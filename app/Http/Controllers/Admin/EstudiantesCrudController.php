@@ -84,7 +84,7 @@ class EstudiantesCrudController extends CrudController
         CRUD::addField([
             'name'    => 'assignments', // Este campo también debe estar presente
             'label'   => 'Añade las asignaturas que cursa el estudiante',
-            'type'    => 'checklist',
+            'type'    => 'custom_checklist',
             'entity'  => 'assignments',
             'model'   => "App\Models\Asignaturas",
             'attribute' => 'nombre',
