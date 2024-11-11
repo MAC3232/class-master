@@ -13,13 +13,14 @@
     <link rel="stylesheet" href="{{ asset('fullcalendar/list/main.css')}}">
     <link rel="stylesheet" href="{{ asset('fullcalendar/timegrid/main.css')}}"> -->
 
-
+    {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">--}}
+    
+    
     <script src="{{ asset('fullcalendar/core/main.js')}}" defer></script>
     <script src="{{ asset('fullcalendar/interaction/main.js')}}" defer></script>
     <script src="{{ asset('fullcalendar/daygrid/main.js')}}" defer></script>
     <script src="{{ asset('fullcalendar/list/main.js')}}" defer></script>
     <script src="{{ asset('fullcalendar/timegrid/main.js')}}" defer></script>
-
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
     <style>
       html, body {
@@ -29,16 +30,20 @@
         font-size: 14px;
       }   
       .modal-backdrop.show {
-    pointer-events: none !important;
-    z-index: 0 !important;
-    opacity: 0 !important;
-}
-.modal-content{
-  z-index: 1 !important;
-}
+          pointer-events: none !important;
+          z-index: 0 !important;
+          opacity: 0 !important;
+      }
+      .modal-content{
+        z-index: 1 !important;
+      }
       #calendar {
         max-width: 900px;
         margin: 40px auto;
+      }
+
+      .fc-daygrid-event-harness-abs {
+          right: 0 !important;
       }
     </style>
 
@@ -171,7 +176,7 @@
                 '_token': $("meta[name='csrf-token']").attr("content"),
                 '_method': method
               };
-            }
+            } 
 
             function EnviarInformacion(url, objEvento, callback) {
               $.ajax({
