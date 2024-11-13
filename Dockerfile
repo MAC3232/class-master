@@ -1,37 +1,38 @@
-# Usa la imagen oficial de PHP 8.3 con FPM (FastCGI Process Manager)
+# Usa una imagen de PHP con las extensiones necesarias para Laravel
 FROM php:8.3-fpm
 
-# Configura el directorio de trabajo en el contenedor
-WORKDIR /var/www
-
-# Instala las dependencias necesarias del sistema
+# Instala dependencias
 RUN apt-get update && apt-get install -y \
-    libfreetype6-dev \
-    libjpeg62-turbo-dev \
     libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
     libonig-dev \
     libxml2-dev \
     zip \
     unzip \
     git \
     curl \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd
 
-# Instala Composer (Administrador de dependencias de PHP)
+# Configura el directorio de trabajo
+WORKDIR /var/www
+
+# Copia los archivos de Laravel
+COPY . .
+
+# Instala Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# Copia el archivo .env (si existe) y los archivos de la aplicación al contenedor
-COPY . /var/www
-
-# Instala las dependencias de Laravel
 RUN composer install --optimize-autoloader --no-dev
 
-# Da permisos al directorio de almacenamiento y bootstrap/cache
+# Permisos para `storage` y `bootstrap/cache`
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
-# Expone el puerto que usará el contenedor
+# Copia y establece `entrypoint.sh`
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Expone el puerto para PHP-FPM
 EXPOSE 8000
 
-# Comando para ejecutar el servidor PHP
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+# Usa el `entrypoint.sh` como comando inicial
+ENTRYPOINT ["/entrypoint.sh"]
