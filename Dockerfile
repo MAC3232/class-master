@@ -1,10 +1,9 @@
-# Usa la imagen oficial de PHP 8.3 con FPM (FastCGI Process Manager)
+# Imagen php 3
 FROM php:8.3-fpm
 
-# Configura el directorio de trabajo en el contenedor
 WORKDIR /var/www
 
-# Instala las dependencias necesarias del sistema
+# dependencias del sistema
 RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
     libjpeg62-turbo-dev \
@@ -18,17 +17,17 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd
 
-# Instala Composer (Administrador de dependencias de PHP)
+# Copiar la configuracion de el composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copia el archivo .env (si existe) y los archivos de la aplicación al contenedor
+# copiar los archivos de la app
 COPY . /var/www
 
-# Instala las dependencias de Laravel
+# dependencias de Laravel
 RUN composer install --optimize-autoloader --no-dev
 
-# Da permisos al directorio de almacenamiento y bootstrap/cache
+# permisos al directorio de almacenamiento y bootstrap/cache
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
-# Expone el puerto que usará el contenedor
+# Exponer el puerto
 EXPOSE 8000
