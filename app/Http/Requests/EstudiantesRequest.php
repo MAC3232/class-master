@@ -13,7 +13,7 @@ class EstudiantesRequest extends FormRequest
      */
     public function authorize()
     {
-        // only allow updates if the user is logged in
+        // Allow only if the user is logged in
         return backpack_auth()->check();
     }
 
@@ -25,19 +25,27 @@ class EstudiantesRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'name' => 'required|min:5|max:255'
+            'nombre' => 'required|string|max:255',
+            'cedula' => 'required|string|max:10|unique:estudiantes,cedula',
+            'correo' => 'required|email|max:255|unique:estudiantes,correo',
+            'codigo_estudiantil' => 'required|string|max:20|unique:estudiantes,codigo_estudiantil',
+            'carrera_id' => 'required|exists:carreras,id',
         ];
     }
 
     /**
-     * Get the validation attributes that apply to the request.
+     * Get custom attribute names.
      *
      * @return array
      */
     public function attributes()
     {
         return [
-            //
+            'nombre' => 'Nombre del estudiante',
+            'cedula' => 'Cédula',
+            'correo' => 'Correo electrónico',
+            'codigo_estudiantil' => 'Código estudiantil',
+            'carrera_id' => 'Carrera',
         ];
     }
 
@@ -49,7 +57,15 @@ class EstudiantesRequest extends FormRequest
     public function messages()
     {
         return [
-            //
+            'nombre.required' => 'El campo Nombre del estudiante es obligatorio.',
+            'cedula.required' => 'El campo Cédula es obligatorio.',
+            'cedula.unique' => 'La Cédula ya está registrada.',
+            'correo.required' => 'El campo Correo electrónico es obligatorio.',
+            'correo.unique' => 'El Correo electrónico ya está registrado.',
+            'codigo_estudiantil.required' => 'El campo Código estudiantil es obligatorio.',
+            'codigo_estudiantil.unique' => 'El Código estudiantil ya está registrado.',
+            'carrera_id.required' => 'El campo Carrera es obligatorio.',
+            'carrera_id.exists' => 'La Carrera seleccionada no es válida.',
         ];
     }
 }
