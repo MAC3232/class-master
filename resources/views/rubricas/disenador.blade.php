@@ -447,7 +447,7 @@
                         <button type="button" class="close" id="closeModal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
-                    </div>
+                    </div>  
                     <div class="modal-body">
                         <!-- Contenido del modal -->
                         <form action="{{ route('rubrica.store') }}" method="POST" id="rubricaForm">

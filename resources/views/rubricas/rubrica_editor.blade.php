@@ -6,6 +6,7 @@
             box-sizing: border-box !important;
         }
 
+
         @media print {
             .d-print-none {
                 display: none !important;
@@ -80,10 +81,9 @@
 
                                             <div class="d-print-none p-1">
 
-                                                <x-form-modal-component :action-url="route('ra.update', $ra->id) " :fields="[
+                                                <x-form-modal-component :action-url="route('ra.update', [$ra->id,$asignatura->rubrica->id]) " :fields="[
                                                     [
                                                         'name' => 'nombreEditar-' . $ra->id,
-
                                                         'type' => 'text',
                                                         'label' => 'Nombre del Resultado de Aprendizaje',
                                                         'value' => $ra->nombre,
@@ -93,6 +93,7 @@
                                                         'type' => 'textarea',
                                                         'label' => 'Editar descripcion',
                                                         'value' => $ra->descripcion ?? '', // Valor actual para editar
+                                                          'maxLength' => '1000'
                                                     ],
 
                                                     [
@@ -108,20 +109,17 @@
                                                         ],
                                                     ],
 
-                                                    [
-                                                        'name' => 'rubrica_id',
-                                                        'type' => 'hidden',
-                                                        'value' => $asignatura->rubrica->id,
-                                                        'label' => '',
-                                                    ],
+
                                                     [
                                                         'name' => 'ponderacion',
                                                         'type' => 'number',
                                                         'value' => $ra->ponderacion,
                                                         'label' => 'Ponderacion',
+                                                          'maxLength' => '3'
                                                     ],
                                                 ]"
                                                     :idField="[
+                                                    'errors'=> $errors->first('RAEditar'.$ra->id) ?? null,
                                                         'method'=>'PUT',
                                                         'name' => 'Editar RA: '.$ra->nombre.'( Corte '. $ra->corte .')',
                                                         'icon' => 'la la-edit',
@@ -161,13 +159,14 @@
                                 'name' => 'Agregar nuevo RA',
                                 'open' => 'AbrirRA',
                                 'modal' => 'modal-RA',
-                            ]" :action-url="route('rarubrica.store', ['id' => $asignatura->id])" :fields="[
+                                 'errors'=> $errors->first('RAEditar') ?? null,
+                            ]" :action-url="route('rarubrica.store', ['id' => $asignatura->id, 'id_rubrica' => $asignatura->rubrica->id])" :fields="[
                                 [
                                     'name' => 'nombre',
                                     'type' => 'text',
                                     'label' => 'Nombre del Resultado de Aprendizaje',
                                 ],
-                                ['name' => 'descripcion', 'type' => 'textarea', 'label' => 'Descripción'],
+                                ['name' => 'descripcion', 'type' => 'textarea', 'label' => 'Descripción',  'maxLength' => '1000'],
                                 [
                                     'name' => 'corte',
                                     'type' => 'select',
@@ -185,7 +184,7 @@
                                     'value' => $asignatura->rubrica->id,
                                     'label' => '',
                                 ],
-                                ['name' => 'ponderacion', 'type' => 'number', 'label' => 'Ponderacion'],
+                                ['name' => 'ponderacion', 'type' => 'number', 'label' => 'Ponderacion', 'maxLength' => '3'],
                             ]" />
                         </td>
                     </tr>
@@ -238,6 +237,7 @@
                                                                                 'type' => 'textarea',
                                                                                 'label' => 'Editar descripcion',
                                                                                 'value' => $criterio->descripcion ?? '',
+                                                                                  'maxLength' => '500'
                                                                             ],
                                                                         ]" :idField="[
                                                                         'method'=> 'PUT' ,
@@ -282,6 +282,7 @@
                                                             'name' => 'descripcion-' . $ra->id,
                                                             'type' => 'textarea',
                                                             'label' => 'Descripción del Criterio',
+                                                            'maxLength' => '500'
                                                         ],
                                                     ]"
                                                         :idField="[
@@ -330,7 +331,8 @@
                                                             'name' => 'EestrategiaEditar-' . $estrategia->id,
                                                             'type' => 'textarea',
                                                             'label' => 'Editar descripcion',
-                                                            'value' => $estrategia->descripcion ?? '', // Valor actual para editar
+                                                            'value' => $estrategia->descripcion ?? '',
+                                                            'maxLength' => '500'
                                                         ],
                                                     ]"
                                                         :idField="[
@@ -375,6 +377,7 @@
                                             'name' => 'Estrategia-' . $ra->id,
                                             'type' => 'textarea',
                                             'label' => 'Descripción de la Estrategia',
+                                            'maxLength' => '500'
                                         ],
                                     ]" :idField="[
                                     'boton'=> 'Agregar Estrategia',
@@ -429,6 +432,7 @@
                                                                 'type' => 'textarea',
                                                                 'label' => 'Editar descripcion',
                                                                 'value' => $eje_contenido->descripcion ?? '',
+                                                                'maxLength' => '500'
                                                             ],
                                                         ]"
                                                             :idField="[
@@ -481,6 +485,7 @@
                                             'name' => 'Contenido-' . $ra->id,
                                             'type' => 'textarea',
                                             'label' => 'Descripción de la Estrategia',
+                                            'maxLength' => '500'
                                         ],
                                     ]" :idField="[
                                        'boton'=> 'Agregar contenido',

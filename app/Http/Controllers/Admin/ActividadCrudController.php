@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\ActividadRequest;
+use App\Models\Actividad;
 use App\Models\Asignaturas;
 use App\Models\Rubrica;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
@@ -103,8 +104,9 @@ class ActividadCrudController extends CrudController
      * @see https://backpackforlaravel.com/docs/crud-operation-create
      * @return void
      */
-    protected function setupCreateOperation()
+    protected function setupCreateOperation($isUpdate = false)
     {
+
         CRUD::setFromDb(); // set columns from db columns.
 
         CRUD::setValidation(ActividadRequest::class);
@@ -119,7 +121,18 @@ class ActividadCrudController extends CrudController
         ]);
 
         // Limitar el select de RA solo a los que pertenecen a la asignatura actual
-       $asignatura_id = request()->input('asignatura_id');
+        if($isUpdate){
+
+            $asignatura_id = Actividad::with('asignatura')->find( request()->route('id'));
+            $asignatura_id =$asignatura_id->asignatura->id;
+
+        }
+        else{
+
+            $asignatura_id = request()->input('asignatura_id') ;
+        }
+
+        
         $rubrica = Rubrica::where('asignatura_id', $asignatura_id)->first();
 
         // dd($rubrica->id);
@@ -147,6 +160,8 @@ class ActividadCrudController extends CrudController
      */
     protected function setupUpdateOperation()
     {
-        $this->setupCreateOperation();
+
+
+        $this->setupCreateOperation(true);
     }
 }

@@ -3,7 +3,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AsignaturasRequest extends FormRequest
+class AsignaturasUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,10 +23,9 @@ class AsignaturasRequest extends FormRequest
      */
     public function rules()
     {
-
         return [
             'nombre' => 'required|string|max:255',
-            'codigo' => 'required|string|max:100|unique:asignaturas,codigo,' . $this->route('id'),
+            'codigo' => 'required|string|max:100',
             'catalogo' => 'required|string|max:255',
             'facultad_id' => 'nullable|exists:facultades,id', // Asegúrate de que la facultad exista
 

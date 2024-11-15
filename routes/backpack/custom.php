@@ -36,7 +36,7 @@ Route::group([
     Route::crud('estudiantes', 'EstudiantesCrudController');
     Route::crud('facultad', 'FacultadCrudController');
     Route::crud('carrera', 'CarreraCrudController');
-    
+
     Route::get('asignaturas/{id}/rubrica', [RubricaController::class, 'showDisenador'])
         ->name('rubrica.disenador');
     Route::get('asignaturas/{id}/rubrica/editor', [RubricaController::class, 'editor'])->name('rubrica.editor');
@@ -44,9 +44,9 @@ Route::group([
     Route::post('asignaturas/rubrica/store', [RubricaController::class, 'store'])->name('rubrica.store');
 
     Route::get('asignaturas/{id}/rarubrica/create', [RAController::class, 'create'])->name('rarubrica.create');
-    Route::post('asignaturas/{id}/rarubrica/store', [RAController::class, 'store'])->name('rarubrica.store');
+    Route::post('asignaturas/{id}/rarubrica/store/{id_rubrica}', [RAController::class, 'store'])->name('rarubrica.store');
     Route::get('ra/edit/{id}', [RAController::class, 'edit'])->name('ra.edit');
-    Route::put('ra/update/{id}', [RAController::class, 'update'])->name('ra.update');
+    Route::put('ra/update/{id}/{id_rubrica}', [RAController::class, 'update'])->name('ra.update');
     Route::delete('ra/destroy/{id}', [RAController::class, 'destroy'])->name('ra.destroy');
 
 

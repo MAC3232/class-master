@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\AsignaturasRequest;
+use App\Http\Requests\AsignaturasUpdateRequest;
+use App\Http\Requests\EstudiantesUpdateRequest;
 use App\Models\User;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
@@ -22,7 +24,7 @@ class AsignaturasCrudController extends CrudController
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
-     * 
+     *
      * @return void
      */
     public function setup()
@@ -34,7 +36,7 @@ class AsignaturasCrudController extends CrudController
 
     /**
      * Define what happens when the List operation is loaded.
-     * 
+     *
      * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
      * @return void
      */
@@ -61,13 +63,16 @@ class AsignaturasCrudController extends CrudController
 
     /**
      * Define what happens when the Create operation is loaded.
-     * 
+     *
      * @see https://backpackforlaravel.com/docs/crud-operation-create
      * @return void
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(AsignaturasRequest::class);
+
+
+            CRUD::setValidation(AsignaturasRequest::class);
+
 
         // Primera parte del formulario
         CRUD::addField([
@@ -201,7 +206,7 @@ class AsignaturasCrudController extends CrudController
                         document.getElementById("area_formacion").style.display = "block";
                         document.getElementById("creditos_academicos").style.display = "block";
                         document.getElementById("modalidad_field").style.display = "block";
-                
+
                         document.getElementById("horas_totales_field").style.display = "block";
                         document.getElementById("horas_independientes_field").style.display = "block";
                         document.getElementById("horas_presenciales_field").style.display = "block";
@@ -211,9 +216,9 @@ class AsignaturasCrudController extends CrudController
 
 
                     function calcularHorasTotales() {
-    var horasPresenciales = document.getElementById("horas_presenciales_field").querySelector("input"); 
+    var horasPresenciales = document.getElementById("horas_presenciales_field").querySelector("input");
     var horasIndependientes = document.getElementById("horas_independientes_field").querySelector("input");
-    var horasTotales = document.getElementById("horas_totales_field").querySelector("input"); 
+    var horasTotales = document.getElementById("horas_totales_field").querySelector("input");
 
     if (horasPresenciales && horasIndependientes && horasTotales) {
         var presencialesValue = parseInt(horasPresenciales.value) || 0;
@@ -227,7 +232,7 @@ class AsignaturasCrudController extends CrudController
 
     /**
      * Define what happens when the Update operation is loaded.
-     * 
+     *
      * @see https://backpackforlaravel.com/docs/crud-operation-update
      * @return void
      */
@@ -242,17 +247,17 @@ class AsignaturasCrudController extends CrudController
     {
 
         CRUD::setFromDb(); // Cargar los campos de la base de datos
-        
-        
+
+
         // logica roles: elimiar update y delete
         if (backpack_user()->hasRole('docente')) {
-            
-            $this->crud->removeButton('update'); 
-            $this->crud->removeButton('delete'); 
-            $this->crud->removeButton('activity'); 
+
+            $this->crud->removeButton('update');
+            $this->crud->removeButton('delete');
+            $this->crud->removeButton('activity');
         }
-        
-        
+
+
         // borones action
         $this->crud->addButtonFromView('line', 'asistencia', 'asistencia');
         $this->crud->addButtonFromView('line', 'activity', 'actividad');
@@ -282,7 +287,7 @@ class AsignaturasCrudController extends CrudController
         $this->crud->addColumn(['name' => 'catalogo', 'label' => 'Catálogo', 'type' => 'text']);
 
 
-        
+
         // Mostrar Facultad
         $this->crud->addColumn([
             'name' => 'facultad_id',
@@ -291,7 +296,7 @@ class AsignaturasCrudController extends CrudController
             'value' => function ($entry) {
 
 
-                return $entry->facultad ? $entry->facultad->nombre : 'N/A'; 
+                return $entry->facultad ? $entry->facultad->nombre : 'N/A';
             },
         ]);
 
@@ -304,7 +309,7 @@ class AsignaturasCrudController extends CrudController
             'type' => 'text',
             'value' => function ($entry) {
 
-                return $entry->carrera ? $entry->carrera->nombre : 'N/A'; 
+                return $entry->carrera ? $entry->carrera->nombre : 'N/A';
             },
         ]);
     }
