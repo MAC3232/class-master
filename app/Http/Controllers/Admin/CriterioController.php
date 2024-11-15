@@ -17,7 +17,7 @@ class CriterioController extends Controller
         // Obtener el Resultado de Aprendizaje (RA) con el ID dado
         $ra = RA::findOrFail($ra_id);
 
-     
+
 
         // Retornar la vista de creación de criterio, pasando el RA
         return view('rubricas.criterio.criteriocreate', compact('ra'));
@@ -28,14 +28,15 @@ class CriterioController extends Controller
      */
     public function store(Request $request, $ra_id)
     {
+
         // Validar los datos de entrada
         $request->validate([
-            'descripcion' => 'required|string',
+            'descripcion-'. $ra_id => 'required|string',
         ]);
 
         // Crear el criterio y asociarlo al RA específico
         Criterio::create([
-            'descripcion' => $request->input('descripcion'),
+            'descripcion' => $request->input('descripcion-'.$ra_id),
             'ra_id' => $ra_id,
         ]);
 
@@ -57,13 +58,13 @@ public function update(Request $request, $id)
 {
     // Validar los datos de entrada
     $request->validate([
-        'descripcion' => 'required|string',
+        'CriterioEdit-'. $id => 'required|string',
     ]);
 
     // Buscar el criterio y actualizarlo
     $criterio = Criterio::findOrFail($id);
     $criterio->update([
-        'descripcion' => $request->input('descripcion'),
+        'descripcion' => $request->input('CriterioEdit-'.$id),
     ]);
 
     // Redirigir a la vista anterior o a la lista de criterios con un mensaje de éxito

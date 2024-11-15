@@ -19,11 +19,11 @@ class EjeContenidoController extends Controller
     public function store(Request $request, $ra_id)
     {
         $request->validate([
-            'descripcion' => 'required|string|max:255',
+            'Contenido-'.$ra_id => 'required|string|max:255',
         ]);
 
         EjeContenido::create([
-            'descripcion' => $request->input('descripcion'),
+            'descripcion' => $request->input('Contenido-'.$ra_id),
             'ra_id' => $ra_id,
         ]);
 
@@ -42,12 +42,12 @@ class EjeContenidoController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'descripcion' => 'required|string|max:255',
+            'EJeContenido-'.$id => 'required|string|max:255',
         ]);
 
         $ejeContenido = EjeContenido::findOrFail($id);
         $ejeContenido->update([
-            'descripcion' => $request->input('descripcion'),
+            'descripcion' => $request->input('EJeContenido-'.$id),
         ]);
 
         return redirect()->route('rubrica.editor', ['id' => $ejeContenido->ra->rubrica->asignatura_id])

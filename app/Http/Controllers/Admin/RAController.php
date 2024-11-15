@@ -14,7 +14,7 @@ class RAController extends Controller
     {
         // Retorna la vista del editor de rúbrica
         $asignatura = Asignaturas::with('rubrica')->findOrFail($id);
-    
+
 
         // dd($rubrica);
 
@@ -28,7 +28,7 @@ class RAController extends Controller
             'nombre' => 'required|string|max:255',
             'descripcion' => 'required|string',
             'ponderacion' => 'required|numeric|min:0|max:100',
-         
+
         ]);
 
         RA::create([
@@ -38,7 +38,7 @@ class RAController extends Controller
             'corte' => $request->input('corte'),
             'rubrica_id' => $request->input('rubrica_id'),
         ]);
-        
+
         $asignatura = Asignaturas::with('rubrica')->findOrFail($id);
 
         return    redirect()->route('rubrica.editor', ['id' => $asignatura->id]);
@@ -47,23 +47,28 @@ class RAController extends Controller
     public function edit($id)
     {
         $estrategia = RA::findOrFail($id);
-   
+
         return view('rubricas.RA.edit', compact('estrategia'));
     }
 
     public function update(Request $request, $id)
     {
+
         $request->validate([
-            'descripcion' => 'required|string|max:255',
+            'Ra-'.$id => 'required|string|max:255',
         ]);
 
         $ra = RA::findOrFail($id);
         $ra->update([
-            'descripcion' => $request->input('descripcion'),
+            'nombre' => $request->input('nombreEditar-'.$id),
+            'descripcion' => $request->input('Ra-'.$id),
+            'ponderacion' => $request->input('ponderacion'),
+            'corte' => $request->input('corte'),
+            'rubrica_id' => $request->input('rubrica_id'),
         ]);
 
         return redirect()->route('rubrica.editor', ['id' => $ra->rubrica->asignatura_id]);
-         
+
 }
 public function destroy($id)
 {

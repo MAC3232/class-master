@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\ActividadRequest;
+use App\Models\Asignaturas;
 use App\Models\Rubrica;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
@@ -22,28 +23,51 @@ class ActividadCrudController extends CrudController
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
-     * 
+     *
      * @return void
      */
     public function setup()
     {
+
         CRUD::setModel(\App\Models\Actividad::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/actividad');
-        CRUD::setEntityNameStrings('actividad', 'actividads');
+    if ( request()->has('asignatura_id')) {
+        $asignatura_id = request()->input('asignatura_id');
+        $rubricaName = Asignaturas::where('id', $asignatura_id)->first();
+
+        CRUD::setEntityNameStrings('actividad', 'actividades: '. $rubricaName->nombre ?? '');
+    }else{
+        return back();
+    }
+
     }
 
     /**
      * Define what happens when the List operation is loaded.
-     * 
+     *
      * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
      * @return void
      */
     protected function setupListOperation()
 {
+    if ( request()->has('asignatura_id')) {
+        $asignatura_id = request()->input('asignatura_id');
+        $rubricaName = Asignaturas::where('id', $asignatura_id)->first();
+
+        CRUD::setEntityNameStrings('actividad', 'actividades: '. $rubricaName->nombre ?? '');
+    }else{
+        return back();
+    }
     CRUD::setFromDb(); // set columns from db columns.
 
     // Obtener `asignatura_id` de la URL (desde el contexto de asignatura)
-    $asignatura_id = request()->query('asignatura_id');
+
+
+    if ( isset($asignatura_id)) {
+        $asignatura_id = request()->query('asignatura_id');
+    }else{
+        return back();
+    }
     if ($asignatura_id) {
         $this->crud->addClause('where', 'asignatura_id', $asignatura_id);
     }
@@ -75,7 +99,7 @@ class ActividadCrudController extends CrudController
 
     /**
      * Define what happens when the Create operation is loaded.
-     * 
+     *
      * @see https://backpackforlaravel.com/docs/crud-operation-create
      * @return void
      */
@@ -84,16 +108,16 @@ class ActividadCrudController extends CrudController
         CRUD::setFromDb(); // set columns from db columns.
 
         CRUD::setValidation(ActividadRequest::class);
-        
+
         $this->crud->addField(['name' => 'nombre', 'label' => 'Nombre', 'type' => 'text']);
         $this->crud->addField(['name' => 'descripcion', 'label' => 'Descripción', 'type' => 'textarea']);
-       
+
         $this->crud->addField([
             'name' => 'asignatura_id',
             'type' => 'hidden',
             'value' => request()->input('asignatura_id')
         ]);
-    
+
         // Limitar el select de RA solo a los que pertenecen a la asignatura actual
        $asignatura_id = request()->input('asignatura_id');
         $rubrica = Rubrica::where('asignatura_id', $asignatura_id)->first();
@@ -117,7 +141,7 @@ class ActividadCrudController extends CrudController
 
     /**
      * Define what happens when the Update operation is loaded.
-     * 
+     *
      * @see https://backpackforlaravel.com/docs/crud-operation-update
      * @return void
      */

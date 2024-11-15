@@ -13,9 +13,9 @@ class ActividadController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($id)
     {
-        //
+       
     }
 
     /**
@@ -27,10 +27,10 @@ class ActividadController extends Controller
 
         // Obtén los RA específicos de la rúbrica de la asignatura
         $raList = $asignatura->rubrica ? $asignatura->rubrica->ra : [];
-    
+
         // Retorna la vista de creación de actividad pasando la lista de RA
-      
-        
+
+
 
         return view('rubricas.actividad.actividad_create', compact([ 'raList', 'asignatura']));
     }
@@ -40,7 +40,7 @@ class ActividadController extends Controller
      */
     public function store(Request $request, $id)
     {
-        
+
         $request->validate([
             'nombre' => 'required|string|max:255',
             'fecha' => 'required|date',
@@ -48,7 +48,7 @@ class ActividadController extends Controller
             'ponderacion' => 'required|numeric|min:0|max:100',
             'ra_id' => 'required|exists:ra,id',  // Validación para ra_id
         ]);
-    
+
         Actividad::create([
             'nombre' => $request->input('nombre'),
             'fecha' => $request->input('fecha'),
@@ -57,7 +57,7 @@ class ActividadController extends Controller
             'ponderacion' => $request->input('ponderacion'),
             'ra_id' => $request->input('ra_id'),
         ]);
-    
+
         return redirect()->route('rubrica.disenador', ['id' => RA::findOrFail($request->input('ra_id'))->rubrica->asignatura_id])
                          ->with('success', 'Actividad creada con éxito.');
     }

@@ -25,7 +25,9 @@ class UserRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'name' => 'required|min:5|max:255'
+            'name' => 'required|string|min:3|max:255',
+            'email' => 'required|email|unique:users,email,' . $this->user,
+            'password' => 'required|string|min:8', // Sin confirmación de contraseña
         ];
     }
 
@@ -37,7 +39,9 @@ class UserRequest extends FormRequest
     public function attributes()
     {
         return [
-            //
+            'name' => 'Nombre',
+            'email' => 'Correo electrónico',
+            'password' => 'Contraseña',
         ];
     }
 
@@ -49,7 +53,14 @@ class UserRequest extends FormRequest
     public function messages()
     {
         return [
-            //
+            'name.required' => 'El campo Nombre es obligatorio.',
+            'name.min' => 'El Nombre debe tener al menos 3 caracteres.',
+            'email.required' => 'El campo Correo electrónico es obligatorio.',
+            'email.email' => 'El Correo electrónico debe ser una dirección válida.',
+            'email.unique' => 'El Correo electrónico ya está en uso.',
+            'password.required' => 'El campo Contraseña es obligatorio.',
+            'password.min' => 'La Contraseña debe tener al menos 8 caracteres.',
+
         ];
     }
 }

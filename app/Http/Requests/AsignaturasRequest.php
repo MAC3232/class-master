@@ -28,7 +28,7 @@ class AsignaturasRequest extends FormRequest
             'codigo' => 'required|string|max:100|unique:asignaturas,codigo,' . $this->route('asignatura'),
             'catalogo' => 'required|string|max:255',
             'facultad_id' => 'nullable|exists:facultades,id', // Asegúrate de que la facultad exista
-            'user_id' => 'required|exists:users,id|role:docente', // Verifica que el usuario sea un docente
+          
             'carrera_id' => 'nullable|exists:carreras,id', // Asegúrate de que la carrera exista
             'area_formacion' => 'nullable|string|max:255',
             'creditos_academicos' => 'nullable|integer|min:1|max:15', // Asegúrate de que los créditos estén dentro de un rango válido
@@ -54,7 +54,7 @@ class AsignaturasRequest extends FormRequest
             'catalogo.required' => 'El catálogo es obligatorio.',
             'user_id.required' => 'El docente es obligatorio.',
             'user_id.exists' => 'El docente seleccionado no es válido.',
-            'user_id.role' => 'El usuario seleccionado debe ser un docente.',
+
             'facultad_id.exists' => 'La facultad seleccionada no es válida.',
             'carrera_id.exists' => 'La carrera seleccionada no es válida.',
             'creditos_academicos.integer' => 'Los créditos académicos deben ser un número entero.',

@@ -6,6 +6,7 @@ use App\Http\Requests\UserRequest;
 use App\Models\User;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Spatie\Permission\Models\Role;
 
 /**
  * Class UserCrudController
@@ -22,7 +23,7 @@ class UserCrudController extends CrudController
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
-     * 
+     *
      * @return void
      */
     public function setup()
@@ -46,31 +47,32 @@ class UserCrudController extends CrudController
             'attribute' => 'name', // Atributo del rol que queremos mostrar (nombre del rol)
             'model' => "Spatie\Permission\Models\Role", // Modelo de roles
         ]);
-        
+
         // Añadir campos
         $this->crud->addField(['name' => 'name', 'label' => 'Nombre', 'type' => 'text']);
         $this->crud->addField(['name' => 'email', 'label' => 'Email', 'type' => 'email']);
-      
+
         $this->crud->addField([
             'label' => "Roles",
-            'type' => 'select_multiple', 
-            'name' => 'roles', 
-            'entity' => 'roles', 
-            'attribute' => 'name', 
-            'model' => "Spatie\Permission\Models\Role", 
-            'pivot' => true, 
+            'type' => 'select_multiple',
+            'name' => 'roles', // relación en el modelo User
+            'entity' => 'roles', // relación en el modelo User
+            'attribute' => 'name', // atributo que se mostrará en el select
+            'model' => "Spatie\Permission\Models\Role",
+            'pivot' => true,
+            'default' =>['admin']
         ]);
-        
-        
+
+
 
         // Proteger acceso a admin
-     
+
 
     }
 
     /**
      * Define what happens when the List operation is loaded.
-     * 
+     *
      * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
      * @return void
      */
@@ -85,7 +87,7 @@ class UserCrudController extends CrudController
 
     /**
      * Define what happens when the Create operation is loaded.
-     * 
+     *
      * @see https://backpackforlaravel.com/docs/crud-operation-create
      * @return void
      */
@@ -96,18 +98,18 @@ class UserCrudController extends CrudController
         CRUD::field('password')->type('password')->label('Contraseña');
         CRUD::field('password')->type('password')->label('Contraseña');
 
-        
-       
+
+
         /**
          * Fields can be defined using the fluent syntax:
          * - CRUD::field('price')->type('number');
          */
     }
-    
+
 
     /**
      * Define what happens when the Update operation is loaded.
-     * 
+     *
      * @see https://backpackforlaravel.com/docs/crud-operation-update
      * @return void
      */

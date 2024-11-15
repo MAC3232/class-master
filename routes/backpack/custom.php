@@ -36,6 +36,7 @@ Route::group([
     Route::crud('estudiantes', 'EstudiantesCrudController');
     Route::crud('facultad', 'FacultadCrudController');
     Route::crud('carrera', 'CarreraCrudController');
+    
     Route::get('asignaturas/{id}/rubrica', [RubricaController::class, 'showDisenador'])
         ->name('rubrica.disenador');
     Route::get('asignaturas/{id}/rubrica/editor', [RubricaController::class, 'editor'])->name('rubrica.editor');
@@ -130,8 +131,8 @@ Route::group([
 
     // Route::get('/calendario/{id}', [CalendarController::class, 'index'])->name('calendario');
      Route::resource('/assignment/calendario', 'CalendarController');
-   
-    
+
+
 
 
 }); // this should be the absolute last line of this file

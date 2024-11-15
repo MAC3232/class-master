@@ -19,11 +19,11 @@ class EstrategiaController extends Controller
     public function store(Request $request, $ra_id)
     {
         $request->validate([
-            'descripcion' => 'required|string|max:255',
+            'Estrategia-'.$ra_id => 'required|string|max:255',
         ]);
 
         Estrategia::create([
-            'descripcion' => $request->input('descripcion'),
+            'descripcion' => $request->input('Estrategia-'.$ra_id),
             'ra_id' => $ra_id,
         ]);
 
@@ -42,12 +42,12 @@ class EstrategiaController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'descripcion' => 'required|string|max:255',
+            'EestrategiaEditar-'. $id => 'required|string|max:255',
         ]);
 
         $estrategia = Estrategia::findOrFail($id);
         $estrategia->update([
-            'descripcion' => $request->input('descripcion'),
+            'descripcion' => $request->input('EestrategiaEditar-'.$id),
         ]);
 
         return redirect()->route('rubrica.editor', ['id' => $estrategia->ra->rubrica->asignatura_id])
