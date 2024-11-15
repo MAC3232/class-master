@@ -25,7 +25,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 COPY . /var/www
 
 # Instala las dependencias de Laravel
-RUN composer install --optimize-autoloader --no-dev
+RUN composer install --optimize-autoloader 
 
 # Da permisos al directorio de almacenamiento y bootstrap/cache
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
