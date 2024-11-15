@@ -21,14 +21,8 @@ RUN apt-get update && apt-get install -y \
 # Instala Composer (Administrador de dependencias de PHP)
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copia el archivo .env (si existe), el script de configuración, y los archivos de la aplicación al contenedor
+# Copia el archivo .env (si existe) y los archivos de la aplicación al contenedor
 COPY . /var/www
-
-# Da permisos al script para que sea ejecutable
-RUN chmod +x /var/www/setup.sh
-
-# Ejecuta el script setup.sh durante la construcción del contenedor (opcional)
-RUN /var/www/setup.sh
 
 # Instala las dependencias de Laravel
 RUN composer install --optimize-autoloader --no-dev
@@ -36,8 +30,13 @@ RUN composer install --optimize-autoloader --no-dev
 # Da permisos al directorio de almacenamiento y bootstrap/cache
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
+
+# Copia y establece `entrypoint.sh`
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 # Expone el puerto que usará el contenedor
 EXPOSE 8000
 
-# Comando para ejecutar el script y el servidor PHP
-CMD ["/bin/sh", "-c", "/var/www/setup.sh && php artisan serve --host=0.0.0.0 --port=8000"]
+# Comando para ejecutar el servidor PHP
+ENTRYPOINT ["/entrypoint.sh"]
