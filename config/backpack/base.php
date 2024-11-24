@@ -117,8 +117,15 @@ return [
         // \Backpack\CRUD\app\Http\Middleware\UseBackpackAuthGuardInsteadOfDefaultAuthGuard::class,
     ],
 
+     'routeMiddleware' => [
+        // Otros middlewares...
+        'check.role' => \App\Http\Middleware\CheckRole::class
+     ],
+
+
     // Alias for that middleware
     'middleware_key' => 'admin',
+
     // Note: It's recommended to use the backpack_middleware() helper everywhere, which pulls this key for you.
 
     // Username column for authentication
@@ -163,7 +170,7 @@ return [
     // You can rename this disk here. Default: root
     'root_disk_name' => 'root',
 
-    
+
     /*
     |--------------------------------------------------------------------------
     | Application
@@ -190,7 +197,7 @@ return [
     | https://www.backpackforlaravel.com
     |
     */
-    
+
 
 
     'token_username' => env('BACKPACK_TOKEN_USERNAME', false),

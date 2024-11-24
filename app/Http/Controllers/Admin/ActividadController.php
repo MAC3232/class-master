@@ -15,7 +15,7 @@ class ActividadController extends Controller
      */
     public function index($id)
     {
-       
+
     }
 
     /**
@@ -40,6 +40,8 @@ class ActividadController extends Controller
      */
     public function store(Request $request, $id)
     {
+
+       
 
         $request->validate([
             'nombre' => 'required|string|max:255',

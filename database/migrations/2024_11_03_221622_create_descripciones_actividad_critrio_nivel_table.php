@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('descripciones_actividad_critrio_nivel', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('criterio_id')->constrained('criterios_actividad');
+            $table->foreignId('criterio_id')->constrained('criterios_actividad')->onDelete('cascade');
             $table->foreignId('nivel_desempeno_id')->constrained('niveles_desempeno_actividad')->onDelete('cascade');
             $table->text('descripcion');
             $table->timestamps();

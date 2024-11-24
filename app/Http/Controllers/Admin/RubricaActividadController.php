@@ -22,6 +22,9 @@ class RubricaActividadController extends Controller
      */
  public function create($id)
 {
+    if (!backpack_auth()->check() || !backpack_user()->hasRole('docente')) {
+        abort(403, 'No tienes permiso para acceder a esta sección.');
+    }
     // Buscar la actividad con su rúbrica y criterios
     $rubrica_actividad = Actividad::with('rubrica.criterios')->findOrFail($id);
 
@@ -31,20 +34,23 @@ class RubricaActividadController extends Controller
 
     $actividad = Actividad::findOrFail($id);
 
-        
+
 
         return view('actividad.rubrica.create', compact('actividad'));
     // Si no existe la rúbrica, mostrar la vista de creación
-   
+
 }
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
+        if (!backpack_auth()->check() || !backpack_user()->hasRole('docente')) {
+            abort(403, 'No tienes permiso para acceder a esta sección.');
+        }
 
 // dd($request);
-       
+
         $request->validate([
             'nombre' => 'required|string|max:255',
             'actividad_id' => 'unique:rubrica_actividad|required|exists:actividades,id',
@@ -57,7 +63,7 @@ class RubricaActividadController extends Controller
         ]);
 
         return redirect()->route('rubrica_actividad.index', $request->input('actividad_id'))->with('success', 'Rúbrica creada con éxito.');
-    
+
     }
 
     /**
@@ -66,10 +72,10 @@ class RubricaActividadController extends Controller
     public function show(string $id)
     {
 
-       
+
         $rubrica_actividad = Actividad::with('rubrica.criterios')->findOrFail($id);
 
-        
+
 
 
         return view('actividad.rubrica.show', compact('rubrica_actividad'));

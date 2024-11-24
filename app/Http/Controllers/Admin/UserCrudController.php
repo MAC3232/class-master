@@ -21,6 +21,8 @@ class UserCrudController extends CrudController
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
 
+
+
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
      *
@@ -28,6 +30,12 @@ class UserCrudController extends CrudController
      */
     public function setup()
     {
+    
+        if (!backpack_auth()->check() || !backpack_user()->hasRole('admin')) {
+            abort(403, 'No tienes permiso para acceder a esta sección.');
+        }
+
+
         CRUD::setModel(\App\Models\User::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/user');
         CRUD::setEntityNameStrings('user', 'users');

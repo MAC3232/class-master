@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AsignaturasCrudController;
 use App\Http\Controllers\admin\AsistenciaController;
 use App\Http\Controllers\admin\CalendarController;
 use App\Http\Controllers\admin\CriterioActividadController;
@@ -12,7 +13,9 @@ use App\Http\Controllers\admin\LevelController;
 use App\Http\Controllers\admin\QrAsistenciaController;
 use App\Http\Controllers\admin\RAController;
 use App\Http\Controllers\admin\RubricaActividadController;
+use App\Http\Controllers\ReportesController;
 use App\Http\Controllers\RubricaController;
+use App\Models\Asignaturas;
 use Illuminate\Support\Facades\Route;
 
 
@@ -27,15 +30,29 @@ Route::group([
     'prefix' => config('backpack.base.route_prefix', 'admin'),
     'middleware' => array_merge(
         (array) config('backpack.base.web_middleware', 'web'),
-        (array) config('backpack.base.middleware_key', 'admin')
+        (array) config('backpack.base.middleware_key', 'admin'),
+
     ),
     'namespace' => 'App\Http\Controllers\Admin',
 ], function () { // custom admin routes
-    Route::crud('user', 'UserCrudController');
+
+
+    Route::get('/facultad/{id}/carreras', [AsignaturasCrudController::class, 'getCarrerasByFacultad']);
+    Route::get('/carrera/{id}/asignaturas', [AsignaturasCrudController::class, 'getAsignaturasByCarrera']);
+
+    Route::get('/reportes/', [ReportesController::class, 'index'])->name('reportes');
+    Route::get('/estudianteReport/{id}/estudents', [ReportesController::class, 'estudianteReport'])->name('estudianteReport');
+    Route::get('/estudianteReport/{id}/estudents/{student}', [ReportesController::class, 'graph'])->name('graph');
+
+    Route::get('admin/api/asignaturas', [AsignaturasCrudController::class, 'getAsignaturas']);
+
     Route::crud('asignaturas', 'AsignaturasCrudController');
+
     Route::crud('estudiantes', 'EstudiantesCrudController');
-    Route::crud('facultad', 'FacultadCrudController');
+    Route::crud('user', 'UserCrudController');
+    Route::crud('facultad', 'FacultadCrudController') ;
     Route::crud('carrera', 'CarreraCrudController');
+
 
     Route::get('asignaturas/{id}/rubrica', [RubricaController::class, 'showDisenador'])
         ->name('rubrica.disenador');

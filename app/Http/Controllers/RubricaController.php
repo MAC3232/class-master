@@ -8,18 +8,26 @@ use Illuminate\Http\Request;
 
 class RubricaController extends Controller
 {
+    public function __construct()
+    {
+        // Aplica el middleware 'role:admin' a todas las acciones de este controlador
+        if (!backpack_auth()->check() || !backpack_user()->hasRole('docente')) {
+            abort(403, 'No tienes permiso para acceder a esta sección.');
+        }
+
+    }
     public function showDisenador($id)
 {
 
     $asignatura = Asignaturas::with('rubrica')->findOrFail($id);
-    
+
     // Verificar si tiene una rúbrica
     $tieneRubrica = $asignatura->rubrica !== null;
-    
-    
+
+
     // Obtenemos los datos de la asignatura
     $asignatura = Asignaturas::findOrFail($id);
-    
+
     // Retornamos la vista del diseñador de rúbrica con los datos de la asignatura
     return view('rubricas.disenador', compact('asignatura', 'tieneRubrica'));
 }

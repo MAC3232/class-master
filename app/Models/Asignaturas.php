@@ -13,11 +13,17 @@ class Asignaturas extends Model
     protected $fillable = [
         'nombre',
         'codigo',
+        'competencia',
+        'descripcion_competencia',
+        'justificacion',
         'facultad_id',
         'carrera_id',
+        'prerequisitos',
+        'correquisitos',
         'user_id',
         'area_formacion',
         'tipo_asignatura',
+        'nivel_formacion',
         'modalidad',
         'creditos_academicos',
         'horas_presenciales',
@@ -54,7 +60,6 @@ class Asignaturas extends Model
     }
 
 
-  
     public function students()
     {
         return $this->belongsToMany(Estudiantes::class, 'asignatura_estudiante',  'asignatura_id', 'estudiante_id');

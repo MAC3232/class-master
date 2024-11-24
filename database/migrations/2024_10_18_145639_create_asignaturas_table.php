@@ -14,13 +14,19 @@ return new class extends Migration
         Schema::create('asignaturas', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
-            $table->string('codigo', 50);
+            $table->string('codigo', 50)->unique();
+            $table->text('competencia');
+            $table->text('descripcion_competencia');
+            $table->text('justificacion');
+            $table->enum('nivel_formacion', ['doctorado', 'maestria', 'especializacion', 'tecnologia', 'tecnico profesional', 'universitario'])->default('universitario');
             $table->string('catalogo', 50);
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); 
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('facultad_id')->constrained('facultades')->onDelete('cascade');
             $table->foreignId('carrera_id')->constrained('carreras')->onDelete('cascade');
             $table->string('area_formacion');
             $table->string('modalidad');
+            $table->string('correquisitos')->nullable();
+            $table->string('prerequisitos')->nullable();
             $table->enum('tipo_asignatura', ['practica', 'teorica', 'teorica con laboratorio'])->default('teorica');
             $table->integer('creditos_academicos');
             $table->integer('horas_presenciales');

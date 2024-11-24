@@ -1,3 +1,5 @@
+
+
 <div class="row" bp-section="crud-operation-list">
     <div class="col-md-12">
         {{-- Contenedor principal con fondo blanco --}}
@@ -25,12 +27,12 @@
                                 <a href="{{route('evaluar.estudiante_asignatura', ['id'=> $estudiante->id, 'actividad_id'=> $asignatura->id])}}" class="btn btn-sm btn-link">
                                     Evaluar estudiante
                                 </a>
-                                
+
                                 <a href="{{route('actividades_estudiante.show', ['id'=> $estudiante->id, 'actividad_id'=> $asignatura->id])}}" class="btn btn-sm btn-link">
-                                    Ver Actividades
+                                    Reporte
                                 </a>
                                 @else
-                                
+
                                 <a href="{{route('Evaluar_actividad.evaluar', ['id'=> $estudiante->id, 'actividad_id'=> $actividad->id])}}" class="btn btn-sm btn-link">
                                     Evaluar estudiante
                                 </a>

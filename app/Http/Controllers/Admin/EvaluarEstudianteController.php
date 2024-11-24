@@ -8,9 +8,20 @@ use App\Models\Asignaturas;
 use App\Models\Valoracion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Prologue\Alerts\Facades\Alert;
+
+use function Laravel\Prompts\alert;
 
 class EvaluarEstudianteController extends Controller
 {
+    public function __construct()
+    {
+        // Aplica el middleware 'role:admin' a todas las acciones de este controlador
+        if (!backpack_auth()->check() || !backpack_user()->hasRole('docente')) {
+            abort(403, 'No tienes permiso para acceder a esta sección.');
+        }
+
+    }
 
 
 
@@ -24,17 +35,17 @@ class EvaluarEstudianteController extends Controller
         return view('admin.evaluar_estudiantes', compact('estudiantes', 'asignatura', 'isAsignatura'));
 
         }
-        
+
         // Materia y estudiantes
-        
+
         $actividad = Actividad::with('asignatura')->findOrFail($actividad);
-     
+
 
         $asignatura = $actividad->asignatura;
         $estudiantes = $asignatura->students;
-        
-        
-       
+
+
+
         // Retorna la vista de evaluación, pasando los estudiantes y la materia
         return view('admin.evaluar_estudiantes', compact('estudiantes', 'asignatura', 'actividad', 'isAsignatura'));
     }
@@ -55,12 +66,12 @@ class EvaluarEstudianteController extends Controller
     public function Evaluar_actividad($actividad, $id)
     {
 
-      
+
         $actividad = Actividad::with(['asignatura', 'rubrica.criterios', 'valoraciones.estudiante'])->findOrFail($actividad);
-        
+
         $materia = $actividad->asignatura;
         $estudiante = $materia->students->findOrFail($id);
-        
+
 
         // Retorna la vista de evaluación, pasando los estudiantes y la materia
         return view('admin.evaluar_actividad', compact('actividad', 'materia', 'estudiante'));
@@ -68,10 +79,10 @@ class EvaluarEstudianteController extends Controller
     public function actividades($actividad, $id)
     {
 
-      
+
         $asignatura = Asignaturas::with([ 'rubrica.ra' ])->findOrFail($actividad);
-        
-     
+
+
         $estudiante = $asignatura->students->findOrFail($id);
         $tieneRubrica = $asignatura->rubrica !== null;
 
@@ -83,15 +94,16 @@ class EvaluarEstudianteController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'nota' => 'required|int|max:5',
+            'nota' => 'required|numeric|max:5',
             'actividad_id' => 'required|int',
             'estudiante_id' => 'required|int'
         ]);
-    
+
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+        Alert::error('No se pudo evaluar, el maximo es de 5' )->flash();
+            return response()->json('error');
         }
-    
+
         // Actualizar o crear la valoración si ya existe una para el mismo estudiante y actividad
         $valoracion = Valoracion::updateOrCreate(
             [
@@ -102,10 +114,11 @@ class EvaluarEstudianteController extends Controller
                 'nota' => $request->input('nota')
             ]
         );
-    
+
+        Alert::success('Evaluado correctamente en '.$request->input('nota') )->flash();
         return response()->json($valoracion, 201);
     }
-    
+
 }
 
 

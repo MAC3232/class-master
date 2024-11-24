@@ -107,6 +107,9 @@ class ActividadCrudController extends CrudController
     protected function setupCreateOperation($isUpdate = false)
     {
 
+        if (!backpack_auth()->check() || !backpack_user()->hasRole('docente')) {
+            abort(403, 'No tienes permiso para acceder a esta sección.');
+        }
         CRUD::setFromDb(); // set columns from db columns.
 
         CRUD::setValidation(ActividadRequest::class);
@@ -132,7 +135,7 @@ class ActividadCrudController extends CrudController
             $asignatura_id = request()->input('asignatura_id') ;
         }
 
-        
+
         $rubrica = Rubrica::where('asignatura_id', $asignatura_id)->first();
 
         // dd($rubrica->id);

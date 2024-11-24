@@ -12,7 +12,7 @@ class Carrera extends Model
     use HasFactory;
     protected $table = 'carreras';
     protected $fillable = [
-        'nombre', 
+        'nombre',
         'facultad_id'
     ];
 
@@ -25,4 +25,9 @@ class Carrera extends Model
     {
         return $this->hasMany(Estudiantes::class);
     }
+    public function asignaturas()
+{
+    return $this->hasMany(Asignaturas::class, 'carrera_id');
+}
+
 }

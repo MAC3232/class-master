@@ -21,8 +21,8 @@ class LevelController extends Controller
         // Validar la solicitud
         $validator = Validator::make($request->all(), [
             'nombre' => 'required|string|max:255',
-            'puntaje_inicial' => 'required|integer',
-            'puntaje_final' => 'required|integer|gte:puntaje_inicial', // score_max debe ser mayor o igual a score_min
+            'puntaje_inicial' => 'required|numeric',
+            'puntaje_final' => 'required|numeric|gte:puntaje_inicial', // score_max debe ser mayor o igual a score_min
         ]);
 
         if ($validator->fails()) {

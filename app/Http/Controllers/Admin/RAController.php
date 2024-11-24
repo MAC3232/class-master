@@ -26,40 +26,18 @@ class RAController extends Controller
     public function store(Request $request, $id, $id_rubrica)
     {
 
-        $rubrica = Rubrica::with('ra')->findOrFail($id_rubrica);
 
-
-        $sumaPonderacion = $rubrica->ra->where('corte', $request->corte)->sum('ponderacion');
-
-
-        $nuevaPonderacion = ($sumaPonderacion) + $request->ponderacion;
-
-        if ($nuevaPonderacion > 100) {
-
-            $diferenteError = "ERROR: La ponderación total supera el 100% (". $request->corte.")";
-            Alert::error($diferenteError)->flash();
-
-            // Comprobamos si se ha alcanzado el límite de RA
-            if ($sumaPonderacion < 0) {
-                Alert::error('Se ha alcanzado el límite de RAS. Prueba cambiar las ponderaciones de los RAS existentes')->flash();
-            } else {
-                $ponderacionRestante = 100 - $sumaPonderacion;
-                Alert::error("En este RA la ponderación puede ser de $ponderacionRestante%")->flash();
-            }
-            return back()->withErrors(['RAEditar' => $diferenteError]); // Pasamos todos los errores como un array
-        }
 
         $request->validate([
             'nombre' => 'required|string|max:255',
             'descripcion' => 'required|string',
-            'ponderacion' => 'required|numeric|min:0|max:100',
+           
 
         ]);
 
         RA::create([
             'nombre' => $request->input('nombre'),
             'descripcion' => $request->input('descripcion'),
-            'ponderacion' => $request->input('ponderacion'),
             'corte' => $request->input('corte'),
             'rubrica_id' => $id_rubrica,
         ]);
@@ -81,27 +59,6 @@ class RAController extends Controller
     public function update(Request $request, $id, $id_rubrica)
     {
 
-        $rubrica = Rubrica::with('ra')->findOrFail($id_rubrica);
-
-        // Sumar las ponderaciones actuales de los RA de esta rúbrica
-        $sumaPonderacion = $rubrica->ra->where('corte', $request->corte)->sum('ponderacion');
-
-        // Calcular la nueva ponderación total incluyendo la actual
-
-        if ( ($sumaPonderacion - $rubrica->ra->findOrFail($id)->ponderacion) +  $request->ponderacion > 100) {
-            // Mostrar diferentes mensajes de error dependiendo del caso
-            $diferenteError = "ERROR: La ponderación total supera el 100% ( Corte". $request->corte.")";
-            Alert::error($diferenteError)->flash();
-
-            // Comprobamos si se ha alcanzado el límite de RA
-            if ($sumaPonderacion < 0) {
-                Alert::error('Se ha alcanzado el límite de RAS. Prueba cambiar las ponderaciones de los RAS existentes')->flash();
-            } else {
-                $ponderacionRestante = 100 - ($sumaPonderacion - ($rubrica->ra->findOrFail($id)->ponderacion)) ;
-                Alert::error("En este RA la ponderación puede ser de $ponderacionRestante%")->flash();
-            }
-            return back()->withErrors(['RAEditar'.$id => $diferenteError]); // Pasamos todos los errores como un array
-        }
         $request->validate([
             'Ra-'.$id => 'required|string|max:255',
         ]);
@@ -110,7 +67,6 @@ class RAController extends Controller
         $ra->update([
             'nombre' => $request->input('nombreEditar-'.$id),
             'descripcion' => $request->input('Ra-'.$id),
-            'ponderacion' => $request->input('ponderacion'),
             'corte' => $request->input('corte'),
             'rubrica_id' => $id_rubrica,
         ]);

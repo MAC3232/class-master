@@ -11,17 +11,20 @@
 @endphp
 
 <!-- Campo de búsqueda -->
-<input type="text" id="buscar-asignatura" placeholder="Buscar asignatura..." class="form-control mt-3 p-2 rounded-lg border-gray-300 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+<label for=""> {!! $field['label'] !!}</label>
+
+<input type="text" id="buscar-asignatura" placeholder="Buscar asignatura..." class="form-control  rounded-lg border-gray-300 shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500">
 
 <!-- Generación del checklist de asignaturas -->
 <div class="grid grid-cols-3 gap-4 mt-4">
     @foreach ($asignaturas as $asignatura)
+
         <div class="checklist-item flex items-center space-x-2">
-            <input type="checkbox" name="assignments[]" value="{{ $asignatura->id }}" 
+            <input type="checkbox" name="assignments[]" value="{{ $asignatura->id }}"
                    {{ in_array($asignatura->id, $selectedAssignments) ? 'checked' : '' }}
                    class="form-checkbox text-blue-500 h-5 w-5 border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
             <label class="text-gray-700 text-lg font-medium cursor-pointer">
-                {{ $asignatura->nombre }}
+                {{ $asignatura->nombre }} ({{$asignatura->codigo}})
             </label>
         </div>
     @endforeach

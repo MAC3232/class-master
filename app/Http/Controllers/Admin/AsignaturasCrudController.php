@@ -5,9 +5,15 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\AsignaturasRequest;
 use App\Http\Requests\AsignaturasUpdateRequest;
 use App\Http\Requests\EstudiantesUpdateRequest;
+use App\Models\Asignaturas;
+use App\Models\Carrera;
+use App\Models\Facultad;
+use App\Models\NivelFormacion;
 use App\Models\User;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Doctrine\DBAL\Query;
+use Illuminate\Support\Facades\Request;
 
 /**
  * Class AsignaturasCrudController
@@ -32,7 +38,14 @@ class AsignaturasCrudController extends CrudController
         CRUD::setModel(\App\Models\Asignaturas::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/asignaturas');
         CRUD::setEntityNameStrings('asignaturas', 'asignaturas');
+
+        $this->crud->setOperationSetting('destroy', [
+            'message' => '¿Estás seguro de eliminar este registro? Esta acción no puede deshacerse.',
+            'icon' => 'warning', // Puedes personalizar el icono también
+            'buttons' => ['cancel' => 'Cancelar', 'confirm' => 'Eliminar'],
+        ]);
     }
+
 
     /**
      * Define what happens when the List operation is loaded.
@@ -57,7 +70,7 @@ class AsignaturasCrudController extends CrudController
 
         // Columnas a mostrar en la lista de asignaturas
         $this->crud->addColumn(['name' => 'nombre', 'label' => 'Nombre', 'type' => 'text']);
-        $this->crud->addColumn(['name' => 'creditos_academicos', 'label' => 'Créditos', 'type' => 'text']);
+        $this->crud->addColumn(['name' => 'codigo', 'label' => 'Codigo', 'type' => 'text']);
         $this->crud->addColumn(['name' => 'catalogo', 'label' => 'Catálogo', 'type' => 'text']);
     }
 
@@ -84,6 +97,10 @@ class AsignaturasCrudController extends CrudController
         CRUD::addField(['name' => 'nombre', 'label' => 'Nombre de la Asignatura', 'type' => 'text']);
         CRUD::addField(['name' => 'codigo', 'label' => 'Código', 'type' => 'text']);
         CRUD::addField(['name' => 'catalogo', 'label' => 'Catalogo', 'type' => 'text']);
+        CRUD::addField(['name' => 'competencia', 'label' => 'competencia', 'type' => 'text']);
+        CRUD::addField(['name' => 'descripcion_competencia', 'label' => 'descripcion de la competencia', 'type' => 'text']);
+        CRUD::addField(['name' => 'justificacion', 'label' => 'Justificacion', 'type' => 'text']);
+
 
         // Select para facultad
         $facultades = \App\Models\Facultad::count();
@@ -94,10 +111,53 @@ class AsignaturasCrudController extends CrudController
                 'value' => '<a href="' . backpack_url('facultad/create') . '" class="btn btn-primary">Crear Facultad</a>',
             ]);
         } else {
-            CRUD::addField(['name' => 'facultad_id', 'label' => 'Facultad', 'type' => 'select', 'entity' => 'facultad', 'model' => 'App\Models\Facultad', 'attribute' => 'nombre']);
+
+
+           CRUD::addField([
+    'name' => 'facultad_id',
+    'label' => 'Facultades',
+    'type' => 'custom_facultas', // El nombre del componente personalizado
+    'attributes' => [
+        'placeholder' => 'Selecciona una asignatura',
+    ],
+]);
+
         }
+        CRUD::addField([
+            'name' => 'carrera_id',
+            'label' => 'Carrera',
+            'type' => 'select',
+            'entity' => 'carrera', // Relación con Facultad
+            'attribute' => 'nombre', // Atributo que se mostrará
+            'model' => 'App\Models\Carrera', // Modelo de facultad
+        ]);
+
+        CRUD::addField(['name' => 'correquisitos', 'label' => 'corequisitos', 'type' => 'text']);
+        CRUD::addField(['name' => 'prerequisitos', 'label' => 'prerequisitos', 'type' => 'text']);
+
+
+
+
+
+        CRUD::addField([
+            'name' => 'nivel_formacion',
+            'label' => 'Nivel de formacion',
+            'type' => 'select_from_array',
+            'options' => [
+                'doctorado'           => 'Doctorado (postgrado)',
+                'maestria'            => 'Maestría (postgrado)',
+                'especializacion'     => 'Especialización (postgrado)',
+                'tecnologia'          => 'Tecnología (pregrado)',
+                'tecnico profesional' => 'Técnico Profesional (pregrado)',
+                'universitario'       => 'Universitario (pregrado)',
+            ],
+            'allows_null' => false,
+            'default' => 'universitario',
+
+        ]);
 
         // Campo de selección para el docente
+
         CRUD::addField([
             'label' => "Docente",
             'type' => 'select',
@@ -109,17 +169,9 @@ class AsignaturasCrudController extends CrudController
                 return $query->role('docente')->get(); // Filtra solo usuarios con rol "docente"
             }), // Filtro para mostrar solo los usuarios que tienen el rol "docente"
         ]);
-        // Select para carrera
-        $carreras = \App\Models\Carrera::count();
-        if ($carreras == 0) {
-            CRUD::addField([
-                'name' => 'crear_carrera',
-                'type' => 'custom_html',
-                'value' => '<a href="' . backpack_url('carrera/create') . '" class="btn btn-primary">Crear Carrera</a>',
-            ]);
-        } else {
-            CRUD::addField(['name' => 'carrera_id', 'label' => 'Carrera', 'type' => 'select', 'entity' => 'carrera', 'model' => 'App\Models\Carrera', 'attribute' => 'nombre']);
-        }
+
+
+
 
         // Botón para avanzar al paso 2
         CRUD::addField([
@@ -127,6 +179,8 @@ class AsignaturasCrudController extends CrudController
             'type' => 'custom_html',
             'value' => '<button class="btn btn-primary" id="goToStep2" type="button">Siguiente paso</button>',
         ]);
+
+
 
         // Segunda parte del formulario (oculta por defecto)
         CRUD::addField([
@@ -152,8 +206,12 @@ class AsignaturasCrudController extends CrudController
             'default' => 'presencial',
             'wrapperAttributes' => ['style' => 'display:none', 'id' => 'modalidad_field'],
         ]);
+
+
+
+
         CRUD::addField([
-            'name' => 'type_asignatura',
+            'name' => 'tipo_asignatura',
             'label' => 'Tipo de asignatura',
             'type' => 'select_from_array',
             'options' => [
@@ -236,6 +294,22 @@ class AsignaturasCrudController extends CrudController
      * @see https://backpackforlaravel.com/docs/crud-operation-update
      * @return void
      */
+
+     function getPrerequisitosOptions() {
+        // Puedes agregar lógica para cargar las opciones dinámicamente, por ejemplo desde una base de datos
+
+        if (!empty(old('facultad_id'))) {
+            # code...
+            dd(old('facultad_id'));
+        }
+
+        return [
+            'Ninguna' => 'Ninguna',
+            'universitario' => 'Universitario',
+            'secundario' => 'Secundario',
+            'tecnico' => 'Técnico',
+        ];
+    }
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
@@ -243,10 +317,35 @@ class AsignaturasCrudController extends CrudController
 
     // Dentro de la clase AsignaturasCrudController
 
+    public function getAsignaturas(Request $request)
+    {
+
+
+        $facultadId = $request->input('facultad_id');
+
+        if (!$facultadId) {
+            return response()->json([]);
+        }
+
+        $asignaturas = Asignaturas::where('facultad_id', $facultadId)
+            ->select('id', 'nombre as text') // Formato requerido para select2
+            ->get();
+
+            if ($asignaturas->isEmpty()) {
+                return response()->json($asignaturas);
+
+            }else{
+
+                return ['ninguna' =>'ninguna'];
+            }
+    }
+
+
+
     protected function setupShowOperation()
     {
 
-        CRUD::setFromDb(); // Cargar los campos de la base de datos
+
 
 
         // logica roles: elimiar update y delete
@@ -313,4 +412,22 @@ class AsignaturasCrudController extends CrudController
             },
         ]);
     }
+
+
+    public function getCarrerasByFacultad($facultadId)
+    {
+        $carreras = Carrera::where('facultad_id', $facultadId)
+                    ->with('asignaturas') // Cargar las asignaturas relacionadas
+                    ->get();
+
+        return response()->json($carreras);
+    }
+
+    public function getAsignaturasByCarrera($carreraId)
+    {
+        $asignaturas = Asignaturas::where('carrera_id', $carreraId)->get(['id', 'nombre','codigo']);
+        return response()->json($asignaturas);
+    }
+
+
 }

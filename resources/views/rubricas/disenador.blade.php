@@ -9,16 +9,8 @@
         @media print {
             .d-print-none {
                 display: none !important;
-                /* Utiliza !important para asegurar que se aplique */
             }
-
-
         }
-
-
-
-
-
 
     </style>
 @endsection
@@ -26,7 +18,7 @@
 @section('header')
     <section class="content-header">
         <h1 class="text-light">
-            Diseñador de Rúbrica
+            Diseñador de syllabus
         </h1>
         <ol class="breadcrumb m-2">
             <li><a href="{{ backpack_url() }}">Panel</a></li>
@@ -43,10 +35,10 @@
     @if ($tieneRubrica)
         <div class="d-flex justify-content-start mb-4">
             {{-- Botón de Imprimir --}}
-            <button onclick="window.print()" class="btn btn-secondary m-2 ">Imprimir Rúbrica</button>
+            <button onclick="window.print()" class="btn btn-primary m-2 ">Imprimir syllabus</button>
 
             {{-- Botón de Editar --}}
-            <a href="{{ route('rubrica.editor', $asignatura->id) }}" class="btn btn-primary m-2">Editar Rúbrica</a>
+            <a href="{{ route('rubrica.editor', $asignatura->id) }}" class="btn btn-primary m-2">Editar syllabus</a>
         </div>
     @endif
 @endsection
@@ -85,18 +77,58 @@
                             <tr>
                                 <td><strong>ÁREA DE FORMACIÓN</strong></td>
                                 <td>{{ $asignatura->area_formacion }}</td>
-                                <td><strong>NIVEL DE FORMACIÓN</strong></td>
-                                <td>
-                                    @foreach ([0 => 'tecnico', 2 => 'Tecnologia'] as $nivel)
-                                        {{ $nivel }},
-                                    @endforeach
-                                </td>
-                            </tr>
-                            <tr>
                                 <td><strong>NÚMERO DE CRÉDITOS ACADÉMICOS</strong></td>
                                 <td colspan="3">{{ $asignatura->creditos_academicos }}</td>
 
                             </tr>
+                            <tr>
+                                <td><strong>NIVEL DE FORMACIÓN</strong></td>
+                                <td colspan="3">
+                                    <table style="border-collapse: collapse; width: 100%;">
+                                        <tr style="{{ $asignatura->nivel_formacion == 'universitario' || $asignatura->nivel_formacion == 'tecnologia' || $asignatura->nivel_formacion == 'tecnico profesional' ? 'border: 2px solid rgba(156, 39, 176, 0.5); box-shadow: 0 4px 8px rgba(156, 39, 176, 0.5); background-color: rgba(156, 39, 176, 0.1);' : '' }}">
+
+                                            <td rowspan="1" style="background-color: #fce4ec; text-align: center;"><strong>Pregrado</strong></td>
+                                            <td >
+                                                <label style="padding: 10px" >
+                                                    <input type="radio" class="form-check-input" name="pregrado_nivel[]" value="0"  {{$asignatura->nivel_formacion == "tecnico profesional" ? 'checked' : ''}} disabled> Técnico Profesional
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <label>
+                                                    <input type="radio" class="form-check-input" name="pregrado_nivel[]" value="1"   {{$asignatura->nivel_formacion == "tecnologia" ? 'checked' : ''}} disabled> Tecnología
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <label>
+                                                    <input type="radio" class="form-check-input" name="pregrado_nivel[]" value="2"  {{$asignatura->nivel_formacion == "universitario" ? 'checked' : ''}} disabled> Universitario
+                                                </label>
+                                            </td>
+                                        </tr>
+                                        <tr style="{{ $asignatura->nivel_formacion == 'doctorado' || $asignatura->nivel_formacion == 'maestria' || $asignatura->nivel_formacion == 'especializacion' ? 'border: 2px solid rgba(156, 39, 176, 0.5); box-shadow: 0 4px 8px rgba(156, 39, 176, 0.5); background-color: rgba(156, 39, 176, 0.1);' : '' }}">
+
+                                            <td rowspan="1" style="background-color: #fce4ec; text-align: center;"><strong>Posgrado</strong></td>
+                                            <td>
+                                                <label style="padding: 10px">
+                                                    <input type="radio" class="form-check-input" name="posgrado_nivel[]" value="3" {{$asignatura->nivel_formacion == "especializacion" ? 'checked' : ''}} disabled> Especialización
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <label>
+                                                    <input type="radio" class="form-check-input" name="posgrado_nivel[]" value="4"  {{$asignatura->nivel_formacion == "maestria" ? 'checked' : ''}} disabled> Maestría
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <label>
+                                                    <input type="radio" class="form-check-input" name="posgrado_nivel[]" value="5"  {{$asignatura->nivel_formacion == "doctorado" ? 'checked' : ''}} disabled> Doctorado
+                                                </label>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                </td>
+                            </tr>
+
+
                             <tr>
                                 <td><strong>TRABAJO ACADÉMICO</strong></td>
                                 <td colspan="3">
@@ -119,12 +151,46 @@
                     <tr>
                         <td class=".btn-imprimir"><strong>MODALIDAD</strong></td>
                         <td>{{ $asignatura->modalidad }}</td>
-                        <td><strong>TIPO DE ASIGNATURA</strong></td>
-                        <td>{{ $asignatura->type_asignatura }}</td>
+                        <td><strong>Numero de semanas</strong></td>
+                        <td> 1 </td>
                     </tr>
+
+
+
+                    <tr>
+                        <td><strong>TIPO DE ASIGNATURA</strong></td>
+                        <td colspan="3">
+                            <table style="border-collapse: collapse; width: 100%;">
+
+                                <tr>
+                                    <td>
+
+                                        <label>
+                                            <input type="radio" class="form-check-input" name="asignatura_tipo" class="form-check-input"  value="0" {{ $asignatura->tipo_asignatura == 'teorica' ? 'checked':'' }}  disabled> Teorica
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <label>
+                                            <input type="radio" class="form-check-input" name="asignatura_tipo" value="1" {{ $asignatura->tipo_asignatura == 'teorica con laboratorio' ? 'checked':'' }}  disabled> Teorica con laboratorios
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <label>
+                                            <input type="radio" class="form-check-input" name="asignatura_tipo" value="2" {{ $asignatura->tipo_asignatura == 'practica' ? 'checked':'' }}  disabled> Practica
+                                        </label>
+                                    </td>
+
+                                </tr>
+
+
+
+                            </table>
+                        </td>
+                    </tr>
+
                     <tr>
                         <td><strong>PRERREQUISITOS</strong></td>
-                        <td>{{ $asignatura->prerrequisitos }}</td>
+                        <td>{{ $asignatura->prerequisitos }}</td>
                         <td><strong>CORREQUISITOS</strong></td>
                         <td>{{ $asignatura->correquisitos }}</td>
                     </tr>
@@ -132,6 +198,31 @@
                         <td><strong>FECHA DE ACTUALIZACIÓN</strong></td>
                         <td colspan="3">{{ $asignatura->fecha_actualizacion }}</td>
                     </tr>
+
+                    <th colspan="4" class="text-center bg-secondary text-white">
+                        JUSTIFICACIÒN DE LA ASIGNATURA
+                    </th>
+                    </tr>
+                    <tr>
+                        <td colspan="4" class="text-justify">
+                            <strong>Descripcion: </strong><br>
+                            {{$asignatura->justificacion}}
+
+                        </td>
+                    </tr>
+                    <th colspan="4" class="text-center bg-secondary   text-white">
+                        COMPETENCIA DE LA ASIGNATURA <br>
+                        {{$asignatura->competencia}}
+                    </th>
+                </tr>
+                <tr>
+                    <td colspan="4" class="text-justify">
+                        <strong>Descripcion</strong><br>
+                        {{$asignatura->descripcion_competencia}}
+
+                        </td>
+                    </tr>
+
 
                     <tr>
                         <th colspan="4" class="text-center bg-secondary text-white">
@@ -447,7 +538,7 @@
                         <button type="button" class="close" id="closeModal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
-                    </div>  
+                    </div>
                     <div class="modal-body">
                         <!-- Contenido del modal -->
                         <form action="{{ route('rubrica.store') }}" method="POST" id="rubricaForm">

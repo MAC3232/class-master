@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('nombre');
             $table->text('descripcion');
-            $table->decimal('ponderacion', 5, 2);
             $table->enum('corte', ['1', '2', '3']);
             $table->foreignId('rubrica_id')->constrained('rubricas')->onDelete('cascade');
             $table->timestamps();

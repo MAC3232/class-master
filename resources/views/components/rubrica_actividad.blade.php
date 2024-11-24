@@ -7,6 +7,84 @@
 
 
             <button class="btn btn-success" onclick="showCustomModal('calificar')"> Calificar / Ver </button>
+            @php
+    $puntaje = 4.5; // Aquí puedes poner el puntaje obtenido del estudiante
+@endphp
+@php
+// Obtener la valoración del estudiante para la actividad
+$valoracionEstudiante = $rubrica_actividad->valoraciones->firstWhere('estudiante_id', $estudiante);
+
+// Convertir a float
+
+if (!is_null($valoracionEstudiante) && !is_null($valoracionEstudiante->nota)) {
+    // $valoracionEstudiante->nota tiene un valor
+
+    $nota = floatval($valoracionEstudiante->nota);
+}
+
+@endphp
+@php
+    // Variable para saber si el estudiante está en algún nivel
+    $estudianteEnRango = false;
+@endphp
+
+@foreach ($rubrica_actividad->rubrica->nivelesDesempeno as $nivel)
+    @php
+        // Verificar si el puntaje del estudiante está dentro del rango de este nivel
+        if (isset( $nota) &&  $nota) {
+            # code...
+            $estudianteEnNivel = $nota >= $nivel->puntaje_inicial && $nota <= $nivel->puntaje_final;
+        }
+
+        // Definir el estado y la clase según el puntaje
+        $nivelEstado = '';
+        $nivelClase = '';
+
+        // Si el estudiante está dentro del rango de puntaje de este nivel
+        if ( isset($estudianteEnNivel) && $estudianteEnNivel && isset($nota) && $nota) {
+            $estudianteEnRango = true; // El estudiante está en el rango de un nivel
+            if ($nota > 4) {
+                $nivelEstado = 'Excelente';
+                $nivelClase = 'alert-success';
+            } elseif ($nota >= 3) {
+                $nivelEstado = 'Aprobado';
+                $nivelClase = 'alert-warning';
+            } else {
+                $nivelEstado = 'Reprobado';
+                $nivelClase = 'alert-danger';
+            }
+        }
+
+    @endphp
+
+    <th class="text-center" data-nivel-id="{{ $nivel->id }}">
+        <div>
+           <!-- Nombre del nivel -->
+        </div>
+
+        <div>
+           <!-- Rango de puntaje -->
+        </div>
+
+        @if (  isset($estudianteEnNivel) && $estudianteEnNivel )
+            <div class="alert {{ $nivelClase }}" role="alert">
+                Nivel:  {{$nivel->nombre}}  ({{$nivel->puntaje_inicial}} - {{$nivel->puntaje_final}}) (Puntaje: {{ $nota }})
+            </div>
+        @endif
+    </th>
+@endforeach
+
+@if (!$estudianteEnRango && isset($nota) && $nota)
+    <!-- Si el estudiante no está en ningún nivel, mostrar mensaje con color azul o morado -->
+    <th class="text-center">
+        <div class="alert alert-info" role="alert">
+            No hay un rango estipulado para esta nota (Puntaje: {{ $nota ?? '' }})
+        </div>
+    </th>
+@endif
+
+
+
 
             @endif
 

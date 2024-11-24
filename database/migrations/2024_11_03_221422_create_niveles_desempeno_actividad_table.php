@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('nombre');
             $table->foreignId('rubrica_actividad_id')->constrained('rubrica_actividad')->onDelete('cascade');
-            $table->integer('puntaje_inicial')->nullable();
-            $table->integer('puntaje_final')->nullable();
+            $table->float('puntaje_inicial')->nullable();
+            $table->float('puntaje_final')->nullable();
             $table->timestamps();
         });
     }

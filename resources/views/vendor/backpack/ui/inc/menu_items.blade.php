@@ -4,6 +4,12 @@
 
 @if (  backpack_user()->hasRole('docente')   )
 <x-backpack::menu-item title="Asignaturas" icon="la la-book" :link="backpack_url('asignaturas')" />
+{{-- Nueva opción de menú personalizada fuera de Backpack --}}
+<li class="nav-item">
+    <a class="nav-link" href="{{ route('reportes') }}">
+        <i class="la la-chart-bar nav-icon"></i> Reportes
+    </a>
+</li>
 @else
 
 <x-backpack::menu-item title="Asignaturas" icon="la la-book" :link="backpack_url('asignaturas')" />
@@ -16,4 +22,4 @@
 @endif
     {{-- Solo visible para docentes --}}
 
-    
+

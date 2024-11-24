@@ -5,15 +5,10 @@
         * {
             box-sizing: border-box !important;
         }
-
-
         @media print {
             .d-print-none {
                 display: none !important;
-                /* Utiliza !important para asegurar que se aplique */
             }
-
-
         }
     </style>
 @endsection
@@ -21,7 +16,7 @@
 @section('header')
     <section class="content-header">
         <h1 class="text-light">
-            Diseñador de Rúbrica
+            Diseñador de syllabus
         </h1>
         <ol class="breadcrumb m-2">
             <li><a href="{{ backpack_url() }}">Panel</a></li>
@@ -30,14 +25,14 @@
             <li>
 
                 <a href="{{ route('rubrica.disenador', $asignatura->id) }}" class="p-2 btn-link">
-                    < Volver a la rubrica </a>
+                    < Volver a la syllabus  </a>
             </li>
         </ol>
     </section>
 
     <div class="d-flex justify-content-start mb-4">
         {{-- Botón de Imprimir --}}
-        <button onclick="window.print()" class="btn btn-primary m-2 ">Imprimir Rúbrica</button>
+        <button onclick="window.print()" class="btn btn-primary m-2 ">Imprimir syllabus </button>
     </div>
 @endsection
 
@@ -46,7 +41,7 @@
 
 
     <div class="container">
-        <h1>Diseñador de Rúbrica - {{ $asignatura->nombre }}</h1>
+        <h1>Diseñador de syllabus  - {{ $asignatura->nombre }}</h1>
         <div class="card">
             <div class="card-body">
                 <table class="table table-bordered avoid-break">
@@ -110,13 +105,7 @@
                                                     ],
 
 
-                                                    [
-                                                        'name' => 'ponderacion',
-                                                        'type' => 'number',
-                                                        'value' => $ra->ponderacion,
-                                                        'label' => 'Ponderacion',
-                                                          'maxLength' => '3'
-                                                    ],
+
                                                 ]"
                                                     :idField="[
                                                     'errors'=> $errors->first('RAEditar'.$ra->id) ?? null,
@@ -184,7 +173,7 @@
                                     'value' => $asignatura->rubrica->id,
                                     'label' => '',
                                 ],
-                                ['name' => 'ponderacion', 'type' => 'number', 'label' => 'Ponderacion', 'maxLength' => '3'],
+                              
                             ]" />
                         </td>
                     </tr>
