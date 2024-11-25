@@ -76,4 +76,18 @@ class Asignaturas extends Model
     {
         return $this->hasMany(Asistencia::class, 'asignatura_id');
     }
+
+    protected static function booted()
+{
+    static::created(function ($asignatura) {
+        if (!$asignatura->rubrica) {
+            $asignatura->rubrica()->create([
+                'asignatura_id'=>$asignatura->id,
+                'nombre' => 'Rúbrica de ' . $asignatura->nombre,
+                'descripcion' => 'Descripción predeterminada para la rúbrica de esta asignatura.',
+            ]);
+        }
+    });
+}
+
 }

@@ -24,7 +24,19 @@ class RubricaController extends Controller
     // Verificar si tiene una rúbrica
     $tieneRubrica = $asignatura->rubrica !== null;
 
+    if (!$tieneRubrica) {
+        $asignatura->rubrica()->create([
+            'nombre' => 'Rúbrica de ' . $asignatura->nombre,
+            'asignatura_id' => 'Rúbrica de ' . $asignatura->id,
+            'descripcion' => 'Descripción predeterminada para la rúbrica de esta asignatura.',
+        ]);
 
+        // Recargar la relación para actualizar el estado
+        $asignatura->load('rubrica');
+
+        // Actualizar la variable para reflejar el cambio
+        $tieneRubrica = true;
+    }
     // Obtenemos los datos de la asignatura
     $asignatura = Asignaturas::findOrFail($id);
 

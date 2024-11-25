@@ -40,9 +40,9 @@
             {{-- Botón de Editar --}}
             <a href="{{ route('rubrica.editor', $asignatura->id) }}" class="btn btn-primary m-2">Editar syllabus</a>
         </div>
-        @else
-
         
+
+
     @endif
 
 @endsection
