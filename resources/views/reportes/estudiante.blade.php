@@ -27,9 +27,7 @@
                                  <a class="nav-link btn btn-link p-1" href="{{ route('graph', ['id' => $asignatura->id, 'student' => $estudiante->id]) }}">
                                 <i class="la la-chart-bar p-1"></i><small> Reporte grafico </small>
                             </a>
-                                 <a class="nav-link btn btn-link p-1" href="{{ route('estudianteReport', ['id' => $asignatura->id]) }}">
-                                <i class="la la-chart-bar p-1"></i> <small>Reporte documento</small>
-                            </a>
+                              
 
                         </td>
                         </tr>
