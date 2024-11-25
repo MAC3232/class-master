@@ -68,6 +68,17 @@ class EvaluarEstudianteController extends Controller
 
 
         $actividad = Actividad::with(['asignatura', 'rubrica.criterios', 'valoraciones.estudiante'])->findOrFail($actividad);
+        if ($actividad->rubrica == null) {
+            $actividad->rubrica()->create([
+                'nombre' => 'Rúbrica de ' . $actividad->nombre,
+                'actividad_id' => $actividad->id,
+                'descripcion' => 'Descripción predeterminada para la rúbrica de esta actividad.',
+            ]);
+
+            // Recargar la relación para actualizar el estado
+            $actividad->load('rubrica');
+
+        }
 
         $materia = $actividad->asignatura;
         $estudiante = $materia->students->findOrFail($id);

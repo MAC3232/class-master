@@ -28,6 +28,18 @@ class RubricaActividadController extends Controller
     // Buscar la actividad con su rúbrica y criterios
     $rubrica_actividad = Actividad::with('rubrica.criterios')->findOrFail($id);
 
+    if ($rubrica_actividad->rubrica == null) {
+        $rubrica_actividad->rubrica()->create([
+            'nombre' => 'Rúbrica de ' . $rubrica_actividad->nombre,
+            'actividad_id' => $rubrica_actividad->id,
+            'descripcion' => 'Descripción predeterminada para la rúbrica de esta actividad.',
+        ]);
+
+        // Recargar la relación para actualizar el estado
+        $rubrica_actividad->load('rubrica');
+
+    }
+
     if ($rubrica_actividad->rubrica) {
         return view('actividad.rubrica.show', compact('rubrica_actividad'));
     }
@@ -74,6 +86,17 @@ class RubricaActividadController extends Controller
 
 
         $rubrica_actividad = Actividad::with('rubrica.criterios')->findOrFail($id);
+        if ($rubrica_actividad->rubrica == null) {
+            $rubrica_actividad->rubrica()->create([
+                'nombre' => 'Rúbrica de ' . $rubrica_actividad->nombre,
+                'actividad_id' => $rubrica_actividad->id,
+                'descripcion' => 'Descripción predeterminada para la rúbrica de esta actividad.',
+            ]);
+
+            // Recargar la relación para actualizar el estado
+            $rubrica_actividad->load('rubrica');
+
+        }
 
 
 
