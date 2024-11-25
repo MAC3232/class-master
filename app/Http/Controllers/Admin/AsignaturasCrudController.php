@@ -113,14 +113,15 @@ class AsignaturasCrudController extends CrudController
         } else {
 
 
-           CRUD::addField([
-    'name' => 'facultad_id',
-    'label' => 'Facultades',
-    'type' => 'custom_facultas', // El nombre del componente personalizado
-    'attributes' => [
-        'placeholder' => 'Selecciona una asignatura',
-    ],
-]);
+            CRUD::addField([
+                'name' => 'facultad_id',
+                'label' => 'Facultad',
+                'type' => 'select',
+                'entity' => 'facultad', // Relación con Facultad
+                'attribute' => 'nombre', // Atributo que se mostrará
+                'model' => 'App\Models\Facultad', // Modelo de facultad
+            ]);
+
 
         }
         CRUD::addField([
