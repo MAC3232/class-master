@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\EstudiantesRequest;
 use App\Http\Requests\EstudiantesUpdateRequest;
+use App\Models\Asignaturas;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Illuminate\Support\Facades\Request;
 
 /**
  * Class EstudiantesCrudController
@@ -114,6 +116,29 @@ class EstudiantesCrudController extends CrudController
 
     }
 
+
+    public function obtenerAsignaturas(Request $request)
+    {
+        $search = $request->get('search', '');
+        $asignaturas = Asignaturas::when($search, function ($query, $search) {
+            $query->where('nombre', 'like', "%{$search}%")
+                  ->orWhere('codigo', 'like', "%{$search}%");
+        })->paginate(10);
+
+        return response()->json([
+            'data' => $asignaturas->items(), // Devuelve solo los elementos actuales
+            'pagination' => [
+                'current_page' => $asignaturas->currentPage(),
+                'last_page' => $asignaturas->lastPage(),
+                'per_page' => $asignaturas->perPage(),
+                'total' => $asignaturas->total(),
+                'links' => [
+                    'next' => $asignaturas->nextPageUrl(),
+                    'prev' => $asignaturas->previousPageUrl(),
+                ]
+            ]
+        ]);
+    }
 
 }
 

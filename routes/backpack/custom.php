@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\CriterioController;
 use App\Http\Controllers\admin\DescripcionCriterioNivelController;
 use App\Http\Controllers\admin\EjeContenidoController;
 use App\Http\Controllers\admin\EstrategiaController;
+use App\Http\Controllers\Admin\EstudiantesCrudController;
 use App\Http\Controllers\Admin\EvaluarEstudianteController;
 use App\Http\Controllers\admin\LevelController;
 use App\Http\Controllers\admin\QrAsistenciaController;
@@ -52,6 +53,7 @@ Route::group([
     Route::crud('user', 'UserCrudController');
     Route::crud('facultad', 'FacultadCrudController') ;
     Route::crud('carrera', 'CarreraCrudController');
+    Route::get('estudiantes/filter-assignments', [EstudiantesCrudController::class, 'obtenerAsignaturas'])->name('filter.assignments');
 
 
     Route::get('asignaturas/{id}/rubrica', [RubricaController::class, 'showDisenador'])
