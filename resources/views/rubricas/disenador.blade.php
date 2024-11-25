@@ -40,7 +40,11 @@
             {{-- Botón de Editar --}}
             <a href="{{ route('rubrica.editor', $asignatura->id) }}" class="btn btn-primary m-2">Editar syllabus</a>
         </div>
+        @else
+
+        
     @endif
+
 @endsection
 
 
@@ -529,7 +533,7 @@
 
     <div class="container mt-5">
         <p>No existe una rúbrica para esta asignatura.</p>
-        <a href="#" class="btn btn-primary" id="openModal">Crear Rúbrica</a>
+        <a href="#" class="btn btn-primary" id="openModal">Crear syllabus</a>
         <div id="rubricaModal" class="modal fade" tabindex="-1" role="dialog" style="display: none;">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
