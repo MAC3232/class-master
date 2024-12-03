@@ -10,10 +10,13 @@ class CalendarController extends Controller
 {
     public function index( Request $request )
     {
-      
+
+        if (!backpack_auth()->check() || !backpack_user()->hasRole('docente')) {
+            abort(403, 'No tienes permiso para acceder a esta sección.');
+        }
         $asignatura_id = $request->id;
-       
-        
+
+
         return view('calendar', compact('asignatura_id')); // Asegúrate de que esta vista exista en `resources/views/calendario/index.blade.php`
     }
 
@@ -38,10 +41,10 @@ class CalendarController extends Controller
      */
     public function show($id)
     {
-        
 
-        
-        
+
+
+
         $data['eventos'] = Evento::where('asignatura_id', $id)->get();
 return response()->json($data['eventos']);
     }

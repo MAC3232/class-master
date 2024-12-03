@@ -35,6 +35,7 @@ class AsignaturasCrudController extends CrudController
      */
     public function setup()
     {
+
         CRUD::setModel(\App\Models\Asignaturas::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/asignaturas');
         CRUD::setEntityNameStrings('asignaturas', 'asignaturas');
@@ -83,6 +84,9 @@ class AsignaturasCrudController extends CrudController
     protected function setupCreateOperation()
     {
 
+        if (!backpack_auth()->check() || !backpack_user()->hasRole('admin')) {
+            abort(403, 'No tienes permiso para acceder a esta sección.');
+        }
 
             CRUD::setValidation(AsignaturasRequest::class);
 
@@ -313,6 +317,9 @@ class AsignaturasCrudController extends CrudController
     }
     protected function setupUpdateOperation()
     {
+        if (!backpack_auth()->check() || !backpack_user()->hasRole('admin')) {
+            abort(403, 'No tienes permiso para acceder a esta sección.');
+        }
         $this->setupCreateOperation();
     }
 
