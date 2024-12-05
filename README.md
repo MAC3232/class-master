@@ -1,66 +1,117 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# Gestión Académica - Laravel
 
-## About Laravel
+Este es un sistema de gestión académica desarrollado en Laravel, diseñado para facilitar la administración de materias, estudiantes, actividades y rúbricas de evaluación en un entorno académico.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Características principales
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Roles de usuario**: Administrador y Docente.
+- **Gestión de materias**:
+  - Crear, editar y eliminar materias.
+  - Asignar docentes a materias.
+  - Visualización de materias 
+- **Gestión de estudiantes**:
+  - Registrar estudiantes y asociarlos a materias.
+- **Gestión de actividades**:
+  - Crear actividades asociadas a materias.
+  - Evaluar actividades utilizando rúbricas personalizadas.
+- **Disñador de syllabus**:
+  - crea syllabus de la asignatura
+  - crea los Ra de la asignatura
+- **Rúbricas de evaluación**:
+  - Rúbrica general por estudiante.
+  - Rúbricas específicas para actividades.
+- **Autenticación de usuarios**:
+  - Registro y login con roles definidos.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Tecnologías utilizadas
 
-## Learning Laravel
+- **Backend**: Laravel 10
+- **Frontend**: Blade Templates, HTML, CSS, Bootstrap
+- **Base de datos**: MySQL
+- **Servidor local**: XAMPP
+- **Panel administrativo**: Backpack
+- **Entorno de desarrollo**: Laragon (Windows)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Requisitos del sistema
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+1. PHP >= 8.1
+2. Composer
+3. MySQL
+4. Node.js y npm (opcional para recursos de frontend)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Instalación
 
-## Laravel Sponsors
+1. Clona este repositorio:
+   ```bash
+   git clone <url-del-repositorio>
+   ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+2. Ve al directorio del proyecto:
+   ```bash
+   cd gestion-academica
+   ```
 
-### Premium Partners
+3. Instala las dependencias de Composer:
+   ```bash
+   composer install
+   ```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+4. Configura el archivo `.env`:
+   - Copia el archivo de ejemplo:
+     ```bash
+     cp .env.example .env
+     ```
+   - Configura los valores para la conexión de la base de datos y otras variables necesarias.
 
-## Contributing
+5. Genera la clave de la aplicación:
+   ```bash
+   php artisan key:generate
+   ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+6. Crea un enlace simbólico para el almacenamiento:
+   ```bash
+   php artisan storage:link
+   ```
 
-## Code of Conduct
+7. Asegúrate de tener la base de datos configurada correctamente y ejecútala.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+8. Ejecuta las migraciones y semillas de la base de datos:
+   ```bash
+   php artisan migrate db:seed
+   ```
 
-## Security Vulnerabilities
+9. Inicia el servidor local:
+   ```bash
+   php artisan serve
+   ```
+## Credenciales de administrador predefinido
+Dado que el sistema no cuenta con una funcionalidad de registro se ha creado un usuario administrador predefinido:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Correo electrónico: admin@google.com
+Contraseña: admin
+Accede con estas credenciales para gestionar las materias, estudiantes, y demás funcionalidades administrativas.
 
-## License
+## Credenciales de Docente predefinido
+Dado que el sistema no cuenta con una funcionalidad de registro se ha creado un usuario docente predefinido:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Correo electrónico: docente@google.com
+Contraseña: docente
+Accede con estas credenciales para gestionar las materias, estudiantes, y demás funcionalidades administrativas.
+## Uso
+
+- Accede al sistema desde: [http://localhost:8000](http://localhost:8000)
+- Usa las credenciales de administrador o docente según el rol asignado durante el registro.
+
+## Estructura del proyecto
+
+- **Usuarios**: Administradores y docentes gestionan las asignaturas y actividades.
+- **Materias**: Listado, creación, edición y asignación de docentes.
+- **Estudiantes**: Relación con materias.
+- **Actividades y Rúbricas**: Evaluación de estudiantes.
+- **Panel administrativo**: Backpack se utilizó para facilitar la gestión de datos en el backend.
+
+## Contribuciones
+
+¡Las contribuciones son bienvenidas! Si deseas colaborar, crea un `fork` del proyecto, realiza tus cambios y envía un `pull request`.
+
