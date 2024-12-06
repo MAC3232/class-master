@@ -64,6 +64,7 @@ class AsignaturasCrudController extends CrudController
             // Quitar botones de edición y eliminación para el rol docente
             $this->crud->removeButton('update'); // Eliminar botón de editar
             $this->crud->removeButton('delete'); // Eliminar botón de eliminar
+            
         }
 
         // Filtrar asignaturas si el usuario es docente
