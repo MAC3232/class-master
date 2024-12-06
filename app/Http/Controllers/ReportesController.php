@@ -10,6 +10,10 @@ class ReportesController extends Controller
 {
     function index()
     {
+        if (!backpack_auth()->check() || !backpack_user()->hasRole('docente')) {
+            abort(403, 'No tienes permiso para acceder a esta sección.');
+        }
+
 
         $user = backpack_user()->id;
 
@@ -21,6 +25,9 @@ class ReportesController extends Controller
     function estudianteReport($id)
     {
 
+        if (!backpack_auth()->check() || !backpack_user()->hasRole('docente')) {
+            abort(403, 'No tienes permiso para acceder a esta sección.');
+        }
         $asignatura = Asignaturas::find($id);
         $estudiantes = $asignatura->students;
         return view('reportes.estudiante', compact('asignatura'));
@@ -31,6 +38,9 @@ class ReportesController extends Controller
 
     function  graph($id, $student)
     {
+        if (!backpack_auth()->check() || !backpack_user()->hasRole('docente')) {
+            abort(403, 'No tienes permiso para acceder a esta sección.');
+        }
         $corte = 1;
         $corteRequest = request('corte');
         if (isset($corteRequest)) {
