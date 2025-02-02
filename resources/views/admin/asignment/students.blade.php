@@ -4,6 +4,9 @@
 
 
 @php
+
+    $index = 0;
+
     $defaultBreadcrumbs = [
       trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dashboard'),
       $crud->entity_name_plural => url($crud->route),
@@ -66,6 +69,31 @@
 
         {{-- Contenedor principal con fondo blanco --}}
         <div class="card p-4 shadow-sm bg-light">
+        @if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+@if (session('import_success'))
+    <div class="alert alert-success">
+        <h4>Estudiante</h4>
+        <ul>
+            @foreach (session('import_success') as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+            @if (session('error'))
+    <div class="alert alert-danger">
+        <h4>⚠️ Errores en la Importación</h4>
+        <ul>
+            @foreach (session('error') as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
             <div class="float-end float-right d-flex justify-content-end mb-3">
                 <!-- Botón Añadir con Modal -->
                 <button class="m-1 btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAdd">
@@ -85,10 +113,12 @@
 
             <div class="container">
                 <div class="table-responsive">
+
                     <table class="table table-bordered">
                         <thead>
                             <tr>
 
+                                <th>N°</th>
                                 <th>Nombre</th>
                                 <th>Email</th>
                                 <th>Codigo</th>
@@ -99,6 +129,7 @@
                             @forelse($students as $student)
                                 <tr>
 
+                                    <td>{{$index+= 1}}</td>
                                     <td>{{ $student->nombre }}</td>
                                     <td>{{ $student->correo }}</td>
                                     <td>{{ $student->codigo_estudiantil }}</td>

@@ -10,6 +10,8 @@ use App\Models\Carrera;
 use App\Models\Estudiantes;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Facades\Excel;
 
 class AssignmentStudentController extends CrudController
@@ -27,8 +29,10 @@ public function index ($id){
 
     $carrer = Carrera::all();
 
+    $students = $asignatura->students()->orderBy( 'nombre','asc')->get();
 
-    return view('admin.asignment.students', ['crud' => $this->crud, 'students' =>  $asignatura->students,'carrers' => $carrer, 'asignatura' =>['nombre'=> $asignatura, 'id' => $id] ]);
+
+    return view('admin.asignment.students', ['crud' => $this->crud, 'students' =>  $students,'carrers' => $carrer, 'asignatura' =>['nombre'=> $asignatura, 'id' => $id] ]);
 
 
 
@@ -40,15 +44,23 @@ public function import(Request $request){
         'file' => 'required|file|mimes:csv,xlsx',
     ]);
 
-
+    Session::forget('error');
     try {
         Excel::import(new AsignaturaEstudianteImport($request->asignatura), $request->file('file'));
 
+        $errors = Session::get('error', []);
+        $success = Session::get('import_success', []);
+
+        return redirect()->back()->with([
+            'successImport' => 'Proceso de importación completado.',
+            'error' => $errors,
+            'import_success' => $success
+        ]);
 
         return redirect()->back()->with('successImport', 'Estudiantes importados correctamente.');
     } catch (\Exception $e) {
 
-        dd($e);
+        Log::error('Error en la importación: ' . $e->getMessage());
 
         return redirect()->back()->with('error', 'Error al importar el archivo: ' . $e->getMessage());
     }

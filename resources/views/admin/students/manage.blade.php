@@ -113,8 +113,34 @@
         </div>
 
         <!-- Importar Estudiantes -->
+
+
+
         <div class="col-md-6">
+
             <h4>Importar Estudiantes</h4>
+
+            @if (session('import_success'))
+    <div class="alert alert-success">
+        <h4>Estudiante</h4>
+        <ul>
+            @foreach (session('import_success') as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+            @if (session('import_errors'))
+    <div class="alert alert-danger">
+        <h4>⚠️ Errores en la Importación</h4>
+        <ul>
+            @foreach (session('import_errors') as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
             @if(session('successImport') ||  session('error') )
                 <div class="alert {{ session('successImport') ?  'alert-success' :  'alert-error' }}">{{ session('successImport') ?? session("error") }}</div>
             @endif

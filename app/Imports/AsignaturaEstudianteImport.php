@@ -7,6 +7,7 @@ use App\Models\Estudiantes;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 
 class AsignaturaEstudianteImport implements ToModel, WithHeadingRow
 {
@@ -31,7 +32,8 @@ class AsignaturaEstudianteImport implements ToModel, WithHeadingRow
 
         // Si no se encuentra, registrar el error y continuar con la siguiente fila
         if (!$student) {
-            Log::warning("El estudiante con el código {$code} no existe. Fila omitida.");
+            $error = "El estudiante con el codigo {$code} no se encuentra en el sistema";
+            Session::push('error', $error);
             return null;
         }
 
@@ -41,7 +43,7 @@ class AsignaturaEstudianteImport implements ToModel, WithHeadingRow
             ->exists();
 
         if ($exists) {
-            Log::info("El estudiante {$student->id} ya está inscrito en la asignatura {$this->assignment}. Fila omitida.");
+            
             return null;
         }
 

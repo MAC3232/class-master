@@ -8,6 +8,8 @@ use App\Models\Estudiantes;
 use Maatwebsite\Excel\Facades\Excel;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 
 class StudentManagementController extends CrudController
 {
@@ -60,23 +62,33 @@ class StudentManagementController extends CrudController
     }
 
     public function importStudents(Request $request)
-    {
-        $request->validate([
-            'file' => 'required|file|mimes:csv,xlsx',
+{
+    $request->validate([
+        'file' => 'required|file|mimes:csv,xlsx',
+    ]);
+
+    // Limpiar errores previos
+    Session::forget('import_errors');
+
+    try {
+        Excel::import(new StudentsImport($request->career_id), $request->file('file'));
+
+        // Verificar si hubo errores en la sesión
+        $errors = Session::get('import_errors', []);
+        $success = Session::get('import_success', []);
+
+
+        return redirect()->back()->with([
+            'successImport' => 'Proceso de importación completado.',
+            'import_errors' => $errors,
+            'import_success' => $success
         ]);
 
 
-        try {
-            Excel::import(new StudentsImport($request->career_id), $request->file('file'));
 
-            return redirect()->back()->with('successImport', 'Estudiantes importados correctamente.');
-        } catch (\Exception $e) {
-
-            return redirect()->back()->with('error', 'Error al importar el archivo: ' . $e->getMessage());
-        }
-
-
-
-        return redirect()->back()->with('success', 'Archivo importado correctamente.');
+        return redirect()->back()->with('successImport', '✅ Estudiantes importados correctamente.');
+    } catch (\Exception $e) {
+        return redirect()->back()->with('error', '❌ Error al importar el archivo: ' );
     }
+}
 }

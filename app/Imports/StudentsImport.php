@@ -5,7 +5,7 @@ namespace App\Imports;
 use App\Models\Estudiantes;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 
 class StudentsImport implements ToModel, WithHeadingRow
 {
@@ -18,32 +18,42 @@ class StudentsImport implements ToModel, WithHeadingRow
 
     public function model(array $row)
     {
-        // Convertir claves a mayúsculas para evitar problemas con encabezados
         $row = array_change_key_case($row, CASE_UPPER);
 
-        // Obtener datos del archivo
         $name = $row['NOMBRE'] ?? $row['NAME'] ?? null;
         $email = $row['CORREO'] ?? $row['EMAIL'] ?? null;
         $code = $row['CODIGO'] ?? $row['CODE'] ?? $row['CODIGO_ESTUDIANTIL'] ?? null;
         $dni = $row['CEDULA'] ?? $row['IDENTIFICACION'] ?? $row['DNI'] ?? null;
 
-        // Verificar si las columnas requeridas existen
-        if (!$name || !$email || !$code || !$dni) {
-            Log::warning("Fila omitida: datos incompletos (Nombre: {$name}, Email: {$email}, Código: {$code}, DNI: {$dni}).");
-            return null; // Omitir la fila
+        if (empty(trim($name)) && empty(trim($email)) && empty(trim($code)) && empty(trim($dni))) {
+            return null; // Ignorar esta fila completamente
         }
 
-        // Eliminar ceros a la izquierda en el código estudiantil
-        $code = ltrim($code, '0');
+        // Verificar si faltan datos
+        if (!$name || !$email || !$code || !$dni) {
+            $error = "❌ Fila omitida: Datos incompletos (Nombre: {$name}, Email: {$email}, Código: {$code}, DNI: {$dni}).";
+            Session::push('import_errors', $error);
+            return null;
+        }
 
         // Verificar si el estudiante ya existe
-        $exists = Estudiantes::where('codigo_estudiantil', $code)->exists();
-        if ($exists) {
-            Log::info("El estudiante con código {$code} ya existe. Fila omitida.");
-            return null; // Evitar duplicados
+        $existsCode = Estudiantes::where('codigo_estudiantil', $code)->exists();
+        $existsDni = Estudiantes::where('cedula', $dni)->exists();
+        $existsEmail = Estudiantes::where('correo', $email)->exists();
+
+        if ($existsCode ||$existsDni || $existsEmail ) {
+
+            $error = "⚠️ Estudiante {$name }  ya existe. Fila omitida.";
+
+            Session::push('import_errors', $error);
+            return null;
         }
 
-        // Crear y devolver un nuevo estudiante
+        $success = "✅ Estudiante {$name} con codigo {$code} fue agregado correctamente";
+
+        Session::push('success_imports', $success);
+
+        // Si todo está bien, crear el registro
         return new Estudiantes([
             'nombre' => $name,
             'cedula' => $dni,

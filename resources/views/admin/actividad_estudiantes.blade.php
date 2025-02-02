@@ -108,7 +108,7 @@
                                                                                                 $actividad->valoraciones->firstWhere(
                                                                                                     'estudiante_id',
                                                                                                     $estudiante->id,
-                                                                                                )->nota ?? null;
+                                                                                                )->nota ?? 0;
                                                                                         @endphp
                                                                                         {{ $notaEstudiante ?? 'N/A' }}
                                                                                     </td>
@@ -141,7 +141,7 @@
 
                                                                                             // Convertir a float
                                                                                             $valoracionEstudianteFloat = floatval(
-                                                                                                $valoracionEstudiante->nota,
+                                                                                                $valoracionEstudiante->nota ?? 0,
                                                                                             );
 
                                                                                         @endphp
