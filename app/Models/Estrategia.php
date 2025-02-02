@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Estrategia extends Model
 {
     protected $fillable = [
-        'descripcion', 
+        'descripcion',
         'ra_id',
     ];
 
@@ -17,3 +17,4 @@ class Estrategia extends Model
         return $this->belongsTo(RA::class);
     }
 }
+ 

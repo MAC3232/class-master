@@ -11,7 +11,7 @@ class Rubrica extends Model
 
     protected $table = 'rubricas';
     protected $fillable = [
-        'nombre', 
+        'nombre',
         'asignatura_id'
     ];
 
@@ -29,3 +29,4 @@ class Rubrica extends Model
 
 }
 
+ 

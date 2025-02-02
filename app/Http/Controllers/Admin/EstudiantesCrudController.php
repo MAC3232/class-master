@@ -43,6 +43,7 @@ class EstudiantesCrudController extends CrudController
      */
     protected function setupListOperation()
     {
+        $this->crud->addButtonFromView('top', 'create', 'add_estudiante', 'beginning');
         CRUD::setFromDb(); // set columns from db columns.
         $this->crud->removeColumn('carrera_id');
 

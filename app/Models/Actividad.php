@@ -11,10 +11,10 @@ class Actividad extends Model
 
     protected $table = 'actividades';
     protected $fillable = [
-        'nombre', 
-        'fecha', 
-        'ponderacion', 
-        'ra_id', 
+        'nombre',
+        'fecha',
+        'ponderacion',
+        'ra_id',
         'asignatura_id'
     ];
 
@@ -35,13 +35,13 @@ class Actividad extends Model
     {
         return $this->hasMany(Valoracion::class, 'actividad_id');
     }
-    
+
     public function estudiante()
 {
     return $this->belongsTo(Estudiantes::class);
 }
 
 
-    
+
 }
 

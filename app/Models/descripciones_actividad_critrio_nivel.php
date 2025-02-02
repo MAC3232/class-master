@@ -26,3 +26,4 @@ class descripciones_actividad_critrio_nivel extends Model
         return $this->belongsTo(niveles_desempeno_actividad::class);
     }
 }
+ 

@@ -8,7 +8,7 @@ class EjeContenido extends Model
 {
     protected $table = 'ejes_contenido';
     protected $fillable = [
-        'descripcion', 
+        'descripcion',
         'ra_id',
     ];
 
@@ -19,3 +19,4 @@ class EjeContenido extends Model
     }
 
 }
+ 

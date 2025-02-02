@@ -8,7 +8,7 @@ class Criterio extends Model
 
     protected $table = 'criterios';
     protected $fillable = [
-        'descripcion',  
+        'descripcion',
         'ra_id'
     ];
 

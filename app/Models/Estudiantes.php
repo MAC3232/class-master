@@ -28,11 +28,11 @@ class Estudiantes extends Model
     {
         return $this->hasMany(Valoracion::class, 'estudiante_id');
     }
-   
+
 
     public function assignments()
     {
         return $this->belongsToMany(Asignaturas::class, 'asignatura_estudiante' , 'estudiante_id', 'asignatura_id');
     }
 }
-
+ 

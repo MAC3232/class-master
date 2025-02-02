@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Admin\AsignaturasCrudController;
 use App\Http\Controllers\admin\AsistenciaController;
-use App\Http\Controllers\admin\CalendarController;
+use App\Http\Controllers\Admin\AssignmentStudentController;
 use App\Http\Controllers\admin\CriterioActividadController;
 use App\Http\Controllers\Admin\CriterioController;
 use App\Http\Controllers\admin\DescripcionCriterioNivelController;
@@ -14,6 +14,7 @@ use App\Http\Controllers\admin\LevelController;
 use App\Http\Controllers\admin\QrAsistenciaController;
 use App\Http\Controllers\admin\RAController;
 use App\Http\Controllers\admin\RubricaActividadController;
+use App\Http\Controllers\Admin\StudentManagementController;
 use App\Http\Controllers\ReportesController;
 use App\Http\Controllers\RubricaController;
 use App\Models\Asignaturas;
@@ -35,8 +36,20 @@ Route::group([
 
     ),
     'namespace' => 'App\Http\Controllers\Admin',
-], function () { // custom admin routes
+], function () {
 
+    // custom admin routes
+    Route::get('students/manage', [StudentManagementController::class, 'index'])->name('students.manage');
+    Route::post('students/manage/onlystudent', [StudentManagementController::class, 'storeSingleStudent'])->name('only.students');
+    Route::post('students/manage/importStudents', [StudentManagementController::class, 'importStudents'])->name('import.students');
+
+
+    Route::get('/studentsassigment', [AssignmentStudentController::class, 'ListCheckEstudentsView']);
+    Route::delete('/asignaturas/{asignatura_id}/estudiantes/{estudiante_id}', [AssignmentStudentController::class, 'DeleteStudentAsigment']);
+    Route::post('/estudiantes/materia', [AssignmentStudentController::class, 'AssigmentStoreEstudents']);
+    Route::get('assignment/{id}/students', [AssignmentStudentController::class, 'index'])->name('assignment.students');
+    
+    Route::post('assignment/{id}/students/import', [AssignmentStudentController::class, 'import'])->name('assignment.students.import');
 
     Route::get('/facultad/{id}/carreras', [AsignaturasCrudController::class, 'getCarrerasByFacultad']);
     Route::get('/carrera/{id}/asignaturas', [AsignaturasCrudController::class, 'getAsignaturasByCarrera']);
@@ -107,10 +120,6 @@ Route::group([
         ->name('save.valoracion');
 
 
-
-
-    // En routes/backpack/custom.php o routes/web.php
-
     Route::crud('actividad', 'ActividadCrudController');
 
     Route::get('actividad/{id}/rubrica/', [RubricaActividadController::class, 'show'])
@@ -150,8 +159,6 @@ Route::group([
 
     // Route::get('/calendario/{id}', [CalendarController::class, 'index'])->name('calendario');
      Route::resource('/assignment/calendario', 'CalendarController');
-
-
 
 
 }); // this should be the absolute last line of this file

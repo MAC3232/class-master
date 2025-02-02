@@ -27,3 +27,4 @@ class niveles_desempeno_actividad extends Model
         return $this->hasMany(descripciones_actividad_critrio_nivel::class, 'nivel_desempeno_id');
     }
 }
+ 

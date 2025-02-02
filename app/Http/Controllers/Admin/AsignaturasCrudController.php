@@ -3,16 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\AsignaturasRequest;
-use App\Http\Requests\AsignaturasUpdateRequest;
-use App\Http\Requests\EstudiantesUpdateRequest;
 use App\Models\Asignaturas;
 use App\Models\Carrera;
-use App\Models\Facultad;
-use App\Models\NivelFormacion;
-use App\Models\User;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
-use Doctrine\DBAL\Query;
 use Illuminate\Support\Facades\Request;
 
 /**
@@ -45,6 +39,9 @@ class AsignaturasCrudController extends CrudController
             'icon' => 'warning', // Puedes personalizar el icono también
             'buttons' => ['cancel' => 'Cancelar', 'confirm' => 'Eliminar'],
         ]);
+
+
+
     }
 
 
@@ -64,7 +61,7 @@ class AsignaturasCrudController extends CrudController
             // Quitar botones de edición y eliminación para el rol docente
             $this->crud->removeButton('update'); // Eliminar botón de editar
             $this->crud->removeButton('delete'); // Eliminar botón de eliminar
-            
+
         }
 
         // Filtrar asignaturas si el usuario es docente
@@ -369,6 +366,7 @@ class AsignaturasCrudController extends CrudController
         // borones action
         $this->crud->addButtonFromView('line', 'asistencia', 'asistencia');
         $this->crud->addButtonFromView('line', 'activity', 'actividad');
+        $this->crud->addButtonFromView('line', 'assigment_students', 'assigment_students', 'beginning');
 
         // eliminar campos select
         $this->crud->removeColumn('facultad_id');

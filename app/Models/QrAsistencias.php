@@ -20,7 +20,7 @@ class QrAsistencias extends Model
     ];
 
     // Genera automáticamente un token único de 64 caracteres al crear una nueva entrada
-   
+
 
     /**
      * Relación con la asignatura.
@@ -38,3 +38,4 @@ class QrAsistencias extends Model
         return $this->hasMany(Asistencia::class);
     }
 }
+ 

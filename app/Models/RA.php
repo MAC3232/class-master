@@ -9,9 +9,9 @@ class RA extends Model
 
     protected $table = 'ra';
     protected $fillable = [
-        'nombre', 
-        'ponderacion', 
-        'descripcion', 
+        'nombre',
+        'ponderacion',
+        'descripcion',
         'corte',
         'rubrica_id'
     ];
@@ -24,7 +24,7 @@ class RA extends Model
     public function criterios()
     {
         return $this->hasMany(Criterio::class, 'ra_id');
-    }
+    } 
     public function actividades()
     {
         return $this->hasMany(Actividad::class, 'ra_id');

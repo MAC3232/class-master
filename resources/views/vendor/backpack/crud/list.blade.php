@@ -99,13 +99,14 @@
                     data-visible-in-export="{{ $exportOnlyColumn ? 'true' : ($visibleInExport ? 'true' : 'false') }}"
                     data-force-export="{{ var_export($forceExport) }}"
                   >
-                    {{-- Bulk checkbox --}}
-                    @if($loop->first && $crud->getOperationSetting('bulkActions'))
-                      {!! View::make('crud::columns.inc.bulk_actions_checkbox')->render() !!}
+                  {{-- Bulk checkbox --}}
+                  @if($loop->first && $crud->getOperationSetting('bulkActions'))
+                  {!! View::make('crud::columns.inc.bulk_actions_checkbox')->render() !!}
+
                     @endif
                     {!! $column['label'] !!}
                   </th>
-                @endforeach
+                  @endforeach
 
                 @if ( $crud->buttons()->where('stack', 'line')->count() )
                   <th data-orderable="false"
@@ -113,8 +114,9 @@
                       data-visible-in-export="false"
                       data-action-column="true"
                       >
-                      
+
                       {{ trans('backpack::crud.actions') }}
+
                     </th>
                 @endif
               </tr>
@@ -125,7 +127,8 @@
               <tr>
                 {{-- Table columns --}}
                 @foreach ($crud->columns() as $column)
-                  <th>
+
+                <th>
                     {{-- Bulk checkbox --}}
                     @if($loop->first && $crud->getOperationSetting('bulkActions'))
                       {!! View::make('crud::columns.inc.bulk_actions_checkbox')->render() !!}
@@ -136,12 +139,12 @@
 
                 @if ( $crud->buttons()->where('stack', 'line')->count() )
                   <th>{{ trans('backpack::crud.actions') }}</th>
+
                 @endif
               </tr>
             </tfoot>
           </table>
         </div>
-
         @if ( $crud->buttons()->where('stack', 'bottom')->count() )
             <div id="bottom_buttons" class="d-print-none text-sm-left">
                 @include('crud::inc.button_stack', ['stack' => 'bottom'])

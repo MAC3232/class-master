@@ -26,3 +26,4 @@ protected $table = 'criterios_actividad';
         return $this->hasMany(descripciones_actividad_critrio_nivel::class, 'criterio_id');
     }
 }
+ 

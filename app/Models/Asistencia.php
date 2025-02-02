@@ -38,4 +38,4 @@ class Asistencia extends Model
         return $this->belongsTo(QrAsistencias::class, 'asignatura_id', 'asignatura_id');
     }
 }
-
+ 

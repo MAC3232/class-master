@@ -30,4 +30,4 @@ class Carrera extends Model
     return $this->hasMany(Asignaturas::class, 'carrera_id');
 }
 
-}
+} 

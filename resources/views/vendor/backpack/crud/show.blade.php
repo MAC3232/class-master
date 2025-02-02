@@ -33,20 +33,22 @@
 		  </div>
 
         </section>
-
-        <a href="javascript: window.print();" class="btn float-end float-right "><i class="la la-print"></i></a>
-
-    </div>
-	@if(Route::is('asignaturas.show'))
+<div class="float-end float-right ">
+        <a href="javascript: window.print();" style="margin-left:10px" class=" p-2 btn h-100   float-end float-right "><i class="la la-print fs-1"></i></a>
+@if(Route::is('asignaturas.show'))
 
     @if (!backpack_auth()->check() || !backpack_user()->hasRole('admin'))
-	<a href="{{ url('/admin/assignment/calendario?id='. $entry->getKey() ) }}" class="btn btn-primary">
-    <i class="la la-calendar"></i> Ver Calendario
+	<a href="{{ url('/admin/assignment/calendario?id='. $entry->getKey() ) }}" class=" p-2 btn h-100  btn-primary">
+    <i class="la la-calendar fs-1"></i>
 
     @endif
 </a>
 
 		  @endif
+</div>
+
+    </div>
+
 @endsection
 
 
@@ -86,7 +88,7 @@
 
     @if (!backpack_auth()->check() || !backpack_user()->hasRole('admin'))
 
-    
+
         @if(Route::is('asignaturas.show'))
         <a href="{{ route('rubrica.disenador', $entry->getKey()) }}" class="btn btn-primary m-1">
         Diseñador de syllabus
