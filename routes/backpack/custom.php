@@ -48,7 +48,7 @@ Route::group([
     Route::delete('/asignaturas/{asignatura_id}/estudiantes/{estudiante_id}', [AssignmentStudentController::class, 'DeleteStudentAsigment']);
     Route::post('/estudiantes/materia', [AssignmentStudentController::class, 'AssigmentStoreEstudents']);
     Route::get('assignment/{id}/students', [AssignmentStudentController::class, 'index'])->name('assignment.students');
-    
+
     Route::post('assignment/{id}/students/import', [AssignmentStudentController::class, 'import'])->name('assignment.students.import');
 
     Route::get('/facultad/{id}/carreras', [AsignaturasCrudController::class, 'getCarrerasByFacultad']);
@@ -103,6 +103,7 @@ Route::group([
     Route::put('/ejes-contenido/update/{id}', [EjeContenidoController::class, 'update'])->name('eje_contenido.update');
     Route::delete('/ejes-contenido/destroy/{id}', [EjeContenidoController::class, 'destroy'])->name('eje_contenido.destroy');
 
+    Route::post('/selectcriterios', [EvaluarEstudianteController::class,  'storeSelectCriterioEstudent'] );
 
     Route::get('asignaturas/{id}/evaluar-estudiante', [EvaluarEstudianteController::class, 'evaluarEstudiantes'])
         ->name('evaluar.estudiante');

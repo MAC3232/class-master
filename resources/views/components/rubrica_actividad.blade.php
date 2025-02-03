@@ -116,13 +116,50 @@ if (!is_null($valoracionEstudiante) && !is_null($valoracionEstudiante->nota)) {
                     @foreach ($rubrica_actividad->rubrica->criterios as $criterios)
                     <tr data-criterio-id="{{ $criterios->id }}">
                         <td>{{ $criterios->descripcion }}</td>
+
+                        @php
+        // Buscar si este criterio ya tiene un nivel seleccionado por el estudiante
+        
+        if($evalueRubrica){
+
+            $nivelSeleccionado = $seleccionados->firstWhere('criterio_id', $criterios->id);
+        }
+    @endphp
                         @foreach ($rubrica_actividad->rubrica->nivelesDesempeno as $nivel)
                         @php
                         $descripcionEncontrada = $nivel->descripciones->firstWhere('criterio_id', $criterios->id);
                         @endphp
-                        <td data-criterio-id="{{ $criterios->id }}" data-nivel-id="{{ $nivel->id }}">
+
+
+                        <td data-criterio-id="{{ $criterios->id }}"  class="justify-content-between {{  $evalueRubrica && $nivelSeleccionado && $nivelSeleccionado->nivel_desempeno_id == $nivel->id ? 'seleccionado' : '' }}" data-nivel-id="{{ $nivel->id }}">
                             @if ($descripcionEncontrada)
-                            {{ $descripcionEncontrada->descripcion }}
+
+
+                            <div class="d-flex justify-content-between  ">
+
+                            <div class="">
+                                {{ $descripcionEncontrada->descripcion }}
+
+                            </div>
+
+                            @if ($evalueRubrica ?? false)
+
+                            <div class="btn-group flex-column">
+        <button class="btn btn-link btn-sm fs-3" onclick="marcarCriterio('{{ $criterios->id }}', '{{ $nivel->id }}', '{{$estudiante}}')">
+            <i class="la la-check"></i>
+        </button>
+        <button class="btn btn-link btn-sm fs-3" onclick="desmarcarCriterio('{{ $criterios->id }}', '{{ $nivel->id }}')">
+            <i class="la la-times"></i>
+        </button>
+        <button class="btn btn-link btn-sm fs-3" onclick="accionPersonalizada('{{ $criterios->id }}', '{{ $nivel->id }}')">
+            <i class="la la-cog"></i>
+        </button>
+    </div>
+                            @endif
+
+                            </div>
+
+
                             @else
                             <button onclick="showCustomModal('descripcion', '{{ $criterios->id }}', '{{ $nivel->id }}')" class="btn btn-sm btn-link">
                                 <i class="la la-plus"></i> Agregar descripción aquí
@@ -217,3 +254,6 @@ if (!is_null($valoracionEstudiante) && !is_null($valoracionEstudiante->nota)) {
         </div>
     </div>
 </div>
+
+
+

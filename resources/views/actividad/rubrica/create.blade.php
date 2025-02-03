@@ -1,5 +1,7 @@
 @extends(backpack_view('blank'))
 
+
+
 @section('header')
 <h1 style="color: white;">Crear Nueva Rúbrica para la actividad: {{ $actividad->nombre }}</h1>
 

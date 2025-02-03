@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Actividad;
 use App\Models\Asignaturas;
+use App\Models\SelectCriterioEstudent;
 use App\Models\Valoracion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -32,6 +33,7 @@ class EvaluarEstudianteController extends Controller
         if($isAsignatura){
         $asignatura = Asignaturas::with('actividades')->findOrFail($actividad);
         $estudiantes = $asignatura->students;
+
         return view('admin.evaluar_estudiantes', compact('estudiantes', 'asignatura', 'isAsignatura'));
 
         }
@@ -82,10 +84,14 @@ class EvaluarEstudianteController extends Controller
 
         $materia = $actividad->asignatura;
         $estudiante = $materia->students->findOrFail($id);
+        $criterios = $actividad->rubrica->criterios;
+        $seleccionados = SelectCriterioEstudent::where('estudiante_id', $id)
+        ->whereIn('criterio_id', $criterios->pluck('id')) // Solo los criterios de la rúbrica
+        ->get();
 
 
         // Retorna la vista de evaluación, pasando los estudiantes y la materia
-        return view('admin.evaluar_actividad', compact('actividad', 'materia', 'estudiante'));
+        return view('admin.evaluar_actividad', compact('actividad', 'materia', 'estudiante', 'seleccionados'));
     }
     public function actividades($actividad, $id)
     {
@@ -129,6 +135,39 @@ class EvaluarEstudianteController extends Controller
         Alert::success('Evaluado correctamente en '.$request->input('nota') )->flash();
         return response()->json($valoracion, 201);
     }
+
+
+
+
+    public function storeSelectCriterioEstudent(Request $request){
+
+
+
+
+        try {
+            $validated = $request->validate([
+                'usuario_id' => 'required|exists:estudiantes,id',
+                'criterio_id' => 'required|exists:criterios_actividad,id',
+                'nivel_desempeno_id' => 'required|exists:niveles_desempeno_actividad,id',
+            ]);
+
+
+            $registro = SelectCriterioEstudent::updateOrCreate(
+                ['estudiante_id' => $validated['usuario_id'],
+                'criterio_id' => $validated['criterio_id'],
+                'nivel_desempeno_id' => $validated['nivel_desempeno_id']
+
+            ],
+
+            );
+
+            return response()->json(['success' => true, 'data' => $registro]);
+
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => $e->getMessage()]);
+        }
+    }
+
 
 }
 

@@ -2,7 +2,9 @@
 
 
 
-
+@php
+$evalueRubrica= false;
+@endphp
 
 @section('header')
 <style>
