@@ -103,7 +103,7 @@ $evalueRubrica = true;
                     dataType: 'json',
                     success: function(response) {
                         console.log(response);
-
+                        // location.reload();
                         document.getElementById('note-view').innerHTML = response;
 
                         let criterio = document.getElementById(`seleccionar_criterio${criterioId}${nivelDesempenoId}`);
