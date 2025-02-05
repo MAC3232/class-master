@@ -12,8 +12,7 @@ class niveles_desempeno_actividad extends Model
     protected $table = 'niveles_desempeno_actividad';
     protected $fillable = [
         'nombre',
-        'puntaje_inicial',
-        'puntaje_final',
+        'puntos',
         'rubrica_actividad_id'
     ];
 
@@ -27,4 +26,3 @@ class niveles_desempeno_actividad extends Model
         return $this->hasMany(descripciones_actividad_critrio_nivel::class, 'nivel_desempeno_id');
     }
 }
- 

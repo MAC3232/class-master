@@ -8,7 +8,7 @@
 
             <button class="btn btn-success" onclick="showCustomModal('calificar')"> Calificar / Ver </button>
             @php
-    $puntaje = 4.5; // Aquí puedes poner el puntaje obtenido del estudiante
+    $puntaje = 4.5;
 @endphp
 @php
 // Obtener la valoración del estudiante para la actividad
@@ -36,6 +36,9 @@ if (!is_null($valoracionEstudiante) && !is_null($valoracionEstudiante->nota)) {
             $estudianteEnNivel = $nota >= $nivel->puntaje_inicial && $nota <= $nivel->puntaje_final;
         }
 
+
+
+
         // Definir el estado y la clase según el puntaje
         $nivelEstado = '';
         $nivelClase = '';
@@ -57,6 +60,7 @@ if (!is_null($valoracionEstudiante) && !is_null($valoracionEstudiante->nota)) {
 
     @endphp
 
+
     <th class="text-center" data-nivel-id="{{ $nivel->id }}">
         <div>
            <!-- Nombre del nivel -->
@@ -68,6 +72,7 @@ if (!is_null($valoracionEstudiante) && !is_null($valoracionEstudiante->nota)) {
 
         @if (  isset($estudianteEnNivel) && $estudianteEnNivel )
             <div class="alert {{ $nivelClase }}" role="alert">
+                <div id="note-view">s</div>
                 Nivel:  {{$nivel->nombre}}  ({{$nivel->puntaje_inicial}} - {{$nivel->puntaje_final}}) (Puntaje: {{ $nota }})
             </div>
         @endif
@@ -78,7 +83,8 @@ if (!is_null($valoracionEstudiante) && !is_null($valoracionEstudiante->nota)) {
     <!-- Si el estudiante no está en ningún nivel, mostrar mensaje con color azul o morado -->
     <th class="text-center">
         <div class="alert alert-info" role="alert">
-            No hay un rango estipulado para esta nota (Puntaje: {{ $nota ?? '' }})
+
+            No hay un rango estipulado para esta nota (Puntaje: <span id="note-view">{{ $nota ?? '' }}</span> )
         </div>
     </th>
 @endif
@@ -104,7 +110,8 @@ if (!is_null($valoracionEstudiante) && !is_null($valoracionEstudiante->nota)) {
 
                             <div>
 
-                                {{$nivel->puntaje_inicial}} - {{$nivel->puntaje_final}}
+                                {{$nivel->puntos}}
+
                             </div>
                         </th>
 
@@ -119,7 +126,7 @@ if (!is_null($valoracionEstudiante) && !is_null($valoracionEstudiante->nota)) {
 
                         @php
         // Buscar si este criterio ya tiene un nivel seleccionado por el estudiante
-        
+
         if($evalueRubrica){
 
             $nivelSeleccionado = $seleccionados->firstWhere('criterio_id', $criterios->id);
@@ -131,7 +138,7 @@ if (!is_null($valoracionEstudiante) && !is_null($valoracionEstudiante->nota)) {
                         @endphp
 
 
-                        <td data-criterio-id="{{ $criterios->id }}"  class="justify-content-between {{  $evalueRubrica && $nivelSeleccionado && $nivelSeleccionado->nivel_desempeno_id == $nivel->id ? 'seleccionado' : '' }}" data-nivel-id="{{ $nivel->id }}">
+                        <td data-criterio-id="{{ $criterios->id }}" id="seleccionar_criterio{{$criterios->id}}{{$nivel->id}}"  class="justify-content-between {{  $evalueRubrica && $nivelSeleccionado && $nivelSeleccionado->nivel_desempeno_id == $nivel->id ? 'seleccionado' : '' }}" data-nivel-id="{{ $nivel->id }}">
                             @if ($descripcionEncontrada)
 
 
@@ -145,7 +152,7 @@ if (!is_null($valoracionEstudiante) && !is_null($valoracionEstudiante->nota)) {
                             @if ($evalueRubrica ?? false)
 
                             <div class="btn-group flex-column">
-        <button class="btn btn-link btn-sm fs-3" onclick="marcarCriterio('{{ $criterios->id }}', '{{ $nivel->id }}', '{{$estudiante}}')">
+        <button class="btn btn-link btn-sm fs-3" onclick="marcarCriterio('{{ $criterios->id }}', '{{ $nivel->id }}', '{{$estudiante}}', '{{$rubrica_actividad->id}}')">
             <i class="la la-check"></i>
         </button>
         <button class="btn btn-link btn-sm fs-3" onclick="desmarcarCriterio('{{ $criterios->id }}', '{{ $nivel->id }}')">

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Actividad;
 use App\Models\Asignaturas;
+use App\Models\Estudiantes;
+use App\Models\niveles_desempeno_actividad;
 use App\Models\SelectCriterioEstudent;
 use App\Models\Valoracion;
 use Illuminate\Http\Request;
@@ -141,20 +143,30 @@ class EvaluarEstudianteController extends Controller
 
     public function storeSelectCriterioEstudent(Request $request){
 
-
-
-
         try {
             $validated = $request->validate([
                 'usuario_id' => 'required|exists:estudiantes,id',
                 'criterio_id' => 'required|exists:criterios_actividad,id',
+                'rubrica_id' => 'required|exists:rubrica_actividad,id',
                 'nivel_desempeno_id' => 'required|exists:niveles_desempeno_actividad,id',
             ]);
+
+            $seleccionActual = SelectCriterioEstudent::where('criterio_id', $validated['criterio_id'] )
+            ->where('estudiante_id', $validated['usuario_id'])
+            ->first();
+
+            if ($seleccionActual) {
+
+                $seleccionActual->delete();
+            }
+
+
 
 
             $registro = SelectCriterioEstudent::updateOrCreate(
                 ['estudiante_id' => $validated['usuario_id'],
                 'criterio_id' => $validated['criterio_id'],
+                'rubrica_actividad_id' =>   $validated['rubrica_id'] ,
                 'nivel_desempeno_id' => $validated['nivel_desempeno_id']
 
             ],
@@ -166,6 +178,39 @@ class EvaluarEstudianteController extends Controller
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'error' => $e->getMessage()]);
         }
+    }
+
+
+    public function getNoteStudent($actividad, $student){
+        // Maximo de puntos posibles
+        $rubricaActividad = Actividad::with('rubrica.nivelesDesempeno')->findOrFail($actividad);
+        $criteriosAmount = $rubricaActividad->rubrica->criterios->count();
+        $maxNivel = $rubricaActividad->rubrica->nivelesDesempeno->sortByDesc('puntos')->first();
+        $pointMax = $criteriosAmount * $maxNivel->puntos;
+        $rubrica = $rubricaActividad->rubrica->id;
+
+
+        $students = SelectCriterioEstudent::where('estudiante_id', $student)
+        ->where('rubrica_actividad_id', $rubrica)
+        ->get();
+
+
+        $note = 0;
+        foreach ($students as $key => $value) {
+
+
+            $nivel = niveles_desempeno_actividad::find($value->nivel_desempeno_id);
+
+            if ($nivel) {
+
+                $note+= $nivel->puntos ;
+            }
+        }
+
+        $noteActivity = (  $note / $pointMax) * 5 ;
+
+        return response()->json($noteActivity);
+
     }
 
 

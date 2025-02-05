@@ -17,6 +17,11 @@ class rubrica_actividad extends Model
     {
         return $this->hasMany(criterios_actividad::class);
     }
+
+    public function selectstudent()
+    {
+        return $this->hasMany(SelectCriterioEstudent::class);
+    }
       public function nivelesDesempeno()
     {
         return $this->hasMany(niveles_desempeno_actividad::class, 'rubrica_actividad_id');

@@ -10,11 +10,16 @@ class SelectCriterioEstudent extends Model
     use HasFactory;
 
     protected $table = 'criterio_desempeno_estudiante';
-    protected $fillable = ['estudiante_id', 'criterio_id', 'nivel_desempeno_id'];
+    protected $fillable = ['estudiante_id', 'criterio_id', 'nivel_desempeno_id', 'rubrica_actividad_id'];
 
     // Relación con Usuario
     public function student() {
         return $this->belongsTo(Estudiantes::class);
+    }
+
+    public function rubrica()
+    {
+        return $this->belongsTo(rubrica_actividad::class );
     }
 
     // Relación con Criterio

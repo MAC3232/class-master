@@ -51,7 +51,7 @@ class UserCrudController extends CrudController
             'type' => 'select_multiple', // Cambiamos a 'select_multiple' que viene con Backpack FREE
             'entity' => 'roles', // Relación en el modelo User
             'attribute' => 'name', // Atributo del rol que queremos mostrar (nombre del rol)
-            'model' => "Spatie\Permission\Models\Role", // Modelo de roles
+            'model' => "Spatie\Permission\Models\Role",
         ]);
 
         // Añadir campos
@@ -98,6 +98,7 @@ class UserCrudController extends CrudController
     {
         CRUD::setValidation(UserRequest::class);
         CRUD::setFromDb(); // set fields from db columns.
+
         CRUD::field('password')->type('password')->label('Contraseña');
         CRUD::field('password')->type('password')->label('Contraseña');
 
@@ -118,6 +119,7 @@ class UserCrudController extends CrudController
      */
     protected function setupUpdateOperation()
     {
+        
         $this->setupCreateOperation();
     }
 }

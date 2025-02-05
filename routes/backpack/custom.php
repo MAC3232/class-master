@@ -104,6 +104,7 @@ Route::group([
     Route::delete('/ejes-contenido/destroy/{id}', [EjeContenidoController::class, 'destroy'])->name('eje_contenido.destroy');
 
     Route::post('/selectcriterios', [EvaluarEstudianteController::class,  'storeSelectCriterioEstudent'] );
+    Route::get('/actividad/{actividad}/evaluatestudent/{student}', [EvaluarEstudianteController::class,  'getNoteStudent'] );
 
     Route::get('asignaturas/{id}/evaluar-estudiante', [EvaluarEstudianteController::class, 'evaluarEstudiantes'])
         ->name('evaluar.estudiante');

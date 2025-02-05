@@ -18,7 +18,7 @@ protected $table = 'criterios_actividad';
 
     public function rubrica()
     {
-        return $this->belongsTo(rubrica_actividad::class, );
+        return $this->belongsTo(rubrica_actividad::class );
     }
 
     public function descripciones()
@@ -26,4 +26,3 @@ protected $table = 'criterios_actividad';
         return $this->hasMany(descripciones_actividad_critrio_nivel::class, 'criterio_id');
     }
 }
- 
