@@ -2,7 +2,7 @@
 
 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('dashboard') }}"><i class="la la-home nav-icon"></i> Inicio</a></li>
 
-<x-backpack::menu-item title="Asignaturas" icon="la la-book" :link="backpack_url('asignaturas')" />
+<x-backpack::menu-item title="Asignaturas" icon="la la-book" :link="backpack_url('courses')" />
 @if (  backpack_user()->hasRole('docente')   )
 
 {{-- Nueva opción de menú personalizada fuera de Backpack --}}
