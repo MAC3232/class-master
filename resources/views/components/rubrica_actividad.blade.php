@@ -11,10 +11,9 @@
     $puntaje = 4.5;
 @endphp
 @php
-// Obtener la valoración del estudiante para la actividad
+
 $valoracionEstudiante = $rubrica_actividad->valoraciones->firstWhere('estudiante_id', $estudiante);
 
-// Convertir a float
 
 if (!is_null($valoracionEstudiante) && !is_null($valoracionEstudiante->nota)) {
     // $valoracionEstudiante->nota tiene un valor

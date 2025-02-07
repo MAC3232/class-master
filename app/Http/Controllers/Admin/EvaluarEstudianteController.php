@@ -209,6 +209,15 @@ class EvaluarEstudianteController extends Controller
 
         $noteActivity = (  $note / $pointMax) * 5 ;
 
+$valoracion = Valoracion::updateOrCreate(
+            [
+                'actividad_id' => $rubricaActividad->id,
+                'estudiante_id' => $student
+            ],
+            [
+                'nota' => $noteActivity
+            ]
+        );
         return response()->json($noteActivity);
 
     }

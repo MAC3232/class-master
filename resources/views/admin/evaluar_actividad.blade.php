@@ -85,7 +85,7 @@ $evalueRubrica = true;
         console.log(actividad);
 
         $.ajax({
-            url: '/admin/selectcriterios', // Ruta donde se envían los datos
+            url: '/admin/selectcriterios', 
             type: 'POST',
             data: {
                 usuario_id: usuarioId,
