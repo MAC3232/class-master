@@ -46,6 +46,7 @@ public function import(Request $request){
 
     Session::forget('error');
     try {
+
         Excel::import(new AsignaturaEstudianteImport($request->asignatura), $request->file('file'));
 
         $errors = Session::get('error', []);
@@ -59,10 +60,10 @@ public function import(Request $request){
 
         return redirect()->back()->with('successImport', 'Estudiantes importados correctamente.');
     } catch (\Exception $e) {
+        
 
-        Log::error('Error en la importación: ' . $e->getMessage());
+        return redirect()->back()->with('error', '❌ Error al importar el archivo: ' );
 
-        return redirect()->back()->with('error', 'Error al importar el archivo: ' . $e->getMessage());
     }
 
 

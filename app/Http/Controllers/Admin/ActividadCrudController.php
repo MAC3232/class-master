@@ -117,6 +117,7 @@ class ActividadCrudController extends CrudController
         $this->crud->addField(['name' => 'nombre', 'label' => 'Nombre', 'type' => 'text']);
         $this->crud->addField(['name' => 'descripcion', 'label' => 'Descripción', 'type' => 'textarea']);
 
+
         $this->crud->addField([
             'name' => 'asignatura_id',
             'type' => 'hidden',
@@ -137,6 +138,7 @@ class ActividadCrudController extends CrudController
 
 
         $rubrica = Rubrica::where('asignatura_id', $asignatura_id)->first();
+        CRUD::addField(['name' => 'ponderacion', 'label' => 'ponderacion (%)', 'type' => 'text']);
 
         // dd($rubrica->id);
         $this->crud->addField([

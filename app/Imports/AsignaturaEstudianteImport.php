@@ -27,6 +27,8 @@ class AsignaturaEstudianteImport implements ToModel, WithHeadingRow
         $code = $row['CODIGO'] ?? $row['CODE'] ?? $row['CODIGO_ESTUDIANTIL'] ?? null;
         $code = ltrim($code, '0'); // Eliminar ceros a la izquierda si los tiene
 
+
+
         // Buscar al estudiante
         $student = Estudiantes::where('codigo_estudiantil', 'LIKE', "%{$code}")->first();
 
@@ -43,7 +45,7 @@ class AsignaturaEstudianteImport implements ToModel, WithHeadingRow
             ->exists();
 
         if ($exists) {
-            
+
             return null;
         }
 

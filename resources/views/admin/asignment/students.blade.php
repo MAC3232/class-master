@@ -88,9 +88,15 @@
     <div class="alert alert-danger">
         <h4>⚠️ Errores en la Importación</h4>
         <ul>
-            @foreach (session('error') as $error)
-                <li>{{ $error }}</li>
-            @endforeach
+
+     @if(session('error') && is_array(session('error')))
+    @foreach (session('error') as $error)
+        <li>{{ $error }}</li>
+    @endforeach
+@else
+    <p>{{session('error')}}.</p>
+@endif
+
         </ul>
     </div>
 @endif

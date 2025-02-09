@@ -6,7 +6,7 @@
 $evalueRubrica= false;
 @endphp
 
-@section('header')
+@push('after_styles')
 <style>
     html,
     body {
@@ -22,8 +22,23 @@ $evalueRubrica= false;
         opacity: 0 !important;
     }
 
+    @media print{
+        .d-print-none {
+        display: none;
+    }
+
+    html, body{
+        width: 100% !important;
+    }
+    .container, .mt-5, .bg-light, .p-2, .rounded{
+        min-width: 100%    !important;
+    }
+    }
 
 </style>
+@endpush
+
+@section('header')
 
 <section class="content-header">
     <h1 class="text-light">
@@ -34,20 +49,19 @@ $evalueRubrica= false;
 
         <li class="active">{{ $rubrica_actividad->nombre }}</li>
         <li>
-
             <a href="/admin/actividad/{{$rubrica_actividad->id}}/show" class="p-2 btn-link">
                 < Volver</a>
         </li>
     </ol>
 </section>
-
-<button onclick="window.print()" class="btn btn-secondary m-2 ">Imprimir Rúbrica</button>
+<button onclick="window.print()" class="btn btn-secondary d-print-none m-2 ">Imprimir Rúbrica</button>
 
 
 
 @endsection
 
 @section('content')
+
 @include('components.rubrica_actividad', ['rubrica_actividad' => $rubrica_actividad])
 
 @endsection

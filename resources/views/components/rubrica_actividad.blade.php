@@ -1,12 +1,12 @@
 <div class="container mt-5 bg-light p-2 rounded">
     <div class="container mt-5">
         <div class="text-right mb-3">
-            <button class="btn btn-primary" onclick="showCustomModal('criterion')">Agregar Nuevo Criterio</button>
-            <button class="btn btn-primary" onclick="showCustomModal('level')">Agregar Nuevo Nivel</button>
+            <button class="btn btn-primary d-print-none" onclick="showCustomModal('criterion')">Agregar Nuevo Criterio</button>
+            <button class="btn btn-primary d-print-none" onclick="showCustomModal('level')">Agregar Nuevo Nivel</button>
             @if(Route::is('Evaluar_actividad.evaluar'))
 
 
-            <button class="btn btn-success" onclick="showCustomModal('calificar')"> Calificar / Ver </button>
+            <button class="btn btn-success d-print-none" onclick="showCustomModal('calificar')"> Calificar / Ver </button>
             @php
     $puntaje = 4.5;
 @endphp
@@ -78,15 +78,15 @@ if (!is_null($valoracionEstudiante) && !is_null($valoracionEstudiante->nota)) {
     </th>
 @endforeach
 
-@if (!$estudianteEnRango && isset($nota) && $nota)
+
     <!-- Si el estudiante no está en ningún nivel, mostrar mensaje con color azul o morado -->
     <th class="text-center">
         <div class="alert alert-info" role="alert">
 
-            No hay un rango estipulado para esta nota (Puntaje: <span id="note-view">{{ $nota ?? '' }}</span> )
+            No hay un rango estipulado para esta nota (Puntaje: <span id="note-view">{{ $nota ?? 'No Calificado' }}</span> )
         </div>
     </th>
-@endif
+
 
 
 
@@ -140,6 +140,13 @@ if (!is_null($valoracionEstudiante) && !is_null($valoracionEstudiante->nota)) {
                         <td data-criterio-id="{{ $criterios->id }}" id="seleccionar_criterio{{$criterios->id}}{{$nivel->id}}"  class="justify-content-between {{  $evalueRubrica && $nivelSeleccionado && $nivelSeleccionado->nivel_desempeno_id == $nivel->id ? 'seleccionado' : '' }}" data-nivel-id="{{ $nivel->id }}">
                             @if ($descripcionEncontrada)
 
+                            @if ($evalueRubrica ?? false)
+
+                            <div class="overlay select" id="overlay"   onclick="marcarCriterio('{{ $criterios->id }}', '{{ $nivel->id }}', '{{$estudiante}}', '{{$rubrica_actividad->id}}')" >
+                <div class="plus">+</div>
+                <div class="text">Marcar cumplido</div>
+            </div>
+                            @endif
 
                             <div class="d-flex justify-content-between  ">
 
@@ -151,13 +158,13 @@ if (!is_null($valoracionEstudiante) && !is_null($valoracionEstudiante->nota)) {
                             @if ($evalueRubrica ?? false)
 
                             <div class="btn-group flex-column">
-        <button class="btn btn-link btn-sm fs-3" onclick="marcarCriterio('{{ $criterios->id }}', '{{ $nivel->id }}', '{{$estudiante}}', '{{$rubrica_actividad->id}}')">
+        <button class="btn btn-link btn-sm fs-3 d-print-none" onclick="marcarCriterio('{{ $criterios->id }}', '{{ $nivel->id }}', '{{$estudiante}}', '{{$rubrica_actividad->id}}')">
             <i class="la la-check"></i>
         </button>
-        <button class="btn btn-link btn-sm fs-3" onclick="desmarcarCriterio('{{ $criterios->id }}', '{{ $nivel->id }}')">
+        <button class="btn btn-link btn-sm fs-3 d-print-none" onclick="desmarcarCriterio('{{ $criterios->id }}', '{{ $nivel->id }}')">
             <i class="la la-times"></i>
         </button>
-        <button class="btn btn-link btn-sm fs-3" onclick="accionPersonalizada('{{ $criterios->id }}', '{{ $nivel->id }}')">
+        <button class="btn btn-link btn-sm fs-3 d-print-none"  onclick="accionPersonalizada('{{ $criterios->id }}', '{{ $nivel->id }}')">
             <i class="la la-cog"></i>
         </button>
     </div>

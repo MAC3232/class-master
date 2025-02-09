@@ -218,7 +218,7 @@ $valoracion = Valoracion::updateOrCreate(
                 'nota' => $noteActivity
             ]
         );
-        return response()->json($noteActivity);
+        return response()->json(number_format($noteActivity, 2  ));
 
     }
 

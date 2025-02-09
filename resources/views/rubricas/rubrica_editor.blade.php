@@ -5,11 +5,7 @@
         * {
             box-sizing: border-box !important;
         }
-        @media print {
-            .d-print-none {
-                display: none !important;
-            }
-        }
+       F
     </style>
 @endsection
 
