@@ -388,6 +388,12 @@ function cambiarEstado(checkbox, id) {
             let asignados = response.asignados || []; // Estudiantes ya asignados
             let html = '';
 
+
+
+asignados.forEach(element => {
+    studentsSelect.push(element);
+});
+
             response.data.data.forEach(estudiante => {
                 let checked = asignados.includes(estudiante.id) ? 'checked' : ''; // Marcar si ya está asignado
 
