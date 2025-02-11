@@ -89,7 +89,7 @@
                 </div>
                 <div class="form-group">
                     <label>Correo</label>
-                    <input type="email" name="email" class="form-control" required>
+                    <input type="email" name="email"  id="email" class="form-control" required>
                 </div>
                 <div class="form-group">
                     <label>Código</label>
@@ -174,3 +174,20 @@
         </div>
 
 @endsection
+
+@push('after_scripts')
+
+<script>
+document.getElementById("email").addEventListener("input", function () {
+    const email = this.value;
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!regex.test(email)) {
+        this.setCustomValidity("Por favor, introduce un correo válido con una extensión como .com, .net, etc.");
+    } else {
+        this.setCustomValidity("");
+    }
+});
+
+</script>
+
+@endpush
