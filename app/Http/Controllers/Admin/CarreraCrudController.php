@@ -31,7 +31,7 @@ class CarreraCrudController extends CrudController
         }
         CRUD::setModel(\App\Models\Carrera::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/carrera');
-        CRUD::setEntityNameStrings('carrera', 'carreras');
+        CRUD::setEntityNameStrings('Programa', 'programas');
     }
 
     /**
@@ -43,7 +43,10 @@ class CarreraCrudController extends CrudController
     protected function setupListOperation()
     {
         $this->crud->addButtonFromView('top', 'create','AddProgram',  'beginning');
-        CRUD::setFromDb(); // set columns from db columns.
+        CRUD::setFromDb();
+        
+        
+        // set columns from db columns.
 
         /**
          * Columns can be defined using the fluent syntax:
@@ -62,7 +65,28 @@ class CarreraCrudController extends CrudController
        
         CRUD::setValidation(CarreraRequest::class);
         CRUD::setFromDb(); // set fields from db columns.
+        
+        $facultades = \App\Models\Facultad::count();
+        if ($facultades == 0) {
+            CRUD::addField([
+                'name' => 'crear_facultad',
+                'type' => 'custom_html',
+                'value' => '<a href="' . backpack_url('facultad/create') . '" class="btn btn-primary">Crear Facultad</a>',
+            ]);
+        } else {
 
+
+            CRUD::addField([
+                'name' => 'facultad_id',
+                'label' => 'Facultad',
+                'type' => 'select',
+                'entity' => 'facultad', // Relación con Facultad
+                'attribute' => 'nombre', // Atributo que se mostrará
+                'model' => 'App\Models\Facultad', // Modelo de facultad
+            ]);
+
+
+        }
         /**
          * Fields can be defined using the fluent syntax:
          * - CRUD::field('price')->type('number');

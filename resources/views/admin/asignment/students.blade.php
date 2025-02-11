@@ -84,6 +84,13 @@
         </ul>
     </div>
 @endif
+
+        @if(session('successImport'))
+        <div class="alert alert-success" role="alert">
+            {{session('successImport')}}
+            </div>
+
+        @endif
             @if (session('error'))
     <div class="alert alert-danger">
         <h4>⚠️ Errores en la Importación</h4>
