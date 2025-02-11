@@ -107,64 +107,69 @@
         </ul>
     </div>
 @endif
-            <div class="float-end float-right d-flex justify-content-end mb-3">
-                <!-- Botón Añadir con Modal -->
-                <button class="m-1 btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAdd">
-                    <i class="la la-plus-circle"></i> Añadir
-                </button>
+<div class="float-end float-right d-flex justify-content-end mb-3">
+    <!-- Botón Añadir con Modal -->
+    <button class="m-1 btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAdd">
+        <i class="la la-plus-circle"></i> Añadir
+    </button>
+    <!-- Botón Seleccionar/Borrar -->
+    <button id="btnSeleccionar" class="m-1 btn btn-warning">
+        <i class="la la-check-square"></i> Seleccionar
+    </button>
+      <!-- Botón Cancelar (Oculto por defecto) -->
+    <button id="btnCancelar" class="m-1 btn btn-danger d-none">
+     <i class="la la-times-circle"></i> Cancelar
+    </button>
+    <!-- Botón Importar con Modal -->
+    <button class="m-1 btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalImport">
+        <i class="la la-upload"></i> Importar
+    </button>
+</div>
 
-                <!-- Botón Borrar -->
-                <button class="m-1 btn btn-danger">
-                    <i class="la la-trash"></i> Borrar
-                </button>
+<div class="container">
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th id="headerCheckAll" class="d-none">
+                        <div id="checkAllContainer" class="m-1">
+                            <input type="checkbox" id="checkAll">
+                            <label for="checkAll">Seleccionar Todo</label>
+                        </div>
+                    </th>
+                    <th>N°</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Código</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($students as $index => $student)
+                    <tr>
+                        <td class="check-col d-none">
+                            <input type="checkbox" class="check-student" value="{{ $student->id }}">
+                        </td>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $student->nombre }}</td>
+                        <td>{{ $student->correo }}</td>
+                        <td>{{ $student->codigo_estudiantil }}</td>
+                        <td>
+                            <a href="" class="btn btn-sm btn-info">
+                                <i class="la la-eye fs-2"></i>
+                            </a>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="6" class="text-center">No hay estudiantes matriculados en esta asignatura.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+</div>
 
-                <!-- Botón Importar con Modal -->
-                <button class="m-1 btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalImport">
-                    <i class="la la-upload"></i> Importar
-                </button>
-            </div>
-
-            <div class="container">
-                <div class="table-responsive">
-
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-
-                                <th>N°</th>
-                                <th>Nombre</th>
-                                <th>Email</th>
-                                <th>Codigo</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($students as $student)
-                                <tr>
-
-                                    <td>{{$index+= 1}}</td>
-                                    <td>{{ $student->nombre }}</td>
-                                    <td>{{ $student->correo }}</td>
-                                    <td>{{ $student->codigo_estudiantil }}</td>
-                                    <td>
-                                        <!-- Botones o acciones -->
-                                        <a href="" class="btn btn-sm btn-info"> <i class="la la-eye fs-2 " ></i> </a>
-
-                                        <a href="#" class="btn btn-sm btn-danger btn-borrar"
-           data-estudiante-id="{{ $student->id }}"
-           data-asignatura-id="{{ $asignatura['id'] }}">
-            <i class="la la-trash fs-2"></i>
-        </a>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="5" class="text-center">No hay estudiantes matriculados en esta asignatura.</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
 
                 <!-- Paginación -->
                 <div class="d-flex justify-content-center">
@@ -338,6 +343,26 @@
   font-family: Arial, sans-serif;
   color: #333;
     }
+    /* Centrar los checkboxes en la tabla */
+.check-col,
+#headerCheckAll {
+    text-align: center;
+    vertical-align: middle;
+    width: 50px; /* Ajusta el ancho si es necesario */
+}
+
+/* Estilo para el checkbox de "Seleccionar Todo" */
+#checkAllContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#checkAll {
+    transform: scale(1.3); /* Aumenta el tamaño */
+    margin-right: 5px;
+}
+
 </style>
 @endpush
 
