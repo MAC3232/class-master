@@ -175,6 +175,7 @@
 
 @endsection
 
+
 @push('after_scripts')
 
 <script>
@@ -189,5 +190,6 @@ document.getElementById("email").addEventListener("input", function () {
 });
 
 </script>
+
 
 @endpush
