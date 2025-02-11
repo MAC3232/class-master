@@ -38,7 +38,9 @@ class AsignaturasCrudController extends CrudController
             'message' => '¿Estás seguro de eliminar este registro? Esta acción no puede deshacerse.',
             'icon' => 'warning', // Puedes personalizar el icono también
             'buttons' => ['cancel' => 'Cancelar', 'confirm' => 'Eliminar'],
+            
         ]);
+       
 
 
 
@@ -53,6 +55,8 @@ class AsignaturasCrudController extends CrudController
      */
     protected function setupListOperation()
     {
+        $this->crud->addButtonFromView('top', 'create','Addcourses',  'beginning');
+       
         CRUD::setValidation(AsignaturasRequest::class);
         if (backpack_user()->hasRole('docente')) {
             // Mostrar solo las asignaturas del docente

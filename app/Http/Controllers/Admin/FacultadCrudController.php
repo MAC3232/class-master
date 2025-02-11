@@ -43,6 +43,7 @@ class FacultadCrudController extends CrudController
      */
     protected function setupListOperation()
     {
+        $this->crud->addButtonFromView('top', 'create','AddFacultad',  'beginning');
         CRUD::setFromDb(); // set columns from db columns.
 
         /**

@@ -42,6 +42,7 @@ class CarreraCrudController extends CrudController
      */
     protected function setupListOperation()
     {
+        $this->crud->addButtonFromView('top', 'create','AddProgram',  'beginning');
         CRUD::setFromDb(); // set columns from db columns.
 
         /**
@@ -58,6 +59,7 @@ class CarreraCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
+       
         CRUD::setValidation(CarreraRequest::class);
         CRUD::setFromDb(); // set fields from db columns.
 

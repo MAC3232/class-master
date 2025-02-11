@@ -58,12 +58,12 @@
         {{-- Contenedor principal con fondo blanco --}}
         <div class="card p-4 shadow-sm bg-light">
             <div class="container">
-    <h2 class="mb-4">Add estudiantes</h2>
+    <h2 class="mb-4">Añadir estudiantes</h2>
 
     <div class="row">
         <!-- Añadir Estudiante Individual -->
         <div class="col-md-6">
-            <h4>Añadir Estudiante</h4>
+            <h4>Añade un estudiante</h4>
             @if(session('success')  )
                 <div class="alert {{ session('success') ?  'alert-success' :  'alert-error' }}">{{ session('success') ?? session("errors") }}</div>
             @endif
