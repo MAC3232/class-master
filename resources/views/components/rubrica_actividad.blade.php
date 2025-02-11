@@ -245,17 +245,14 @@ if (!is_null($valoracionEstudiante) && !is_null($valoracionEstudiante->nota)) {
                                 <input type="text" class="form-control" id="levelDesc" required>
                             </div>
                             <div class="form-group">
-                                <label for="scoreRangeFrom">Rango de Nota Desde</label>
+                                <label for="scoreRangeFrom">Puntos del nivel</label>
                                 <input type="number" class="form-control" id="scoreRangeFrom" required>
                             </div>
                             <div class="form-group">
 
                                 <input type="hidden" class="form-control" value="{{$rubrica_actividad->rubrica->id}}" id="scoreRangeFrom" required>
                             </div>
-                            <div class="form-group">
-                                <label for="scoreRangeTo">Rango de Nota Hasta</label>
-                                <input type="number" class="form-control" id="scoreRangeTo" required>
-                            </div>
+
                         </div>
                     </form>
                 </div>

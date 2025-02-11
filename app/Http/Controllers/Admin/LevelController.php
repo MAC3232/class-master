@@ -18,11 +18,11 @@ class LevelController extends Controller
     // Almacena un nuevo nivel
     public function store(Request $request)
     {
+
         // Validar la solicitud
         $validator = Validator::make($request->all(), [
             'nombre' => 'required|string|max:255',
-            'puntaje_inicial' => 'required|numeric',
-            'puntaje_final' => 'required|numeric|gte:puntaje_inicial', // score_max debe ser mayor o igual a score_min
+            'puntos' => 'required|numeric',
         ]);
 
         if ($validator->fails()) {

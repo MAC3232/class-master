@@ -19,7 +19,7 @@
 <x-backpack::menu-item title="Usuarios" icon="la la-user" :link="backpack_url('user')" />
 <x-backpack::menu-item title="Estudiantes" icon="la la-users" :link="backpack_url('estudiantes')" />
 <x-backpack::menu-item title="Facultades" icon="la la-university" :link="backpack_url('facultad')" />
-<x-backpack::menu-item title="Carreras" icon="la la-graduation-cap" :link="backpack_url('carrera')" />
+<x-backpack::menu-item title="Programas" icon="la la-graduation-cap" :link="backpack_url('carrera')" />
 
 @endif
 

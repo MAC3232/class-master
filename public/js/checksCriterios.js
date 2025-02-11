@@ -47,8 +47,9 @@ const marcarCriterio = (criterioId, nivelDesempenoId, usuarioId, rubrica_activid
                 type: 'GET',
                 dataType: 'json',
                 success: function(response) {
-                    console.log(response);
+                    
                     document.getElementById('note-view').innerHTML = response;
+                    document.getElementById('CalificarDesc').value = response;
 
 
                 },

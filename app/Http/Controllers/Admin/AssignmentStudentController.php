@@ -60,7 +60,7 @@ public function import(Request $request){
 
         return redirect()->back()->with('successImport', 'Estudiantes importados correctamente.');
     } catch (\Exception $e) {
-        
+
 
         return redirect()->back()->with('error', '❌ Error al importar el archivo: ' );
 
@@ -126,6 +126,9 @@ public function AssigmentStoreEstudents(Request $request)
     $asignatura = Asignaturas::findOrFail($request->materia_id);
 
     $asignatura->students()->sync($request->estudiantes);
+
+
+
     return response()->json(['message' => 'Asignación guardada correctamente']);
 
 

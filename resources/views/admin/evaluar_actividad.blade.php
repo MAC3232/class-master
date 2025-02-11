@@ -38,7 +38,7 @@ html,
     }
 
     .seleccionado {
-        background-color: rgba(49, 193, 125, 0.8) !important;
+        background-color: #565656 !important;
         color: white;
         transition: all 0.3s ease-in-out;
     }

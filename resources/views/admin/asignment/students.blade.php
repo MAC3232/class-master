@@ -323,12 +323,12 @@
     }
 
     .carrer{
-        white-space: nowrap;           /* Impide el salto de línea */
-  overflow: hidden;              /* Oculta el texto que excede el límite */
-  text-overflow: ellipsis;       /* Agrega los "..." al final */
-  max-width: 300px;              /* Máximo tamaño del contenedor */
-  font-size: 16px;               /* Tamaño de fuente ajustable */
-  font-family: Arial, sans-serif;/* Fuente ajustable */
+        white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 300px;
+  font-size: 16px;
+  font-family: Arial, sans-serif;
   color: #333;
     }
 </style>
@@ -339,11 +339,40 @@
 @push('after_scripts')
 
 <!-- SweetAlert2 -->
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-
 <script>
 let asignatura = `{{$asignatura['id']}}`;
+let studentsSelect = [];
+
+
+
+
+function cambiarEstado(checkbox, id) {
+
+
+    if (checkbox.checked) {
+        studentsSelect.push(id);
+    }else{
+        let index = studentsSelect.indexOf(id);
+
+        if (index !== -1) {
+            studentsSelect.splice(index, 1);
+
+}
+
+
+    }
+
+
+
+
+    // Aquí puedes enviar el estado a tu backend si es necesario
+  }
+
+
+
+
  $(document).ready(function() {
     function cargarEstudiantes(page = 1, search = '', carrera_id = '', asignatura_id = asignatura) {
     $.ajax({
@@ -362,10 +391,16 @@ let asignatura = `{{$asignatura['id']}}`;
             response.data.data.forEach(estudiante => {
                 let checked = asignados.includes(estudiante.id) ? 'checked' : ''; // Marcar si ya está asignado
 
+                if(checked === 'checked' && !studentsSelect.includes(estudiante.id)){
+                    studentsSelect.push(estudiante.id);
+
+                }
+
+
                 html += `
                     <tr>
                         <td class="text-center">
-                            <input type="checkbox" class="form-check-input checkbox-materia" data-id="${estudiante.id}" ${checked}>
+                            <input type="checkbox" onchange="cambiarEstado(this, ${estudiante.id})" class="form-check-input checkbox-materia" data-id="${estudiante.id}" ${checked}>
                         </td>
                         <td>${estudiante.codigo_estudiantil}</td>
                         <td>${estudiante.nombre}</td>
@@ -474,9 +509,11 @@ let asignatura = `{{$asignatura['id']}}`;
     // Guardar selección de estudiantes
     $('#guardar-seleccion').on('click', function() {
         let seleccionados = [];
-        $('.checkbox-materia:checked').each(function() {
-            seleccionados.push($(this).data('id'));
-        });
+        seleccionados = studentsSelect
+
+
+
+
 
         if (seleccionados.length === 0) {
             Swal.fire('Atención', 'Debe seleccionar al menos un estudiante.', 'warning');
