@@ -6,7 +6,7 @@
             @if(Route::is('Evaluar_actividad.evaluar'))
 
 
-            <button class="btn btn-success d-print-none" onclick="showCustomModal('calificar')"> Calificar / Ver </button>
+            <button class="btn btn-success d-print-none" onclick="showCustomModal('calificar')"> Ver / Editar calificacion </button>
             @php
     $puntaje = 4.5;
 @endphp
@@ -158,7 +158,7 @@ if (!is_null($valoracionEstudiante) && !is_null($valoracionEstudiante->nota)) {
                             @if ($evalueRubrica ?? false)
 
                             <div class="btn-group flex-column">
-       
+
     </div>
                             @endif
 
