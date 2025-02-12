@@ -128,9 +128,9 @@
             <thead class="table-primary text-center">
                 <tr>
                     <th>📌 Código</th>
-                    <th>📌 Nombre</th>
-                    <th>📌 Identificacion</th>
-                    <th>📌 Correo</th>
+                    <th>📌 Nombre(Opcional)</th>
+                    <th>📌 Identificacion(Opcional)</th>
+                    <th>📌 Correo(Opcional)</th>
                 </tr>
             </thead>
             <tbody>

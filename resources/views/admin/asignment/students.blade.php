@@ -270,9 +270,9 @@
                         <thead class="table-primary text-center">
                             <tr>
                                 <th>📌 Código</th>
-                                <th>📌 Nombre</th>
-                                <th>📌 Identificacion</th>
-                                <th>📌 Correo</th>
+                                <th>📌 Nombre(opcional)</th>
+                                <th>📌 Identificacion(Opcional)</th>
+                                <th>📌 Correo(opcional)</th>
                             </tr>
                         </thead>
                         <tbody>
