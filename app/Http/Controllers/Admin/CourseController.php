@@ -18,7 +18,6 @@ class CourseController extends CrudController
     }
 
     public function index() {
-
         $courses = Asignaturas::where('user_id', backpack_user()->id)->get();
         $crud = $this->crud;
         return view('courses.listCourses', compact('courses', 'crud'));

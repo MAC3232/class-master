@@ -1,6 +1,5 @@
 @extends(backpack_view('blank'))
 
-
 @section('content')
 <div class="container">
     <div class="card">
