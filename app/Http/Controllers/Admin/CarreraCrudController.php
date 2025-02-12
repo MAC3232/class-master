@@ -44,7 +44,17 @@ class CarreraCrudController extends CrudController
     {
         $this->crud->addButtonFromView('top', 'create','AddProgram',  'beginning');
         CRUD::setFromDb();
-        
+        CRUD::removeColumn('facultad_id');
+
+        CRUD::addColumn([
+            'name' => 'facultad.nombre',
+            'label' => 'Facultad',
+            'type' => 'text',
+            'entity' => 'facultad', // Relación con Facultad
+            'attribute' => 'nombre', // Atributo que se mostrará
+            'model' => 'App\Models\Facultad', // Modelo de facultad
+        ]);
+
         
         // set columns from db columns.
 
