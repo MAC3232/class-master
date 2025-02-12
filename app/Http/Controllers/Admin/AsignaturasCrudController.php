@@ -38,9 +38,9 @@ class AsignaturasCrudController extends CrudController
             'message' => '¿Estás seguro de eliminar este registro? Esta acción no puede deshacerse.',
             'icon' => 'warning', // Puedes personalizar el icono también
             'buttons' => ['cancel' => 'Cancelar', 'confirm' => 'Eliminar'],
-            
+
         ]);
-       
+
 
 
 
@@ -56,7 +56,7 @@ class AsignaturasCrudController extends CrudController
     protected function setupListOperation()
     {
         $this->crud->addButtonFromView('top', 'create','Addcourses',  'beginning');
-       
+
         CRUD::setValidation(AsignaturasRequest::class);
         if (backpack_user()->hasRole('docente')) {
             // Mostrar solo las asignaturas del docente
@@ -73,7 +73,7 @@ class AsignaturasCrudController extends CrudController
 
         // Columnas a mostrar en la lista de asignaturas
         $this->crud->addColumn(['name' => 'nombre', 'label' => 'Nombre', 'type' => 'text']);
-        $this->crud->addColumn(['name' => 'codigo', 'label' => 'Codigo', 'type' => 'text']);
+        $this->crud->addColumn(['name' => 'codigo', 'label' => 'N° clase', 'type' => 'text']);
         $this->crud->addColumn(['name' => 'catalogo', 'label' => 'Catálogo', 'type' => 'text']);
     }
 
@@ -101,7 +101,7 @@ class AsignaturasCrudController extends CrudController
         ]);
 
         CRUD::addField(['name' => 'nombre', 'label' => 'Nombre de la Asignatura', 'type' => 'text']);
-        CRUD::addField(['name' => 'codigo', 'label' => 'Código', 'type' => 'text']);
+        CRUD::addField(['name' => 'codigo', 'label' => 'N° clase', 'type' => 'text']);
         CRUD::addField(['name' => 'catalogo', 'label' => 'Catalogo', 'type' => 'text']);
         CRUD::addField(['name' => 'competencia', 'label' => 'competencia', 'type' => 'text']);
         CRUD::addField(['name' => 'descripcion_competencia', 'label' => 'descripcion de la competencia', 'type' => 'text']);
