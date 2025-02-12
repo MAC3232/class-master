@@ -44,7 +44,7 @@
 </a>
 
 		  @endif
-</div>
+</div>  
 
     </div>
 
@@ -58,27 +58,27 @@
         {{-- Contenedor principal con fondo blanco --}}
         <div class="card p-4 shadow-sm bg-light">
             <div class="container">
-    <h2 class="mb-4">Añadir estudiantes</h2>
-
-    <div class="row">
-        <!-- Añadir Estudiante Individual -->
-        <div class="col-md-6">
-            <h4>Añade un estudiante</h4>
-            @if(session('success')  )
-                <div class="alert {{ session('success') ?  'alert-success' :  'alert-error' }}">{{ session('success') ?? session("errors") }}</div>
+                
+                <div class="row">
+                    <!-- Añadir Estudiante Individual -->
+                    <div class="col-md-6">
+                        @if(session('success')  )
+            <div class="alert {{ session('success') ?  'alert-success' :  'alert-error' }}">{{ session('success') ?? session("errors") }}</div>
             @endif
             @if($errors->any())
-    <div class="alert alert-danger">
-        <strong>Por favor corrige los siguientes errores:</strong>
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
+            <div class="alert alert-danger">
+                <strong>Por favor corrige los siguientes errores:</strong>
+                <ul>
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
             <form action="{{route('only.students')}}" method="POST">
                 @csrf
+                <h2 class="mb-4">Añadir estudiantes</h2>
+                <h4>Añade un estudiante</h4>
                 <div class="form-group">
                     <label>Nombre</label>
                     <input type="text" name="name" class="form-control" required>
@@ -117,6 +117,41 @@
 
 
         <div class="col-md-6">
+
+        <div class="container mt-4">
+    <p class="fs-5">
+    📌El archivo debe estar en formato 📂 <strong>CSV</strong> o 📊 <strong>Excel</strong> para garantizar una importación exitosa ✅.
+    </p>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover">
+            <thead class="table-primary text-center">
+                <tr>
+                    <th>📌 Código</th>
+                    <th>📌 Nombre</th>
+                    <th>📌 Identificacion</th>
+                    <th>📌 Correo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Juan Pérez</td>
+                    <td>25</td>
+                    <td>juan@example.com</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Ana López</td>
+                    <td>30</td>
+                    <td>ana@example.com</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<br>
+
 
             <h4>Importar Estudiantes</h4>
 

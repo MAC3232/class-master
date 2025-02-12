@@ -259,9 +259,39 @@
             </div>
             <div class="modal-body">
 
-                     <!-- Instrucciones de Importación -->
-        <p>Por favor, cargue un archivo Excel o CSV con los códigos de los estudiantes. Si el código no existe, se producirá un error.</p>
+            <div class="container mt-4">
+            <p>
+            <span class="fs-1">📌</span> El archivo debe estar en formato 📂 <strong>CSV</strong> o 📊 <strong>Excel</strong> para garantizar una importación exitosa ✅.
+        </p>
 
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover">
+                        <thead class="table-primary text-center">
+                            <tr>
+                                <th>📌 Código</th>
+                                <th>📌 Nombre</th>
+                                <th>📌 Identificacion</th>
+                                <th>📌 Correo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Juan Pérez</td>
+                                <td>25</td>
+                                <td>juan@example.com</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Ana López</td>
+                                <td>30</td>
+                                <td>ana@example.com</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         <!-- Opciones de Subida de Archivos -->
         <form action="{{route('assignment.students.import', ['id' =>$asignatura['id'] ]  )}}" method="POST" enctype="multipart/form-data">
           @csrf

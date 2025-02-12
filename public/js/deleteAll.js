@@ -10,15 +10,8 @@ document.addEventListener("DOMContentLoaded", function() {
   let seleccionActivo = false;
 
   // Activar selección y mostrar checkboxes
-  btnSeleccionar.addEventListener("click", function() {
-      seleccionActivo = !seleccionActivo;
-      toggleSeleccion(seleccionActivo);
-  });
-  
-  cancel.addEventListener("click", function() {
-      seleccionActivo = !seleccionActivo;
-      toggleSeleccion(seleccionActivo);
-  });
+
+
   // Seleccionar/Deseleccionar todos los checkboxes
   checkAll.addEventListener("change", function() {
       checkboxes.forEach(checkbox => checkbox.checked = checkAll.checked);
@@ -71,8 +64,7 @@ el.classList.remove("d-none");
 });
 
   document.getElementById("btnCancelar").classList.remove("d-none");
-  if (!isSelected) {
-  }
+ 
   // Mostrar los checkboxes de cada fila
 });
 
@@ -86,6 +78,8 @@ document.getElementById("btnCancelar").addEventListener("click", function () {
   document.querySelectorAll(".check-col").forEach(function (el) {
       el.classList.add("d-none");
   });
+  btnSeleccionar.innerHTML = '<i class="la la-select"></i> Seleccionar';
+  btnSeleccionar.classList.replace("btn-danger", "btn-warning");
 
   document.querySelectorAll(".check-student, #checkAll").forEach(function (checkbox) {
       checkbox.checked = false;
