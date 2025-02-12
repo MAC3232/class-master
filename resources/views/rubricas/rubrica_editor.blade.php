@@ -119,7 +119,7 @@
 
                                             <div class="d-print-none p-1">
                                                 <a href="#"
-                                                    onclick="deleteItem('{{ route('ra.destroy', ['id' => $ra->id]) }}');"
+                                                    onclick="deleteItem('{{ route('ra.destroy', ['id' => $ra->id])  }}')"
                                                     class="btn btn-danger  d-flex align-items-center justify-content-center  rounded-3 ">
                                                     <i class="la la-trash" style="font-size: xx-large"></i>
                                                 </a>
@@ -169,7 +169,7 @@
                                     'value' => $asignatura->rubrica->id,
                                     'label' => '',
                                 ],
-                              
+
                             ]" />
                         </td>
                     </tr>
@@ -333,7 +333,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="d-print-none p-1">
-                                                    <a href=""
+                                                    <a href="#"
                                                         onclick="deleteItem('{{ route('estrategia.destroy', ['id' => $estrategia->id]) }}');"
                                                         class="btn btn-danger  d-flex align-items-center justify-content-center  rounded-3 ">
                                                         <i class="la la-trash" style="font-size: xx-large"></i>
