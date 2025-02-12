@@ -67,7 +67,7 @@ class ReportesController extends Controller
             foreach ($value->actividades as $key => $actividades) {
                 $valoracion= $actividades->valoraciones->where('estudiante_id', $student)->first();
 
-                $actividades_nota   [$actividades->nombre] = $valoracion->nota;
+                $actividades_nota   [$actividades->nombre] = $valoracion->nota ?? 0;
             }
 
         }
