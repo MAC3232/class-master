@@ -267,7 +267,7 @@
                                                             'name' => 'descripcion-' . $ra->id,
                                                             'type' => 'textarea',
                                                             'label' => 'Descripción del Criterio',
-                                                            'maxLength' => '500'
+                                                            'maxLength' => '250'
                                                         ],
                                                     ]"
                                                         :idField="[
@@ -317,7 +317,7 @@
                                                             'type' => 'textarea',
                                                             'label' => 'Editar descripcion',
                                                             'value' => $estrategia->descripcion ?? '',
-                                                            'maxLength' => '500'
+                                                            'maxLength' => '250'
                                                         ],
                                                     ]"
                                                         :idField="[
@@ -362,7 +362,7 @@
                                             'name' => 'Estrategia-' . $ra->id,
                                             'type' => 'textarea',
                                             'label' => 'Descripción de la Estrategia',
-                                            'maxLength' => '500'
+                                            'maxLength' => '250'
                                         ],
                                     ]" :idField="[
                                     'boton'=> 'Agregar Estrategia',
@@ -417,7 +417,7 @@
                                                                 'type' => 'textarea',
                                                                 'label' => 'Editar descripcion',
                                                                 'value' => $eje_contenido->descripcion ?? '',
-                                                                'maxLength' => '500'
+                                                                'maxLength' => '250'
                                                             ],
                                                         ]"
                                                             :idField="[
@@ -469,8 +469,8 @@
                                         [
                                             'name' => 'Contenido-' . $ra->id,
                                             'type' => 'textarea',
-                                            'label' => 'Descripción de la Estrategia',
-                                            'maxLength' => '500'
+                                            'label' => 'Descripción del eje de contenido',
+                                            'maxLength' => '250'
                                         ],
                                     ]" :idField="[
                                        'boton'=> 'Agregar contenido',
