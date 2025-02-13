@@ -82,7 +82,7 @@ class ActividadCrudController extends CrudController
         'type' => 'text',
         'value' => function($entry) {
 
-            return $entry->ra ? $entry->ra->nombre : 'N/A'; // Asegúrate de que exista la relación
+            return $entry->ra ? $entry->ra->nombre. '(corte: '. $entry->ra->corte .' )' : 'N/A'; // Asegúrate de que exista la relación
         },
     ]);
 
@@ -146,11 +146,17 @@ class ActividadCrudController extends CrudController
             'label' => 'Resultado de Aprendizaje',
             'type' => 'select',
             'entity' => 'ra',
-            'attribute' => 'nombre',
+            'attribute' => 'nombre_corte', // No existe en la BD, pero se usa en 'options'
             'options' => function ($query) use ($rubrica) {
-                return $rubrica ? $query->where('rubrica_id', $rubrica->id)->get() : collect();
+                return $rubrica
+                    ? $query->where('rubrica_id', $rubrica->id)->get()->map(function ($item) {
+                        $item->nombre_corte = "{$item->nombre} (Corte {$item->corte})"; // Se agrega un atributo dinámico
+                        return $item;
+                    })
+                    : collect();
             }
         ]);
+
         /**
          * Fields can be defined using the fluent syntax:
          * - CRUD::field('price')->type('number');
