@@ -117,5 +117,6 @@ $student = Estudiantes::all()->findOrFail($student);
 
 
         return view('reportes.graph', compact('notas','asignatura','student','porcentaje_aprobadas','porcentaje_no_aprobadas', 'resultados', 'promedio'));
+  
     }
 }
