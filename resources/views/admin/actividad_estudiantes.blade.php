@@ -37,7 +37,7 @@
     @if ($tieneRubrica)
         <div class="d-flex justify-content-start mb-4">
             {{-- Botón de Imprimir --}}
-            <button onclick="window.print()" class="btn btn-secondary m-2 ">Imprimir Rúbrica</button>
+            <button onclick="window.print()" class="btn btn-secondary m-2 ">Imprimir</button>
 
             {{-- Botón de Editar --}}
             <a href="{{ route('rubrica.editor', $asignatura->id) }}" class="btn btn-primary m-2">Editar Rúbrica</a>
@@ -65,7 +65,7 @@
                                                 <tr>
                                                     <th class="col-md-1"><strong>Corte</strong></th>
                                                     <th class="col-md-1"><strong>Ponderación</strong></th>
-                                                    <th class="col-md-1"><strong>MECANISMOS DE EVALUACIÓN</strong></th>
+                                                    <th class="col-md-0"><strong>MECANISMOS DE EVALUACIÓN</strong></th>
                                                     <th class="col-md-1" ><strong>RESULTADO DE APRENDIZAJE QUE
                                                             EVALÚA</strong></th>
                                                     <th class="col-md-1"><strong>Total del Corte</strong></th>
@@ -86,12 +86,12 @@
                                                                 <table class="table table-bordered mb-0">
                                                                     @foreach ($asignatura->rubrica->ra->where('corte', $corte) as $ra)
                                                                         <tr class="bg-danger text-white">
-                                                                            <th class="col-3">Actividades</th>
-                                                                            <th class="col-2">Nota</th>
-                                                                            <th class="col-2">Ponderación</th>
+                                                                            <th class="col-1">Actividades</th>
+                                                                            <th class="col-1">Nota</th>
+                                                                            <th class="col-1">Ponderación</th>
 
-                                                                            <th class="col-2">Total</th>
-                                                                            <th class="col-2">Nivel alcanzado</th>
+                                                                            <th class="col-1">Total</th>
+                                                                            <th class="col-6">Nivel alcanzado</th>
                                                                         </tr>
                                                                         @if ($ra->actividades->isNotEmpty())
                                                                             @php
@@ -148,87 +148,54 @@
                                                                                         @php
                                                                                             // Variable para saber si el estudiante está en algún nivel
                                                                                             $estudianteEnRango = false;
-                                                                                        @endphp
-
-                                                                                        @foreach ($actividad->rubrica->nivelesDesempeno as $nivel)
-                                                                                            @php
-                                                                                                // Verificar si el puntaje del estudiante está dentro del rango de este nivel
-                                                                                                $estudianteEnNivel =
-                                                                                                    $valoracionEstudianteFloat >=
-                                                                                                        $nivel->puntaje_inicial &&
-                                                                                                    $valoracionEstudianteFloat <=
-                                                                                                        $nivel->puntaje_final;
-
-                                                                                                // Definir el estado y la clase según el puntaje
-                                                                                                $nivelEstado = '';
-                                                                                                $nivelClase = '';
-
-                                                                                                // Si el estudiante está dentro del rango de puntaje de este nivel
-                                                                                                if (
-                                                                                                    $estudianteEnNivel
-                                                                                                ) {
-                                                                                                    $estudianteEnRango = true; // El estudiante está en el rango de un nivel
-                                                                                                    if (
-                                                                                                        $valoracionEstudianteFloat >
-                                                                                                        4
-                                                                                                    ) {
-                                                                                                        $nivelEstado =
-                                                                                                            'Excelente';
-                                                                                                        $nivelClase =
-                                                                                                            'alert-success';
-                                                                                                    } elseif (
-                                                                                                        $valoracionEstudianteFloat >=
-                                                                                                        3
-                                                                                                    ) {
-                                                                                                        $nivelEstado =
-                                                                                                            'Aprobado';
-                                                                                                        $nivelClase =
-                                                                                                            'alert-warning';
-                                                                                                    } else {
-                                                                                                        $nivelEstado =
-                                                                                                            'Reprobado';
-                                                                                                        $nivelClase =
-                                                                                                            'alert-danger';
-                                                                                                    }
-                                                                                                }
                                                                                             @endphp
 
-                                                                                            <div class="text-center"
-                                                                                                data-nivel-id="{{ $nivel->id }}">
-                                                                                                <div>
-                                                                                                    <!-- Nombre del nivel -->
-                                                                                                </div>
+                                                                                            <?php
+$niveles = [
+    ['nombre' => 'Deficiente', 'rango' => [0, 1.9], 'clase' => 'alert-danger'],
+    ['nombre' => 'Regular', 'rango' => [2, 2.9], 'clase' => 'alert-warning'],
+    ['nombre' => 'Bueno', 'rango' => [3, 3.9], 'clase' => 'alert-info'],
+    ['nombre' => 'Excelente', 'rango' => [4, 5], 'clase' => 'alert-success'],
+];
+?>
 
-                                                                                                <div>
-                                                                                                    <!-- Rango de puntaje -->
-                                                                                                </div>
+<?php
+$niveles = [
+    ['nombre' => 'Deficiente', 'rango' => [0, 1.9], 'clase' => 'alert-danger'],
+    ['nombre' => 'Regular', 'rango' => [2, 2.9], 'clase' => 'alert-warning'],
+    ['nombre' => 'Bueno', 'rango' => [3, 3.9], 'clase' => 'alert-info'],
+    ['nombre' => 'Excelente', 'rango' => [4, 5], 'clase' => 'alert-success'],
+];
 
-                                                                                                @if ($estudianteEnNivel)
-                                                                                                    <div class="alert {{ $nivelClase }}"
-                                                                                                        role="alert">
-                                                                                                        Nivel:
-                                                                                                        {{ $nivel->nombre }}
-                                                                                                        ({{ $nivel->puntaje_inicial }}
-                                                                                                        -
-                                                                                                        {{ $nivel->puntaje_final }})
-                                                                                                        (Puntaje:
-                                                                                                        {{ $valoracionEstudianteFloat }})
-                                                                                                    </div>
-                                                                                                @endif
-                                                                                            </div>
-                                                                                        @endforeach
+$estudianteEnRango = false;
+?>
 
-                                                                                        @if (!$estudianteEnRango)
-                                                                                            <!-- Si el estudiante no está en ningún nivel, mostrar mensaje con color azul o morado -->
-                                                                                    <th class="text-center">
-                                                                                        <div class="alert alert-info"
-                                                                                            role="alert">
-                                                                                            No hay un rango estipulado para
-                                                                                            esta nota (Puntaje:
-                                                                                            {{ $valoracionEstudianteFloat }})
-                                                                                        </div>
-                                                                                    </th>
-                                                                            @endif
+@foreach ($niveles as $nivel)
+    @php
+        $estudianteEnNivel = $valoracionEstudianteFloat >= $nivel['rango'][0] && $valoracionEstudianteFloat <= $nivel['rango'][1];
+        if ($estudianteEnNivel) {
+            $estudianteEnRango = true;
+        }
+    @endphp
+
+    <div class="text-center" data-nivel-nombre="{{ $nivel['nombre'] }}">
+        @if ($estudianteEnNivel)
+            <div class="alert {{ $nivel['clase'] }}" role="alert">
+                Nivel: {{ $nivel['nombre'] }} ({{ $nivel['rango'][0] }} - {{ $nivel['rango'][1] }})
+                (Puntaje: {{ $valoracionEstudianteFloat }})
+            </div>
+        @endif
+    </div>
+@endforeach
+
+@if (!$estudianteEnRango)
+    <div class="text-center">
+        <div class="alert alert-info" role="alert">
+            No hay un rango estipulado para esta nota (Puntaje: {{ $valoracionEstudianteFloat }})
+        </div>
+    </div>
+@endif
+
                                                         </td>
                                                     </tr>
                                                 @endforeach
