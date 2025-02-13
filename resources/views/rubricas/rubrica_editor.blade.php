@@ -1,9 +1,12 @@
 @extends(backpack_view('blank'))
 @php
 
+@php
+
 $breadcrumbs = [
         trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dashboard'),
         'Asignaturas' => route('asignaturas.index'),
+        'panel asignatura' => route('asignaturas.show',['id' => $asignatura->id]),
         'Listado' => false, // El último elemento no lleva URL
     ];
 @endphp

@@ -1,5 +1,12 @@
 @extends(backpack_view('blank'))
+@php
 
+$breadcrumbs = [
+        trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dashboard'),
+        'Asignaturas' => route('asignaturas.index'),
+        'Listado' => false, // El último elemento no lleva URL
+    ];
+@endphp
 <style>
     @media print {
         /* Ocultar elementos no relevantes para impresión */

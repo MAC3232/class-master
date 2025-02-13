@@ -11,9 +11,12 @@ $breadcrumbs = [
 
 
 @section('content')
-<a href="{{ url('/admin/reportes/') }}" class="btn btn-primary">
-    <i class="la la-arrow-left"></i> Volver
+<a href="{{ url('/admin/reportes/') }}" class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center" 
+   style="width: 50px; height: 50px; padding: 0; position: relative; top: -10px; left: 17px;">
+    <i class="la la-arrow-left" style="font-size: 1.5rem;"></i>
 </a>
+
+
 
 
 
