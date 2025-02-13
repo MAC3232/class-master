@@ -44,7 +44,7 @@
 </a>
 
 		  @endif
-</div>  
+</div>
 
     </div>
 
@@ -58,7 +58,7 @@
         {{-- Contenedor principal con fondo blanco --}}
         <div class="card p-4 shadow-sm bg-light">
             <div class="container">
-                
+
                 <div class="row">
                     <!-- Añadir Estudiante Individual -->
                     <div class="col-md-6">
@@ -152,7 +152,11 @@
 </div>
 <br>
 
+<a href="{{ route('descargar.plantilla') }}" download class="btn btn-info">
+    <i class="la la-download"></i> Descargar Plantilla
+</a>
 
+<br> <br>
             <h4>Importar Estudiantes</h4>
 
             @if (session('import_success'))

@@ -298,6 +298,14 @@
                     </table>
                 </div>
             </div>
+            <br>
+
+            <a href="{{ route('descargar.plantilla') }}" download class="btn btn-info">
+                <i class="la la-download"></i> Descargar Plantilla
+            </a>
+
+            <br> <br>
+
         <!-- Opciones de Subida de Archivos -->
         <form action="{{route('assignment.students.import', ['id' =>$asignatura['id'] ]  )}}" method="POST" enctype="multipart/form-data">
           @csrf

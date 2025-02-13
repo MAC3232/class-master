@@ -164,6 +164,9 @@ Route::group([
     // Route::get('/calendario/{id}', [CalendarController::class, 'index'])->name('calendario');
      Route::resource('/assignment/calendario', 'CalendarController');
 
+     Route::get('/descargar-plantilla', function () {
+        return response()->download(storage_path('app/public/PLANTILLA.xlsx'));
+    })->name('descargar.plantilla');
 
 }); // this should be the absolute last line of this file
 
