@@ -1,5 +1,5 @@
 @extends(backpack_view('blank'))
-@php
+
 
 @php
 
