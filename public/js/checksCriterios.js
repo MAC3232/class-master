@@ -18,6 +18,8 @@ document.querySelectorAll("td.seleccionado").forEach(td => {
 
 const marcarCriterio = (criterioId, nivelDesempenoId, usuarioId, rubrica_actividad) => {
 
+    
+
     if (elementoAnterior[criterioId]) {
 
         document.getElementById(`seleccionar_criterio${criterioId}${elementoAnterior[criterioId]}`).classList.remove("seleccionado");
@@ -41,6 +43,8 @@ const marcarCriterio = (criterioId, nivelDesempenoId, usuarioId, rubrica_activid
         },
         success: function(response) {
 
+            console.log(response);
+            
 
             $.ajax({
                 url: `/admin/actividad/${actividad}/evaluatestudent/${response.data.estudiante_id}`,

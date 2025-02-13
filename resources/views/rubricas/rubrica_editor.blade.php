@@ -126,7 +126,7 @@ $breadcrumbs = [
 
                                             <div class="d-print-none p-1">
                                                 <a href="#"
-                                                    onclick="deleteItem('{{ route('ra.destroy', ['id' => $ra->id]) }}');"
+                                                    onclick="deleteItem('{{ route('ra.destroy', ['id' => $ra->id])  }}')"
                                                     class="btn btn-danger  d-flex align-items-center justify-content-center  rounded-3 ">
                                                     <i class="la la-trash" style="font-size: xx-large"></i>
                                                 </a>
@@ -176,7 +176,7 @@ $breadcrumbs = [
                                     'value' => $asignatura->rubrica->id,
                                     'label' => '',
                                 ],
-                              
+
                             ]" />
                         </td>
                     </tr>
@@ -274,7 +274,7 @@ $breadcrumbs = [
                                                             'name' => 'descripcion-' . $ra->id,
                                                             'type' => 'textarea',
                                                             'label' => 'Descripción del Criterio',
-                                                            'maxLength' => '500'
+                                                            'maxLength' => '250'
                                                         ],
                                                     ]"
                                                         :idField="[
@@ -324,7 +324,7 @@ $breadcrumbs = [
                                                             'type' => 'textarea',
                                                             'label' => 'Editar descripcion',
                                                             'value' => $estrategia->descripcion ?? '',
-                                                            'maxLength' => '500'
+                                                            'maxLength' => '250'
                                                         ],
                                                     ]"
                                                         :idField="[
@@ -340,7 +340,7 @@ $breadcrumbs = [
                                                     </div>
                                                 </div>
                                                 <div class="d-print-none p-1">
-                                                    <a href=""
+                                                    <a href="#"
                                                         onclick="deleteItem('{{ route('estrategia.destroy', ['id' => $estrategia->id]) }}');"
                                                         class="btn btn-danger  d-flex align-items-center justify-content-center  rounded-3 ">
                                                         <i class="la la-trash" style="font-size: xx-large"></i>
@@ -369,7 +369,7 @@ $breadcrumbs = [
                                             'name' => 'Estrategia-' . $ra->id,
                                             'type' => 'textarea',
                                             'label' => 'Descripción de la Estrategia',
-                                            'maxLength' => '500'
+                                            'maxLength' => '250'
                                         ],
                                     ]" :idField="[
                                     'boton'=> 'Agregar Estrategia',
@@ -424,7 +424,7 @@ $breadcrumbs = [
                                                                 'type' => 'textarea',
                                                                 'label' => 'Editar descripcion',
                                                                 'value' => $eje_contenido->descripcion ?? '',
-                                                                'maxLength' => '500'
+                                                                'maxLength' => '250'
                                                             ],
                                                         ]"
                                                             :idField="[
@@ -476,8 +476,8 @@ $breadcrumbs = [
                                         [
                                             'name' => 'Contenido-' . $ra->id,
                                             'type' => 'textarea',
-                                            'label' => 'Descripción de la Estrategia',
-                                            'maxLength' => '500'
+                                            'label' => 'Descripción del eje de contenido',
+                                            'maxLength' => '250'
                                         ],
                                     ]" :idField="[
                                        'boton'=> 'Agregar contenido',

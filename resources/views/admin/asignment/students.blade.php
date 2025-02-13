@@ -116,6 +116,7 @@
     <button id="btnSeleccionar" class="m-1 btn btn-warning">
         <i class="la la-check-square"></i> Seleccionar
     </button>
+
       <!-- Botón Cancelar (Oculto por defecto) -->
     <button id="btnCancelar" class="m-1 btn btn-danger d-none">
      <i class="la la-times-circle"></i> Cancelar
@@ -158,6 +159,11 @@
                             <a href="" class="btn btn-sm btn-info">
                                 <i class="la la-eye fs-2"></i>
                             </a>
+                            <a href="#" class="btn btn-sm btn-danger btn-borrar"
+                                data-estudiante-id="{{ $student->id }}"
+                                data-asignatura-id="{{ $asignatura['id'] }}">
+                                    <i class="la la-trash fs-2"></i>
+                                </a>
                         </td>
                     </tr>
                 @empty

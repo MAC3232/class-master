@@ -6,7 +6,7 @@
             @if(Route::is('Evaluar_actividad.evaluar'))
 
 
-            <button class="btn btn-success d-print-none" onclick="showCustomModal('calificar')"> Calificar / Ver </button>
+            <button class="btn btn-success d-print-none" onclick="showCustomModal('calificar')"> Ver / Editar calificacion </button>
             @php
     $puntaje = 4.5;
 @endphp
@@ -142,7 +142,7 @@ if (!is_null($valoracionEstudiante) && !is_null($valoracionEstudiante->nota)) {
 
                             @if ($evalueRubrica ?? false)
 
-                            <div class="overlay select" id="overlay"   onclick="marcarCriterio('{{ $criterios->id }}', '{{ $nivel->id }}', '{{$estudiante}}', '{{$rubrica_actividad->id}}')" >
+                            <div class="overlay select" id="overlay"   onclick="marcarCriterio('{{ $criterios->id }}', '{{ $nivel->id }}', '{{$estudiante}}', '{{$rubrica_actividad->rubrica->id}}')" >
                 <div class="plus">+</div>
                 <div class="text">Marcar cumplido</div>
             </div>
@@ -158,15 +158,7 @@ if (!is_null($valoracionEstudiante) && !is_null($valoracionEstudiante->nota)) {
                             @if ($evalueRubrica ?? false)
 
                             <div class="btn-group flex-column">
-        <button class="btn btn-link btn-sm fs-3 d-print-none" onclick="marcarCriterio('{{ $criterios->id }}', '{{ $nivel->id }}', '{{$estudiante}}', '{{$rubrica_actividad->id}}')">
-            <i class="la la-check"></i>
-        </button>
-        <button class="btn btn-link btn-sm fs-3 d-print-none" onclick="desmarcarCriterio('{{ $criterios->id }}', '{{ $nivel->id }}')">
-            <i class="la la-times"></i>
-        </button>
-        <button class="btn btn-link btn-sm fs-3 d-print-none"  onclick="accionPersonalizada('{{ $criterios->id }}', '{{ $nivel->id }}')">
-            <i class="la la-cog"></i>
-        </button>
+
     </div>
                             @endif
 
