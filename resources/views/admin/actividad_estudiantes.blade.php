@@ -20,7 +20,7 @@
 @section('header')
     <section class="content-header">
         <h1 class="text-light">
-            Diseñador de Rúbrica
+           Asignatura {{$asignatura->nombre}}: <br> Estudiante: {{$estudiante->nombre}}
         </h1>
         <ol class="breadcrumb m-2">
             <li><a href="{{ backpack_url() }}">Panel</a></li>

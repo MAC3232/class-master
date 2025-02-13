@@ -18,7 +18,7 @@ document.querySelectorAll("td.seleccionado").forEach(td => {
 
 const marcarCriterio = (criterioId, nivelDesempenoId, usuarioId, rubrica_actividad) => {
 
-    
+
 
     if (elementoAnterior[criterioId]) {
 
@@ -29,6 +29,8 @@ const marcarCriterio = (criterioId, nivelDesempenoId, usuarioId, rubrica_activid
     let criterio = document.getElementById(`seleccionar_criterio${criterioId}${nivelDesempenoId}`);
 
     criterio.classList.add("seleccionado");
+
+
 
 
     $.ajax({
@@ -44,14 +46,14 @@ const marcarCriterio = (criterioId, nivelDesempenoId, usuarioId, rubrica_activid
         success: function(response) {
 
             console.log(response);
-            
+
 
             $.ajax({
                 url: `/admin/actividad/${actividad}/evaluatestudent/${response.data.estudiante_id}`,
                 type: 'GET',
                 dataType: 'json',
                 success: function(response) {
-                    
+
                     document.getElementById('note-view').innerHTML = response;
                     document.getElementById('CalificarDesc').value = response;
 

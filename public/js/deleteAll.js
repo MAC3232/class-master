@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", function() {
   // Activar selección y mostrar checkboxes
 
 
+
   // Seleccionar/Deseleccionar todos los checkboxes
   checkAll.addEventListener("change", function() {
       checkboxes.forEach(checkbox => checkbox.checked = checkAll.checked);
@@ -42,6 +43,8 @@ document.addEventListener("DOMContentLoaded", function() {
       if (seleccionados) {
           btnSeleccionar.innerHTML = '<i class="la la-trash"></i> Borrar';
           btnSeleccionar.classList.replace("btn-warning", "btn-danger");
+          btnSeleccionar.setAttribute("onclick", "borrarSeleccionados(asignatura)");
+
       } else {
           btnSeleccionar.innerHTML = '<i class="la la-check-square"></i> Seleccionar';
           btnSeleccionar.classList.replace("btn-danger", "btn-warning");
@@ -52,8 +55,8 @@ document.addEventListener("DOMContentLoaded", function() {
 let isSelected = false;
 
 document.getElementById("btnSeleccionar").addEventListener("click", function () {
-  
-  
+
+
   isSelected = true
 console.log(isSelected);
 document.getElementById("headerCheckAll").classList.remove("d-none");
@@ -64,7 +67,7 @@ el.classList.remove("d-none");
 });
 
   document.getElementById("btnCancelar").classList.remove("d-none");
- 
+
   // Mostrar los checkboxes de cada fila
 });
 
@@ -85,3 +88,47 @@ document.getElementById("btnCancelar").addEventListener("click", function () {
       checkbox.checked = false;
   });
 });
+
+
+function borrarSeleccionados(asignaturaId) {
+
+
+    const checkboxes = document.querySelectorAll(".check-student:checked");
+    let studentsList = Array.from(checkboxes).map(cb => cb.value).join(",");
+
+
+
+    Swal.fire({
+        title: "¿Estás seguro?",
+        text: "Eliminarás al estudiante solo de esta asignatura.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar"
+    }).then((result) => {
+        $.ajax({
+            url:  `/admin/asignaturas/${asignaturaId}/estudiantes/delete/${studentsList}`,
+            type: 'DELETE',
+
+            success: function(response) {
+
+
+                location.reload
+
+
+            },
+            error: function(xhr, status, error) {
+                console.error("Error al guardar:", error);
+                Swal.fire('Error', 'No se pudo guardar el desempeño.', 'error');
+            }
+        });
+
+        location.reload();
+    });
+
+
+
+
+  }
