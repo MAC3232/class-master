@@ -1,7 +1,22 @@
 @extends(backpack_view('blank'))
+@php
+
+$breadcrumbs = [
+        trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dashboard'),
+        'Asignaturas' => route('asignaturas.index'),
+        'Listado' => false, // El último elemento no lleva URL
+    ];
+@endphp
+
 
 
 @section('content')
+<a href="{{ url('/admin/reportes/') }}" class="btn btn-primary">
+    <i class="la la-arrow-left"></i> Volver
+</a>
+
+
+
 <div class="container">
     <div class="card">
         <div class="card-body">
@@ -38,4 +53,5 @@
     </div>
 </div>
 @endsection
+@section('header')
 
