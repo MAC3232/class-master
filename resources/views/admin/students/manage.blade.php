@@ -128,22 +128,22 @@
             <thead class="table-primary text-center">
                 <tr>
                     <th>📌 Código</th>
-                    <th>📌 Nombre(Opcional)</th>
-                    <th>📌 Identificacion(Opcional)</th>
-                    <th>📌 Correo(Opcional)</th>
+                    <th>📌 Nombre</th>
+                    <th>📌 Identificacion</th>
+                    <th>📌 Correo</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td>1</td>
                     <td>Juan Pérez</td>
-                    <td>25</td>
+                    <td>0000000</td>
                     <td>juan@example.com</td>
                 </tr>
                 <tr>
                     <td>2</td>
                     <td>Ana López</td>
-                    <td>30</td>
+                    <td>0000000</td>
                     <td>ana@example.com</td>
                 </tr>
             </tbody>

@@ -46,6 +46,8 @@ Route::group([
 
     Route::get('/studentsassigment', [AssignmentStudentController::class, 'ListCheckEstudentsView']);
     Route::delete('/asignaturas/{asignatura_id}/estudiantes/{estudiante_id}', [AssignmentStudentController::class, 'DeleteStudentAsigment']);
+    Route::delete('/asignaturas/{asignatura_id}/estudiantes/delete/{studentsList}', [AssignmentStudentController::class, 'deleteStudents']);
+
     Route::post('/estudiantes/materia', [AssignmentStudentController::class, 'AssigmentStoreEstudents']);
     Route::get('assignment/{id}/students', [AssignmentStudentController::class, 'index'])->name('assignment.students');
 

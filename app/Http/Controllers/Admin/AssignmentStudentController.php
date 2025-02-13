@@ -121,6 +121,51 @@ if ($request->has('search') && $request->search) {
 
 }
 
+public function deleteStudents($asignatura_id, $studentsList)
+{
+
+
+    try {
+        $studentsArray = explode(',', $studentsList);
+        // Convertir la lista de IDs a un array
+
+        // Eliminar la relación en la tabla intermedia
+
+        foreach ($studentsArray as $key => $value) {
+
+
+            $asignacion = AsignaturaEstudiante::where('asignatura_id', $asignatura_id)
+            ->where('estudiante_id', $value)
+            ->first();
+
+            if (!$asignacion) {
+                return response()->json(['message' => 'El estudiante no está asignado a esta materia.'], 404);
+              }
+
+              AsignaturaEstudiante::where('asignatura_id', $asignatura_id)
+              ->where('estudiante_id', $value)
+              ->delete();
+            
+        }
+
+
+
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Estudiantes eliminados correctamente',
+            'deleted_students' => $studentsArray
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Error al eliminar los estudiantes',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
+
+
 public function AssigmentStoreEstudents(Request $request)
 {
     $asignatura = Asignaturas::findOrFail($request->materia_id);
