@@ -164,6 +164,13 @@ Route::group([
     // Route::get('/calendario/{id}', [CalendarController::class, 'index'])->name('calendario');
      Route::resource('/assignment/calendario', 'CalendarController');
 
+     
+
+Route::get('reportes/graphGeneral/{id}', [ReportesController::class, 'graphGeneral'])
+    ->name('graphGeneral')
+    ->middleware(['web']); // Agrega los middlewares que utilices en tu proyecto
+
+
 
 }); // this should be the absolute last line of this file
 
