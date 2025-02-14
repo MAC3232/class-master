@@ -58,7 +58,7 @@
         } else if (currentMode === 'level') {
             const levelDesc = document.getElementById('levelDesc').value;
             const scoreRangeFrom = document.getElementById('scoreRangeFrom').value;
-         
+
             const rubrica1 = document.getElementById('rubrica').value;
 
             const data = {

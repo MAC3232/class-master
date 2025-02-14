@@ -72,6 +72,7 @@ if (!is_null($valoracionEstudiante) && !is_null($valoracionEstudiante->nota)) {
         @if (  isset($estudianteEnNivel) && $estudianteEnNivel )
             <div class="alert {{ $nivelClase }}" role="alert">
                 <div id="note-view">s</div>
+                <input type="hidden" id="note-opacity">
                 Nivel:  {{$nivel->nombre}}  ({{$nivel->puntaje_inicial}} - {{$nivel->puntaje_final}}) (Puntaje: {{ $nota }})
             </div>
         @endif

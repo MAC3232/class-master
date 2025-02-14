@@ -55,6 +55,8 @@ const marcarCriterio = (criterioId, nivelDesempenoId, usuarioId, rubrica_activid
                 success: function(response) {
 
                     document.getElementById('note-view').innerHTML = response;
+                    document.getElementById('note-opacity').value = response;
+
                     document.getElementById('CalificarDesc').value = response;
 
 

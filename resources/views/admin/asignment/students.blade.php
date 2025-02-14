@@ -156,9 +156,7 @@
                         <td>{{ $student->correo }}</td>
                         <td>{{ $student->codigo_estudiantil }}</td>
                         <td>
-                            <a href="" class="btn btn-sm btn-info">
-                                <i class="la la-eye fs-2"></i>
-                            </a>
+                         
                             <a href="#" class="btn btn-sm btn-danger btn-borrar"
                                 data-estudiante-id="{{ $student->id }}"
                                 data-asignatura-id="{{ $asignatura['id'] }}">

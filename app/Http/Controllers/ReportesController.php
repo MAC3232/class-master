@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\DynamicReporteExport;
+use App\Exports\ReporteNotasExport;
 use App\Models\Asignaturas;
 use App\Models\Estudiantes;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ReportesController extends Controller
 {
@@ -117,6 +120,48 @@ $student = Estudiantes::all()->findOrFail($student);
 
 
         return view('reportes.graph', compact('notas','asignatura','student','porcentaje_aprobadas','porcentaje_no_aprobadas', 'resultados', 'promedio'));
-  
+
+    }
+
+
+    public function exportReporte($asignaturaId)
+    {
+        $asignatura = Asignaturas::with([
+            'actividades.valoraciones.estudiante'
+        ])->findOrFail($asignaturaId);
+
+        $datos = [];
+
+        // Recorremos cada actividad de la asignatura
+        foreach ($asignatura->actividades as $actividad) {
+            // Recorremos cada valoración (evaluación) de la actividad
+            foreach ($actividad->valoraciones as $valoracion) {
+                // Obtenemos el estudiante relacionado
+                $estudiante = $valoracion->estudiante;
+
+                $datos[] = [
+                    $estudiante->nombre,   // Nombre del estudiante
+                    $estudiante->codigo_estudiantil,   // Código del estudiante
+                    $actividad->nombre,    // Nombre de la actividad
+                    $valoracion->nota      // Nota obtenida en la actividad
+                ];
+            }
+        }
+
+
+
+
+        // Opcional: Agregar una fila de resumen (por ejemplo, un promedio general)
+        if (count($datos) > 0) {
+            $sum = array_sum(array_column($datos, 3));
+            $promedio = round($sum / count($datos), 2);
+            $datos[] = ['Promedio general', '', '', $promedio];
+        }
+
+        // Retornamos el Excel usando la clase DynamicReporteExport
+        return Excel::download(
+            new ReporteNotasExport($asignatura, $datos),
+            'reporte_asignatura_' . $asignaturaId . '.xlsx'
+        );
     }
 }

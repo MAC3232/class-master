@@ -44,6 +44,10 @@ Route::group([
     Route::post('students/manage/importStudents', [StudentManagementController::class, 'importStudents'])->name('import.students');
 
 
+
+    Route::get('/exportar-excel/{id}', [ReportesController::class, 'exportReporte'])->name('reportes.general');
+
+
     Route::get('/studentsassigment', [AssignmentStudentController::class, 'ListCheckEstudentsView']);
     Route::delete('/asignaturas/{asignatura_id}/estudiantes/{estudiante_id}', [AssignmentStudentController::class, 'DeleteStudentAsigment']);
     Route::delete('/asignaturas/{asignatura_id}/estudiantes/delete/{studentsList}', [AssignmentStudentController::class, 'deleteStudents']);

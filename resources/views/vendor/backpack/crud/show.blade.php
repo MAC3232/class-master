@@ -24,30 +24,35 @@
 						<small><a href="{{ url($crud->route) }}" class="font-sm"><i class="la la-angle-double-left"></i> {{ trans('backpack::crud.back_to_all') }} <span>{{ $crud->entity_name_plural }}</span></a></small>
 					</p>
 				@endif
-		  </div>
-		  <div>
+            </div>
+            <div>
 
 
-			</div>
+                </div>
 
-		  </div>
+            </div>
 
         </section>
-<div class="float-end float-right ">
-        <a href="javascript: window.print();" style="margin-left:10px" class=" p-2 btn h-100   float-end float-right "><i class="la la-print fs-1"></i></a>
-@if(Route::is('asignaturas.show'))
+        <div class="float-end float-right ">
+            <a href="javascript: window.print();" style="margin-left:10px" class=" p-2 btn h-100   float-end float-right "><i class="la la-print fs-1"></i></a>
+            @if(Route::is('asignaturas.show'))
 
-    @if (!backpack_auth()->check() || !backpack_user()->hasRole('admin'))
-	<a href="{{ url('/admin/assignment/calendario?id='. $entry->getKey() ) }}" class=" p-2 btn h-100  btn-primary">
-    <i class="la la-calendar fs-1"></i>
+            @if (!backpack_auth()->check() || !backpack_user()->hasRole('admin'))
 
-    @endif
-</a>
+            <a href="{{ url('/admin/assignment/calendario?id='. $entry->getKey() ) }}" class=" p-2 btn h-100  btn-primary">
+                <i class="la la-calendar fs-1"></i>
+            </a>
 
-		  @endif
-</div>
+            @endif
+
+            @endif
+        </div>
 
     </div>
+    <a href="{{ route( 'reportes.general' , ['id' => $entry->getKey() ]) }}" class=" p-2 m-3 btn h-100  btn-warning">
+
+<i class="la la-file fs-1"></i> Exportar informe excel
+</a>
 
 @endsection
 
@@ -91,7 +96,7 @@
 
         @if(Route::is('asignaturas.show'))
         <a href="{{ route('rubrica.disenador', $entry->getKey()) }}" class="btn btn-primary m-1">
-        Diseñador de syllabus
+        Ver syllabus
     </a>
         <a href="{{ route('evaluar.estudiante', ['id' => $entry->getKey(), 'is_asignatura'=> true]) }}" class="btn btn-primary m-1">
         Evaluar estudiantes
