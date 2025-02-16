@@ -1,15 +1,5 @@
 @extends(backpack_view('blank'))
 
-
-@php
-
-$breadcrumbs = [
-        trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dashboard'),
-        'Asignaturas' => route('asignaturas.index'),
-        'panel asignatura' => route('asignaturas.show',['id' => $asignatura->id]),
-        'Listado' => false, // El último elemento no lleva URL
-    ];
-@endphp
 @section('head')
     <style>
         * {
@@ -22,7 +12,7 @@ $breadcrumbs = [
 @section('header')
     <section class="content-header">
         <h1 class="text-light">
-            
+
         </h1>
         <ol class="breadcrumb m-2">
             <li><a href="{{ backpack_url() }}">Panel</a></li>

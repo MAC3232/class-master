@@ -172,6 +172,16 @@ Route::group([
         return response()->download(storage_path('app/public/PLANTILLA.xlsx'));
     })->name('descargar.plantilla');
 
+
+
+
+Route::get('reportes/graphGeneral/{id}', [ReportesController::class, 'graphGeneral'])
+    ->name('graphGeneral')
+    ->middleware(['web']); // Agrega los middlewares que utilices en tu proyecto
+
+
+
+
 }); // this should be the absolute last line of this file
 
 /**

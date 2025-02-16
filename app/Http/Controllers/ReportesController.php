@@ -121,6 +121,7 @@ $student = Estudiantes::all()->findOrFail($student);
 
         return view('reportes.graph', compact('notas','asignatura','student','porcentaje_aprobadas','porcentaje_no_aprobadas', 'resultados', 'promedio'));
 
+
     }
 
 
@@ -163,5 +164,91 @@ $student = Estudiantes::all()->findOrFail($student);
             new ReporteNotasExport($asignatura, $datos),
             'reporte_asignatura_' . $asignaturaId . '.xlsx'
         );
+
+
+
     }
+    public function graphGeneral($id)
+    {
+        // Verificar acceso: solo docentes
+        if (!backpack_auth()->check() || !backpack_user()->hasRole('docente')) {
+            abort(403, 'No tienes permiso para acceder a esta sección.');
+        }
+
+        // Obtener el corte seleccionado (por defecto 1)
+        $corte = request('corte') ? request('corte') : 1;
+
+        // Cargar la asignatura con sus relaciones filtradas por corte
+        $asignatura = \App\Models\Asignaturas::where('id', $id)
+            ->with(['rubrica.ra' => function($query) use ($corte) {
+                $query->where('corte', $corte);
+            }])
+            ->first();
+
+        if (!$asignatura) {
+            abort(404, "Asignatura no encontrada");
+        }
+
+        // Inicializar contadores generales y arreglo para detalle por actividad
+        $aprobadas = 0;
+        $no_aprobadas = 0;
+        $actividades_porcentaje = [];
+
+        if (!empty($asignatura->rubrica) && !empty($asignatura->rubrica->ra)) {
+            foreach ($asignatura->rubrica->ra as $ra) {
+                if (!empty($ra->actividades)) {
+                    foreach ($ra->actividades as $actividad) {
+                        $valoraciones = $actividad->valoraciones;
+                        $total_eval = count($valoraciones);
+
+                        // Contar evaluaciones aprobadas (nota >= 3.0)
+                        $aprobadas_eval = 0;
+                        if ($total_eval > 0) {
+                            $aprobadas_eval = $valoraciones->filter(function($valoracion) {
+                                return $valoracion->nota >= 3.0;
+                            })->count();
+                        }
+
+                        // Evaluaciones no aprobadas
+                        $no_aprobadas_eval = $total_eval - $aprobadas_eval;
+
+                        // Calcular porcentajes para la actividad
+                        $porcentaje_aprobacion = $total_eval > 0 ? ($aprobadas_eval / $total_eval * 100) : 0;
+                        $porcentaje_no_aprobacion = $total_eval > 0 ? ($no_aprobadas_eval / $total_eval * 100) : 0;
+
+                        // Agregar datos de la actividad al arreglo
+                        $actividades_porcentaje[] = [
+                            'nombre'                  => $actividad->nombre,
+                            'total'                   => $total_eval,
+                            'aprobadas'               => $aprobadas_eval,
+                            'no_aprobadas'            => $no_aprobadas_eval,
+                            'porcentaje_aprobadas'    => $porcentaje_aprobacion,
+                            'porcentaje_no_aprobadas' => $porcentaje_no_aprobacion,
+                        ];
+
+                        // Sumar a los contadores generales
+                        $aprobadas += $aprobadas_eval;
+                        $no_aprobadas += $no_aprobadas_eval;
+                    }
+                }
+            }
+        }
+
+        // Calcular porcentajes generales
+        $total = $aprobadas + $no_aprobadas;
+        $porcentaje_aprobadas = $total > 0 ? ($aprobadas / $total * 100) : 0;
+        $porcentaje_no_aprobadas = $total > 0 ? ($no_aprobadas / $total * 100) : 0;
+
+        return view('reportes.graph_general', compact(
+            'asignatura',
+            'porcentaje_aprobadas',
+            'porcentaje_no_aprobadas',
+            'corte',
+            'actividades_porcentaje',
+            'aprobadas',
+            'no_aprobadas'
+        ));
+    }
+
+
 }

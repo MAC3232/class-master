@@ -156,7 +156,7 @@
                         <td>{{ $student->correo }}</td>
                         <td>{{ $student->codigo_estudiantil }}</td>
                         <td>
-                         
+
                             <a href="#" class="btn btn-sm btn-danger btn-borrar"
                                 data-estudiante-id="{{ $student->id }}"
                                 data-asignatura-id="{{ $asignatura['id'] }}">
@@ -295,14 +295,12 @@
                         </tbody>
                     </table>
                 </div>
+
             </div>
-            <br>
 
-            <a href="{{ route('descargar.plantilla') }}" download class="btn btn-info">
-                <i class="la la-download"></i> Descargar Plantilla
-            </a>
-
-            <br> <br>
+            <a href="{{ route('descargar.plantilla') }}" download class="btn m-2 btn-info">
+    <i class="la la-download"></i> Descargar Plantilla
+</a>
 
         <!-- Opciones de Subida de Archivos -->
         <form action="{{route('assignment.students.import', ['id' =>$asignatura['id'] ]  )}}" method="POST" enctype="multipart/form-data">

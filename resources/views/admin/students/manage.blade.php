@@ -152,11 +152,11 @@
 </div>
 <br>
 
-<a href="{{ route('descargar.plantilla') }}" download class="btn btn-info">
+
+<a href="{{ route('descargar.plantilla') }}" download class="btn m-2 btn-info">
     <i class="la la-download"></i> Descargar Plantilla
 </a>
 
-<br> <br>
             <h4>Importar Estudiantes</h4>
 
             @if (session('import_success'))
