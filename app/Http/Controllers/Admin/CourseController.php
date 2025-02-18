@@ -17,9 +17,21 @@ class CourseController extends CrudController
         $this->crud->setEntityNameStrings('Asignatura', 'Asignaturas');
     }
 
-    public function index() {
-        $courses = Asignaturas::where('user_id', backpack_user()->id)->get();
-        $crud = $this->crud;
-        return view('courses.listCourses', compact('courses', 'crud'));
+    public function index(Request $request)
+{
+    $query = Asignaturas::where('user_id', backpack_user()->id);
+
+    if ($search = $request->input('search')) {
+        $query->where(function($q) use ($search) {
+            $q->where('nombre', 'LIKE', "%{$search}%")
+              ->orWhere('codigo', 'LIKE', "%{$search}%")
+              ->orWhere('catalogo', 'LIKE', "%{$search}%");
+        });
     }
+
+    $courses = $query->get();
+    $crud = $this->crud;
+    // cambia a la vista para mostrar
+    return response()->json($courses);
+}
 }
