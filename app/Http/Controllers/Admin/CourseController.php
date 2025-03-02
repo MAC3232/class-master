@@ -19,7 +19,21 @@ class CourseController extends CrudController
 
     public function index(Request $request)
 {
-    $query = Asignaturas::where('user_id', backpack_user()->id);
+
+
+    $courses = Asignaturas::where('user_id', backpack_user()->id)->get();
+    $crud = $this->crud;
+    return view('courses.listCourses', compact('courses', 'crud'));
+
+
+
+}
+
+
+public function searchAsignatura(Request $request)  {
+    $query = Asignaturas::select('id', 'nombre', 'codigo', 'catalogo')
+    ->where('user_id', backpack_user()->id);
+
 
     if ($search = $request->input('search')) {
         $query->where(function($q) use ($search) {

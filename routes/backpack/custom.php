@@ -62,6 +62,7 @@ Route::group([
     Route::get('admin/api/asignaturas', [AsignaturasCrudController::class, 'getAsignaturas']);
 
     Route::get('courses', [CourseController::class, 'index']);
+    Route::get('searchCourses', [CourseController::class, 'searchAsignatura']);
 
 
     Route::crud('asignaturas', 'AsignaturasCrudController');
