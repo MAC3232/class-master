@@ -28,9 +28,8 @@ public function index ($id){
     $asignatura = Asignaturas::findOrFail($id);
 
     $carrer = Carrera::all();
-
-    $students = $asignatura->students()->orderBy( 'nombre','asc')->get();
-
+    
+    $students = $asignatura->students();
 
     return view('admin.asignment.students', ['crud' => $this->crud, 'students' =>  $students,'carrers' => $carrer, 'asignatura' =>['nombre'=> $asignatura, 'id' => $id] ]);
 
@@ -145,7 +144,7 @@ public function deleteStudents($asignatura_id, $studentsList)
               AsignaturaEstudiante::where('asignatura_id', $asignatura_id)
               ->where('estudiante_id', $value)
               ->delete();
-            
+
         }
 
 

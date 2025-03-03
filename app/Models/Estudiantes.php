@@ -13,11 +13,10 @@ class Estudiantes extends Model
     protected $table = 'estudiantes';
 
     protected $fillable = [
-        'nombre',
         'cedula',
-         'correo',
           'codigo_estudiantil',
-           'carrera_id'
+           'carrera_id',
+           'user_id'
         ];
 
     public function carrera()
@@ -28,6 +27,10 @@ class Estudiantes extends Model
     {
         return $this->hasMany(Valoracion::class, 'estudiante_id');
     }
+    public function user()
+{
+    return $this->belongsTo(User::class);
+}
 
 
     public function assignments()
@@ -35,4 +38,4 @@ class Estudiantes extends Model
         return $this->belongsToMany(Asignaturas::class, 'asignatura_estudiante' , 'estudiante_id', 'asignatura_id');
     }
 }
- 
+

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\AsignaturasRequest;
 use App\Models\Asignaturas;
 use App\Models\Carrera;
+use App\Models\Estudiantes;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Illuminate\Support\Facades\Request;
@@ -33,6 +34,7 @@ class AsignaturasCrudController extends CrudController
         CRUD::setModel(\App\Models\Asignaturas::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/asignaturas');
         CRUD::setEntityNameStrings('asignaturas', 'asignaturas');
+
 
         $this->crud->setOperationSetting('destroy', [
             'message' => '¿Estás seguro de eliminar este registro? Esta acción no puede deshacerse.',
@@ -66,6 +68,21 @@ class AsignaturasCrudController extends CrudController
             $this->crud->removeButton('update'); // Eliminar botón de editar
             $this->crud->removeButton('delete'); // Eliminar botón de eliminar
 
+        }
+        if (backpack_user()->hasRole('estudiante')) {
+            // Obtener el estudiante autenticado
+            $estudiante = Estudiantes::where('user_id', backpack_user()->id)->first();
+
+            if ($estudiante) {
+                // Filtrar solo las asignaturas del estudiante usando la tabla intermedia
+                $this->crud->addClause('whereHas', 'students', function ($query) use ($estudiante) {
+                    $query->where('estudiante_id', $estudiante->id);
+                });
+
+                // Quitar botones de edición y eliminación para el rol estudiante
+                $this->crud->removeButton('update');
+                $this->crud->removeButton('delete');
+            }
         }
 
         // Filtrar asignaturas si el usuario es docente
