@@ -28,8 +28,9 @@ public function index ($id){
     $asignatura = Asignaturas::findOrFail($id);
 
     $carrer = Carrera::all();
-    
-    $students = $asignatura->students();
+
+    $students = $asignatura->students()->get();
+
 
     return view('admin.asignment.students', ['crud' => $this->crud, 'students' =>  $students,'carrers' => $carrer, 'asignatura' =>['nombre'=> $asignatura, 'id' => $id] ]);
 
