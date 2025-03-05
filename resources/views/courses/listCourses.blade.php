@@ -10,6 +10,7 @@
 
     // if breadcrumbs aren't defined in the CrudController, use the default breadcrumbs
     $breadcrumbs = $breadcrumbs ?? $defaultBreadcrumbs;
+    
 
     $cards = [
         ["title" => "Etica Profesional", "code" => "068", "catalog" => "21CDCCU", "color" => "#4c6ef5"],
@@ -35,7 +36,9 @@
 @endphp
 
 @section('header')
-<section></section>
+<section>
+    
+</section>
 @endsection
 
 @push('after_styles')
@@ -278,6 +281,20 @@
 
 @push('after_scripts')
 <script>
+    
+    $.ajax({
+    url: 'http://127.0.0.1:8000/admin/searchCourses',
+    type: 'GET',
+    dataType: 'json',
+    success: function(data) {
+        console.log('Datos recibidos:', data);
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+        console.error('Error en la petición:', textStatus, errorThrown);
+    }
+});
+
+
     function toggleDropdown(dropdownId) {
         const dropdownMenu = document.getElementById(dropdownId);
         if (dropdownMenu.style.display === 'block') {
