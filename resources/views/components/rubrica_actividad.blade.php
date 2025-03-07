@@ -100,29 +100,120 @@ if (!is_null($valoracionEstudiante) && !is_null($valoracionEstudiante->nota)) {
                 <thead>
 
                     <tr id="headerRow">
-                        <th class="text-center">Descripción del Criterio</th>
-                        @foreach ( $rubrica_actividad->rubrica->nivelesDesempeno as $nivel )
-                        <th class="text-center" data-nivel-id="{{ $nivel->id }}">
-                            <div>
+                    <th class="text-center">Descripción del Criterio</th>
+    @foreach ($rubrica_actividad->rubrica->nivelesDesempeno as $nivel)
+    <th class="text-center position-relative" data-nivel-id="{{ $nivel->id }}" style="position: relative;">
 
-                                {{$nivel->nombre}}
-                            </div>
+        <div class="position-absolute top-0 end-0 m-1 buttons-container"
+            style="opacity: 0; transition: opacity .8s; display: flex; flex-direction: column; gap: 5px;">
+            <button class="btn btn-danger btn-sm">
+                <i class="la la-trash"></i>
+            </button>
+            <button class="btn btn-primary btn-sm btn-edit" data-id="{{ $nivel->id }}">
+                <i class="la la-edit"></i>
+            </button>
+        </div>
 
-                            <div>
+        <div class="editable-text" data-id="{{ $nivel->id }}" style="cursor: pointer;">
+            {{ $nivel->nombre }}
+        </div>
+        <div>{{ $nivel->puntos }}</div>
 
-                                {{$nivel->puntos}}
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                let th = document.querySelector('[data-nivel-id="{{ $nivel->id }}"]');
+                let buttonContainer = th.querySelector(".buttons-container");
+                let editableText = th.querySelector(".editable-text");
 
-                            </div>
-                        </th>
+                th.addEventListener("mouseenter", function() {
+                    buttonContainer.style.opacity = "1";
+                });
 
-                        @endforeach
+                th.addEventListener("mouseleave", function() {
+                    buttonContainer.style.opacity = "0";
+                });
+
+                // Permitir edición al hacer clic en el nombre del nivel
+                editableText.addEventListener("click", function() {
+                    let nivelId = this.getAttribute("data-id");
+                    let nuevoTexto = prompt("Editar nombre del nivel:", this.innerText);
+                    if (nuevoTexto !== null) {
+                        this.innerText = nuevoTexto;
+                        console.log("Nivel ID:", nivelId, "Nuevo nombre:", nuevoTexto);
+                        // Aquí puedes hacer una petición AJAX para guardar el cambio en el backend
+                    }
+                });
+
+                // Capturar clic en el botón de edición
+                th.querySelector('.btn-edit')?.addEventListener('click', function() {
+                    let nivelId = this.getAttribute("data-id");
+                    console.log('Editar nivel ID:', nivelId);
+                    // Aquí puedes redirigir o abrir un modal con el ID
+                });
+
+            });
+        </script>
+
+    </th>
+    @endforeach
+
+
+
+
+
                     </tr>
                 </thead>
                 <tbody>
                     <!-- Table body will be dynamically filled -->
                     @foreach ($rubrica_actividad->rubrica->criterios as $criterios)
-                    <tr data-criterio-id="{{ $criterios->id }}">
-                        <td>{{ $criterios->descripcion }}</td>
+                    <tr data-criterio-id="{{ $criterios->id }}" style="position: relative;">
+
+                    <td>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="n-criterios text-center">
+                                {{ $criterios->descripcion }}
+                            </div>
+
+                            <div class="buttons-criterios d-flex flex-column" style="opacity: 0; transition: opacity .8s;">
+                                <button type="button" class="btn btn-danger btn-sm mb-2">
+                                    <i class="la la-trash"></i>
+                                </button>
+                                <button class="btn btn-primary btn-sm btn-edit" data-id="{{ $criterios->id }}">
+                                    <i class="la la-edit"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <script>
+                            (function(){
+                                // Obtenemos el <td> contenedor
+                                const td = document.currentScript.parentElement;
+                                const btnContainer = td.querySelector('.buttons-criterios');
+
+                                // Mostrar botones al pasar el mouse
+                                td.addEventListener('mouseenter', () => {
+                                    btnContainer.style.opacity = '1';
+                                });
+
+                                // Ocultar botones al salir del área
+                                td.addEventListener('mouseleave', () => {
+                                    btnContainer.style.opacity = '0';
+                                });
+
+                                // Capturar clic en el botón de edición y obtener el ID
+                                td.querySelector('.btn-edit')?.addEventListener('click', function() {
+                                    const criterioId = this.getAttribute('data-id');
+                                    console.log('Editar criterio ID:', criterioId);
+                                    // Aquí puedes redirigir o abrir un modal con el ID
+                                });
+
+                            })();
+                        </script>
+                    </td>
+
+
+
+
 
                         @php
         // Buscar si este criterio ya tiene un nivel seleccionado por el estudiante
@@ -149,21 +240,61 @@ if (!is_null($valoracionEstudiante) && !is_null($valoracionEstudiante->nota)) {
             </div>
                             @endif
 
-                            <div class="d-flex justify-content-between  ">
-
-                            <div class="">
-                                {{ $descripcionEncontrada->descripcion }}
-
+                            <div class="d-flex justify-content-between">
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    {{ $descripcionEncontrada->descripcion }}
+                                </div>
                             </div>
 
-                            @if ($evalueRubrica ?? false)
-
-                            <div class="btn-group flex-column">
-
-    </div>
-                            @endif
-
+                            <div class="b-c" style="margin-left: 10px;">
+                                @if ($evalueRubrica ?? false)
+                                <div class="buttons-criterios d-flex flex-column" style="opacity: 0; transition: opacity .3s;">
+                                    <button type="button" class="btn btn-danger btn-sm mb-2">
+                                        <i class="la la-trash"></i>
+                                    </button>
+                                    <button class="btn btn-primary btn-sm btn-edit" data-id="{{ $descripcionEncontrada->id }}">
+                                        <i class="la la-edit"></i>
+                                    </button>
+                                </div>
+                                @endif
                             </div>
+                        </div>
+
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                // Delegación de eventos para hover
+                                document.addEventListener('mouseover', function(e) {
+                                    const td = e.target.closest('.d-flex.justify-content-between');
+                                    if (td) {
+                                        const btnContainer = td.querySelector('.buttons-criterios');
+                                        if (btnContainer) {
+                                            btnContainer.style.opacity = '1';
+                                        }
+                                    }
+                                });
+
+                                document.addEventListener('mouseout', function(e) {
+                                    const td = e.target.closest('.d-flex.justify-content-between');
+                                    if (td) {
+                                        const btnContainer = td.querySelector('.buttons-criterios');
+                                        if (btnContainer) {
+                                            btnContainer.style.opacity = '0';
+                                        }
+                                    }
+                                });
+
+                                // Delegación de eventos para clic en editar
+                                document.addEventListener('click', function(e) {
+                                    if (e.target.closest('.btn-edit')) {
+                                        const button = e.target.closest('.btn-edit');
+                                        const criterioId = button.getAttribute('data-id');
+                                        console.log('Editar criterio ID:', criterioId);
+                                        // Aquí tu lógica para editar
+                                    }
+                                });
+                            });
+                            </script>
 
 
                             @else
