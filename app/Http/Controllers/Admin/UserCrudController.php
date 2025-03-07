@@ -6,6 +6,9 @@ use App\Http\Requests\UserRequest;
 use App\Models\User;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redirect;
+use Prologue\Alerts\Facades\Alert;
 use Spatie\Permission\Models\Role;
 
 /**
@@ -96,11 +99,12 @@ class UserCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
+
         CRUD::setValidation(UserRequest::class);
         CRUD::setFromDb(); // set fields from db columns.
 
         CRUD::field('password')->type('password')->label('Contraseña');
-        CRUD::field('password')->type('password')->label('Contraseña');
+
 
 
 
@@ -119,7 +123,35 @@ class UserCrudController extends CrudController
      */
     protected function setupUpdateOperation()
     {
-        
+
         $this->setupCreateOperation();
+    }
+
+
+    public function update()
+    {
+
+     $request = $this->crud->validateRequest();
+     
+    // Encuentra y actualiza al usuario de forma elegante
+    $user = User::findOrFail($request->id);
+
+    $user->update([
+    'name' => $request->name,
+    'email' => $request->email,
+    'password' => bcrypt($request->password)
+    ]);
+
+
+
+    Alert::success('Usuario editado exitosamente')->flash();
+
+    if($request->_save_action == 'save_and_back'){
+
+        return Redirect::to('/admin/user');
+    }
+
+    return redirect()->back() ;
+
     }
 }
