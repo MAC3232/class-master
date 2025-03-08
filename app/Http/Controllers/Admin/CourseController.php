@@ -17,7 +17,7 @@ class CourseController extends CrudController
         $this->crud->setEntityNameStrings('Asignatura', 'Asignaturas');
     }
 
-    public function index(Request $request)
+    public function index()
 {
 
 
@@ -48,4 +48,17 @@ public function searchAsignatura(Request $request)  {
     // cambia a la vista para mostrar
     return response()->json($courses);
 }
+
+
+
+public function panelCourse(Request $request){
+
+
+$crud = $this->crud;
+
+    return view('courses.panelCourse', compact( 'crud'));
+
+}
+
+
 }
