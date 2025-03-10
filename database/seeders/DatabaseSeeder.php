@@ -17,11 +17,12 @@ class DatabaseSeeder extends Seeder
 
         // User::factory(10)->create();
         Role::firstOrCreate(['name' => 'admin']);
+        Role::firstOrCreate(['name' => 'estudiante']);
         Role::firstOrCreate(['name' => 'docente']);
 
 
-        $this->call(FacultadSeeder::class);
-        $this->call(CarreraSeeder::class);
+        // $this->call(FacultadSeeder::class);
+        // $this->call(CarreraSeeder::class);
         //crear el usuario inicial
        $existingUser = User::where('email', 'admin@google.com')->first();
 
