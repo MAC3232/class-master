@@ -20,12 +20,14 @@ class StudentsImport implements ToModel, WithHeadingRow
 
     public function model(array $row)
     {
-        $row = array_change_key_case($row, CASE_UPPER);
+        set_time_limit(300); // 5 minutos
 
+        $row = array_change_key_case($row, CASE_UPPER);
         $name = $row['NOMBRE'] ?? $row['NAME'] ?? null;
         $email = $row['CORREO'] ?? $row['EMAIL'] ?? null;
         $code = $row['CODIGO'] ?? $row['CODE'] ?? $row['CODIGO_ESTUDIANTIL'] ?? null;
         $dni = $row['CEDULA'] ?? $row['IDENTIFICACION'] ?? $row['DNI'] ?? null;
+
 
         if (empty(trim($name)) && empty(trim($email)) && empty(trim($code)) && empty(trim($dni))) {
             return null; // Ignorar esta fila completamente
@@ -56,7 +58,7 @@ class StudentsImport implements ToModel, WithHeadingRow
         $user = User::create([
             'name'     => $name,
             'email'    => $email,
-            'password' => $dni, // Hash usando bcrypt
+            'password' => bcrypt($dni), // Hash usando bcrypt
         ]);
         $user->assignRole('estudiante');
 
@@ -69,5 +71,6 @@ class StudentsImport implements ToModel, WithHeadingRow
             'carrera_id'         => $this->career,
             'user_id'            => $user->id,
         ]);
+
     }
 }

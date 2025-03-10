@@ -29,6 +29,7 @@ class StudentManagementController extends CrudController
 
     public function storeSingleStudent(Request $request)
     {
+        
 
 
         $request->validate([
@@ -56,7 +57,7 @@ class StudentManagementController extends CrudController
             $user = User::create([
                 'name'     => $request->name,
                 'email'    => $request->email,
-                'password' =>  $request->cedula
+                'password' =>  bcrypt($request->cedula)
             ]);
             $user->assignRole('estudiante');
 

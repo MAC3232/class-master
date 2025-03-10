@@ -8,6 +8,7 @@ use App\Models\AsignaturaEstudiante;
 use App\Models\Asignaturas;
 use App\Models\Carrera;
 use App\Models\Estudiantes;
+use App\Models\User;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -18,25 +19,36 @@ class AssignmentStudentController extends CrudController
 {
 
 
-public function index ($id){
+    public function index ($id){
 
 
-    $this->crud->setModel('App\Models\AsignaturaEstudiante'); // Define el modelo
-    $this->crud->setRoute(config('backpack.base.route_prefix') . '/asignaturas'); // Define la ruta
-    $this->crud->setEntityNameStrings('Asignatura', 'Estudiantes');
+        $this->crud->setModel('App\Models\AsignaturaEstudiante'); // Define el modelo
+        $this->crud->setRoute(config('backpack.base.route_prefix') . '/asignaturas'); // Define la ruta
+        $this->crud->setEntityNameStrings('Asignatura', 'Estudiantes');
 
-    $asignatura = Asignaturas::findOrFail($id);
+        $asignatura = Asignaturas::findOrFail($id);
 
-    $carrer = Carrera::all();
+        $carrer = Carrera::all();
 
-    $students = $asignatura->students()->get();
+        $students = $asignatura->students()
+        ->with('user') // Asegúrate de tener esta relación en el modelo
+        ->join('users', 'users.id', '=', 'estudiantes.user_id')
+        ->orderBy('users.name', 'asc')
+        ->select('estudiantes.*') // Evita columnas duplicadas
+        ->get();
 
 
-    return view('admin.asignment.students', ['crud' => $this->crud, 'students' =>  $students,'carrers' => $carrer, 'asignatura' =>['nombre'=> $asignatura, 'id' => $id] ]);
 
 
 
-}
+
+
+
+        return view('admin.asignment.students', ['crud' => $this->crud, 'students' =>  $students,'carrers' => $carrer, 'asignatura' =>['nombre'=> $asignatura, 'id' => $id] ]);
+
+
+
+    }
 
 public function import(Request $request){
 
@@ -76,28 +88,32 @@ public function import(Request $request){
 public function ListCheckEstudentsView(Request $request) {
 
 
-    $query = Estudiantes::with('carrera');
+    $query = Estudiantes::with(['carrera', 'user']);
+
+
 
     // Filtro por carrera si existe
     if ($request->has('carrera_id') && $request->carrera_id) {
         $query->where('carrera_id', $request->carrera_id);
     }
 
-   // Búsqueda por nombre o código estudiantil
-if ($request->has('search') && $request->search) {
-    $searchTerm = $request->search;
-
-    $query->where(function($q) use ($searchTerm) {
-        $q->where('nombre', 'like', '%' . $searchTerm . '%')
-          ->orWhere('codigo_estudiantil', 'like', '%' . $searchTerm . '%');
-    });
-}
 
 
 
-    // Ordenar por carrera y luego por nombre del estudiante
+    // Búsqueda por nombre de usuario o código estudiantil
+    if ($request->has('search') && $request->search) {
+        $searchTerm = $request->search;
+
+        $query->where(function($q) use ($searchTerm) {
+            $q->whereHas('user', function ($u) use ($searchTerm) {
+                $u->where('name', 'like', '%' . $searchTerm . '%');
+            })->orWhere('codigo_estudiantil', 'like', '%' . $searchTerm . '%');
+        });
+    }
+
+    // Ordenar por nombre de la carrera y luego por nombre del usuario
     $query->orderBy(Carrera::select('nombre')->whereColumn('carreras.id', 'estudiantes.carrera_id'))
-          ->orderBy('nombre');
+          ->orderBy(User::select('name')->whereColumn('users.id', 'estudiantes.user_id'));
 
     $estudiantes = $query->paginate(10);
 
@@ -107,10 +123,7 @@ if ($request->has('search') && $request->search) {
         $asignados = AsignaturaEstudiante::where('asignatura_id', $request->asignatura_id)
                                           ->pluck('estudiante_id')
                                           ->toArray();
-
     }
-
-
 
     return response()->json([
         'data' => $estudiantes,
@@ -118,8 +131,8 @@ if ($request->has('search') && $request->search) {
     ]);
 
 
-
 }
+
 
 public function deleteStudents($asignatura_id, $studentsList)
 {
