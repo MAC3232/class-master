@@ -108,7 +108,7 @@ return [
         /**
          * Use this to pass classes to the <body> HTML element, on all pages.
          */
-        'body' => null,
+        'body' =>null,
 
         /**
          * For background colors use:
