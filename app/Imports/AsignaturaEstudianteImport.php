@@ -20,6 +20,8 @@ class AsignaturaEstudianteImport implements ToModel, WithHeadingRow
 
     public function model(array $row)
     {
+        set_time_limit(300); // 5 minutos
+
         // Convertir claves a mayúsculas para evitar problemas con los encabezados
         $row = array_change_key_case($row, CASE_UPPER);
 
@@ -28,13 +30,13 @@ class AsignaturaEstudianteImport implements ToModel, WithHeadingRow
         $code = ltrim($code, '0'); // Eliminar ceros a la izquierda si los tiene
 
 
-
         // Buscar al estudiante
         $student = Estudiantes::where('codigo_estudiantil', 'LIKE', "%{$code}")->first();
 
+
         // Si no se encuentra, registrar el error y continuar con la siguiente fila
-        if (!$student) {
-            $error = "El estudiante con el codigo {$code} no se encuentra en el sistema";
+        if (is_null($student)) {
+            $error = "El estudiante con el código {$code} no se encuentra en el sistema";
             Session::push('error', $error);
             return null;
         }

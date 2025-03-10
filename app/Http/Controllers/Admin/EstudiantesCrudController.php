@@ -44,21 +44,47 @@ class EstudiantesCrudController extends CrudController
     protected function setupListOperation()
     {
         $this->crud->addButtonFromView('top', 'create', 'add_estudiante', 'beginning');
-        CRUD::setFromDb(); // set columns from db columns.
-        $this->crud->removeColumn('carrera_id');
+
 
         CRUD::addColumn([
-            'name' => 'carrera_id', // Nombre de la columna en la tabla de estudiantes
-            'label' => 'Carrera',   // Etiqueta para mostrar en la tabla
-            'entity' => 'carrera', // Nombre de la relación en el modelo de Estudiantes
-            'attribute' => 'nombre', // Nombre del atributo de Carrera que quieres mostrar
-            'model' => 'App\Models\Carrera' // Modelo relacionado
+            'name'      => 'name',
+            'label'     => 'Nombre',
+            'entity'    => 'user', // nombre de la relación definida en el modelo
+            'attribute' => 'name', // asumiendo que el campo 'name' almacena el nombre del usuario
+            'model'     => 'App\Models\User'
         ]);
-        /**
-         * Columns can be defined using the fluent syntax:
-         * - CRUD::column('price')->type('number');
-         */
+        CRUD::setFromDb();
+        $this->crud->removeColumn('carrera_id');
+        $this->crud->removeColumn('user_id');
+        $this->crud->removeColumn('cedula');
+        CRUD::addColumn([
+            'name'     => 'user_email', // este nombre es arbitrario
+            'label'    => 'Correo',
+            'type'     => 'closure',
+            'function' => function($entry) {
+                if ($entry->user) {
+                    return '<a href="mailto:' . $entry->user->email . '">' . $entry->user->email . '</a>';
+                }
+                return 'Sin correo';
+            },
+            'escaped'  => false, // Para que se renderice el HTML
+        ]);
+
+
+        // Agregar columna para mostrar la relación con Carrera
+        CRUD::addColumn([
+            'name'      => 'carrera_id',
+            'label'     => 'Carrera',
+            'entity'    => 'carrera',
+            'attribute' => 'nombre',
+            'model'     => 'App\Models\Carrera'
+        ]);
+
+
+
+
     }
+
 
     /**
      * Define what happens when the Create operation is loaded.
@@ -68,42 +94,51 @@ class EstudiantesCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-
-            CRUD::setValidation(EstudiantesRequest::class);
-
+        CRUD::setValidation(EstudiantesRequest::class);
         CRUD::setFromDb();
 
         $carreras = \App\Models\Carrera::all()->count();
         if ($carreras == 0) {
             CRUD::addField([
-                'name' => 'crear_carrera',
-                'type' => 'custom_html',
+                'name'  => 'crear_carrera',
+                'type'  => 'custom_html',
                 'value' => '<a href="' . backpack_url('carrera/create') . '" class="btn btn-primary">Crear Carrera</a>',
             ]);
         } else {
-            CRUD::addField(['name' => 'carrera_id', 'label' => 'Carrera', 'type' => 'select', 'entity' => 'carrera', 'model' => 'App\Models\Carrera', 'attribute' => 'nombre']);
+            CRUD::addField([
+                'name'      => 'carrera_id',
+                'label'     => 'Carrera',
+                'type'      => 'select',
+                'entity'    => 'carrera',
+                'model'     => 'App\Models\Carrera',
+                'attribute' => 'nombre'
+            ]);
         }
 
-
-
-
+        // Campo para seleccionar el usuario con rol 'estudiante'
         CRUD::addField([
-            'name'    => 'assignments', // Este campo también debe estar presente
-            'label'   => 'Añade las asignaturas que cursa el estudiante',
-            'type'    => 'custom_checklist',
-            'entity'  => 'assignments',
-            'model'   => "App\Models\Asignaturas",
-            'attribute' => 'nombre',
-            'pivot'   => true,
+            'name'      => 'user_id',
+            'label'     => 'Usuario Estudiante',
+            'type'      => 'select2',
+            'entity'    => 'user',
+            'model'     => 'App\Models\User',
+            'attribute' => 'name',
+            'options'   => function ($query) {
+                return $query->where('role', 'estudiante')->get();
+            }
         ]);
 
-
-
-        /**
-         * Fields can be defined using the fluent syntax:
-         * - CRUD::field('price')->type('number');
-         */
+        CRUD::addField([
+            'name'      => 'assignments',
+            'label'     => 'Añade las asignaturas que cursa el estudiante',
+            'type'      => 'custom_checklist',
+            'entity'    => 'assignments',
+            'model'     => 'App\Models\Asignaturas',
+            'attribute' => 'nombre',
+            'pivot'     => true,
+        ]);
     }
+
 
     /**
      * Define what happens when the Update operation is loaded.

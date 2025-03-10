@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Imports\StudentsImport;
 use App\Models\Carrera;
 use App\Models\Estudiantes;
+use App\Models\User;
 use Maatwebsite\Excel\Facades\Excel;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 
@@ -27,10 +29,12 @@ class StudentManagementController extends CrudController
 
     public function storeSingleStudent(Request $request)
     {
+        
+
 
         $request->validate([
             'name' => 'required|string|max:150',
-            'email' => 'required|email|unique:estudiantes,correo',
+            'email' => 'required|email|unique:users,email',
             'code' => 'required|string|unique:estudiantes,codigo_estudiantil|max:50',
             'cedula' => 'required|string|unique:estudiantes,cedula|max:20',
             'carrera_id' => 'required',
@@ -48,17 +52,29 @@ class StudentManagementController extends CrudController
 
 
         try {
-            Estudiantes::create([
-                'nombre' => $request->name,
-                'cedula' => $request->cedula,
-                'codigo_estudiantil' => $request->code,
-                'correo' => $request->email,
-                'carrera_id' => $request->carrera_id
+
+            // Crear el usuario
+            $user = User::create([
+                'name'     => $request->name,
+                'email'    => $request->email,
+                'password' =>  bcrypt($request->cedula)
             ]);
+            $user->assignRole('estudiante');
+
+            // Crear el estudiante y asociar el user_id
+            Estudiantes::create([
+                'cedula' => $request->cedula,
+
+                'codigo_estudiantil' => $request->code,
+                'carrera_id'         => $request->carrera_id,
+                'user_id'            => $user->id,
+            ]);
+
             return redirect()->back()->with('success', 'Estudiante añadido exitosamente.');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Ocurrió un error inesperado: ' . $e->getMessage());
         }
+
     }
 
     public function importStudents(Request $request)
@@ -88,7 +104,7 @@ class StudentManagementController extends CrudController
 
         return redirect()->back()->with('successImport', '✅ Estudiantes importados correctamente.');
     } catch (\Exception $e) {
-        return redirect()->back()->with('error', '❌ Error al importar el archivo: ' );
+        return redirect()->back()->with('error', '❌ Error al importar el archivo: '. $e );
     }
 }
 }

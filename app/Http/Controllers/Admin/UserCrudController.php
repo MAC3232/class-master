@@ -84,7 +84,9 @@ class UserCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        $this->crud->addButtonFromView('top', 'create','AddUsers',  'beginning');
+        CRUD::addClause('whereDoesntHave', 'estudiante');
+
+
         /**
          * Columns can be defined using the fluent syntax:
          * - CRUD::column('price')->type('number');

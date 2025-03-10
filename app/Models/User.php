@@ -18,14 +18,17 @@ class User extends Authenticatable
         'password',
     ];
 
-  
+
 
     public function docente()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-
+    public function estudiante()
+    {
+        return $this->hasOne(Estudiantes::class, 'user_id');
+    }
 
 
 }
