@@ -16,6 +16,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'carrera_id',
     ];
 
     public function setPasswordAttribute($value)
@@ -29,6 +30,10 @@ class User extends Authenticatable
     }
 
 
+    public function carrera()
+    {
+        return $this->belongsTo(\App\Models\Carrera::class, 'carrera_id');
+    }
 
 
 }

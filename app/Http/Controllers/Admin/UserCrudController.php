@@ -7,6 +7,9 @@ use App\Models\User;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NewUserCredentials;
 
 /**
  * Class UserCrudController
@@ -70,7 +73,14 @@ class UserCrudController extends CrudController
         ]);
 
         // Proteger acceso a admin
-
+        $this->crud->addField([
+            'name'      => 'carrera_id',
+            'label'     => 'Carrera',
+            'type'      => 'select',
+            'entity'    => 'carrera',       // Relación definida en el modelo User
+            'attribute' => 'nombre',        // Campo que se mostrará (asumiendo que la carrera tiene 'nombre')
+            'model'     => "App\Models\Carrera",
+        ]);
     }
 
     /**
@@ -99,8 +109,8 @@ class UserCrudController extends CrudController
         CRUD::setValidation(UserRequest::class);
         CRUD::setFromDb(); // set fields from db columns.
 
-        CRUD::field('password')->type('password')->label('Contraseña');
-        CRUD::field('password')->type('password')->label('Contraseña');
+       // CRUD::field('password')->type('password')->label('Contraseña');
+        //CRUD::field('password')->type('password')->label('Contraseña');
 
 
 
@@ -119,7 +129,36 @@ class UserCrudController extends CrudController
      */
     protected function setupUpdateOperation()
     {
-        
+
         $this->setupCreateOperation();
     }
+
+
+    public function store()
+    {
+            // Valida la solicitud (Backpack hace esto en el trait CreateOperation)
+            $request = $this->crud->validateRequest();
+
+            // Obtén todos los datos enviados
+            $data = $request->all();
+
+            // Genera una contraseña aleatoria (8 caracteres, puedes ajustar la longitud)
+            $plainPassword = Str::random(20);
+            //dd($plainPassword);
+
+            // Hashea la contraseña y reemplaza el valor en el arreglo de datos
+            $data['password'] = bcrypt($plainPassword);
+
+            // Crea el usuario en la base de datos
+            $item = $this->crud->create($data);
+
+            // Envía un correo con las credenciales
+            // Asegúrate de haber creado una Mailable: php artisan make:mail NewUserCredentials
+            Mail::to($item->email)->send(new \App\Mail\NewUserCredentials($item, $plainPassword));
+
+            \Alert::success('Usuario creado y correo enviado con las credenciales.')->flash();
+
+            return redirect()->to($this->crud->route);
+    }
+
 }

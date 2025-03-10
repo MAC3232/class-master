@@ -58,15 +58,16 @@ class AsignaturasCrudController extends CrudController
         $this->crud->addButtonFromView('top', 'create','Addcourses',  'beginning');
 
         CRUD::setValidation(AsignaturasRequest::class);
-        if (backpack_user()->hasRole('docente')) {
-            // Mostrar solo las asignaturas del docente
-            $this->crud->addClause('where', 'user_id', backpack_user()->id);
-
-            // Quitar botones de edición y eliminación para el rol docente
-            $this->crud->removeButton('update'); // Eliminar botón de editar
-            $this->crud->removeButton('delete'); // Eliminar botón de eliminar
-
-        }
+         if (backpack_user()->hasRole('docente')) {
+        $this->crud->addClause('where', 'user_id', backpack_user()->id);
+        $this->crud->removeButton('update');
+        $this->crud->removeButton('delete');
+    }
+    // 2. Filtrar si el usuario es admin
+    else if (backpack_user()->hasRole('admin')) {
+        // Solo muestra asignaturas de la carrera a la que pertenece el admin
+        $this->crud->addClause('where', 'carrera_id', backpack_user()->carrera_id);
+    }
 
         // Filtrar asignaturas si el usuario es docente
 
@@ -75,6 +76,8 @@ class AsignaturasCrudController extends CrudController
         $this->crud->addColumn(['name' => 'nombre', 'label' => 'Nombre', 'type' => 'text']);
         $this->crud->addColumn(['name' => 'codigo', 'label' => 'N° clase', 'type' => 'text']);
         $this->crud->addColumn(['name' => 'catalogo', 'label' => 'Catálogo', 'type' => 'text']);
+
+        
     }
 
     /**
@@ -329,8 +332,6 @@ class AsignaturasCrudController extends CrudController
 
     public function getAsignaturas(Request $request)
     {
-
-
         $facultadId = $request->input('facultad_id');
 
         if (!$facultadId) {
@@ -341,13 +342,13 @@ class AsignaturasCrudController extends CrudController
             ->select('id', 'nombre as text') // Formato requerido para select2
             ->get();
 
-            if ($asignaturas->isEmpty()) {
-                return response()->json($asignaturas);
-
-            }else{
-
-                return ['ninguna' =>'ninguna'];
-            }
+        if ($asignaturas->isEmpty()) {
+            // Retorna una opción indicando que no hay asignaturas
+            return response()->json([['id' => '', 'text' => 'Ninguna asignatura encontrada']]);
+        } else {
+            // Retorna las asignaturas encontradas
+            return response()->json($asignaturas);
+        }
     }
 
 
