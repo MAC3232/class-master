@@ -187,3 +187,4 @@ Route::get('reportes/graphGeneral/{id}', [ReportesController::class, 'graphGener
 /**
  * DO NOT ADD ANYTHING HERE.
  */
+

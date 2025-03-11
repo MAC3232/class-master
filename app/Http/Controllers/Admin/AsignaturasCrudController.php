@@ -42,10 +42,6 @@ class AsignaturasCrudController extends CrudController
             'buttons' => ['cancel' => 'Cancelar', 'confirm' => 'Eliminar'],
 
         ]);
-
-
-
-
     }
 
 
@@ -57,18 +53,10 @@ class AsignaturasCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        $this->crud->addButtonFromView('top', 'create','Addcourses',  'beginning');
+        $this->crud->addButtonFromView('top', 'create', 'Addcourses',  'beginning');
 
         CRUD::setValidation(AsignaturasRequest::class);
-        if (backpack_user()->hasRole('docente')) {
-            // Mostrar solo las asignaturas del docente
-            $this->crud->addClause('where', 'user_id', backpack_user()->id);
 
-            // Quitar botones de edición y eliminación para el rol docente
-            $this->crud->removeButton('update'); // Eliminar botón de editar
-            $this->crud->removeButton('delete'); // Eliminar botón de eliminar
-
-        }
         if (backpack_user()->hasRole('estudiante')) {
             // Obtener el estudiante autenticado
             $estudiante = Estudiantes::where('user_id', backpack_user()->id)->first();
@@ -84,6 +72,21 @@ class AsignaturasCrudController extends CrudController
                 $this->crud->removeButton('delete');
             }
         }
+
+
+        // 2. Filtrar si el usuario es admin
+        if (backpack_user()->hasRole('admin')) {
+            // Solo muestra asignaturas de la carrera a la que pertenece el admin
+            $this->crud->addClause('where', 'carrera_id', backpack_user()->carrera_id);
+
+        } else if (backpack_user()->hasRole('docente')) {
+            
+            $this->crud->addClause('where', 'user_id', backpack_user()->id);
+            $this->crud->removeButton('update');
+            $this->crud->removeButton('delete');
+        }
+
+
 
         // Filtrar asignaturas si el usuario es docente
 
@@ -107,7 +110,7 @@ class AsignaturasCrudController extends CrudController
             abort(403, 'No tienes permiso para acceder a esta sección.');
         }
 
-            CRUD::setValidation(AsignaturasRequest::class);
+        CRUD::setValidation(AsignaturasRequest::class);
 
 
         // Primera parte del formulario
@@ -144,8 +147,6 @@ class AsignaturasCrudController extends CrudController
                 'attribute' => 'nombre', // Atributo que se mostrará
                 'model' => 'App\Models\Facultad', // Modelo de facultad
             ]);
-
-
         }
         CRUD::addField([
             'name' => 'carrera_id',
@@ -319,7 +320,8 @@ class AsignaturasCrudController extends CrudController
      * @return void
      */
 
-     function getPrerequisitosOptions() {
+    function getPrerequisitosOptions()
+    {
         // Puedes agregar lógica para cargar las opciones dinámicamente, por ejemplo desde una base de datos
 
         if (!empty(old('facultad_id'))) {
@@ -346,8 +348,6 @@ class AsignaturasCrudController extends CrudController
 
     public function getAsignaturas(Request $request)
     {
-
-
         $facultadId = $request->input('facultad_id');
 
         if (!$facultadId) {
@@ -358,13 +358,13 @@ class AsignaturasCrudController extends CrudController
             ->select('id', 'nombre as text') // Formato requerido para select2
             ->get();
 
-            if ($asignaturas->isEmpty()) {
-                return response()->json($asignaturas);
-
-            }else{
-
-                return ['ninguna' =>'ninguna'];
-            }
+        if ($asignaturas->isEmpty()) {
+            // Retorna una opción indicando que no hay asignaturas
+            return response()->json([['id' => '', 'text' => 'Ninguna asignatura encontrada']]);
+        } else {
+            // Retorna las asignaturas encontradas
+            return response()->json($asignaturas);
+        }
     }
 
 
@@ -445,17 +445,15 @@ class AsignaturasCrudController extends CrudController
     public function getCarrerasByFacultad($facultadId)
     {
         $carreras = Carrera::where('facultad_id', $facultadId)
-                    ->with('asignaturas') // Cargar las asignaturas relacionadas
-                    ->get();
+            ->with('asignaturas') // Cargar las asignaturas relacionadas
+            ->get();
 
         return response()->json($carreras);
     }
 
     public function getAsignaturasByCarrera($carreraId)
     {
-        $asignaturas = Asignaturas::where('carrera_id', $carreraId)->get(['id', 'nombre','codigo']);
+        $asignaturas = Asignaturas::where('carrera_id', $carreraId)->get(['id', 'nombre', 'codigo']);
         return response()->json($asignaturas);
     }
-
-
 }
