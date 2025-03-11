@@ -41,7 +41,7 @@ $evalueRubrica= false;
 @section('header')
 
 <section class="content-header">
-    <h1 class="text-light">
+    <h1 class="">
         Diseñador de Rúbrica: {{ $rubrica_actividad->nombre }}
     </h1>
     <ol class="breadcrumb m-2">
