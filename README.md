@@ -48,7 +48,7 @@ Este es un sistema de gestión académica desarrollado en **Laravel** para facil
 
 ## 💻 **Requisitos del sistema**
 
-1. PHP >= 8.1  
+1. PHP >= 8.3  
 2. Composer  
 3. MySQL  
 4. Node.js y npm (opcional para recursos de frontend)
