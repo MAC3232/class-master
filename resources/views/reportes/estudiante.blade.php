@@ -23,13 +23,13 @@ $breadcrumbs = [
 <div class="container">
     <div class="card">
         <div class="card-body">
-            <h1>Estudiantes de la Asignatura: {{ $asignatura->user->name }}</h1>
+            <h1>Estudiantes de la Asignatura: {{ $asignatura->nombre }}</h1>
 
             <!-- Tabla de estudiantes -->
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>ID</th>
+
                         <th>Nombre</th>
                         <th>Correo</th>
                         <th>Acciones</th>
@@ -38,7 +38,7 @@ $breadcrumbs = [
                 <tbody>
                     @foreach ($asignatura->students as $estudiante)
                         <tr>
-                            <td>{{ $estudiante->id }}</td>
+
                             <td>{{ $estudiante->user->name }}</td>
                             <td>{{ $estudiante->user->email }}</td>
                             <td class="">

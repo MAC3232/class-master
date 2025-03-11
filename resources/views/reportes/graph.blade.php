@@ -56,7 +56,7 @@ $breadcrumbs = [
 @section('header')
     <section class="content-header text-center bg-primary text-light py-4">
         <h1 class="mb-1">Reporte Materia: <strong>{{ $asignatura->nombre }}</strong></h1>
-        <h2>Estudiante: <strong>{{ $student->nombre }}</strong></h2>
+        <h2>Estudiante: <strong>{{ $student->user->name }}</strong></h2>
         <ol class="breadcrumb justify-content-center">
             <li><a href="{{ backpack_url() }}" class="text-white">Panel</a></li>
             <li><a href="#" onclick="window.history.back()" class="text-white">Volver</a></li>
