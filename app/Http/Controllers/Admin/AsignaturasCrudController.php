@@ -80,7 +80,7 @@ class AsignaturasCrudController extends CrudController
             $this->crud->addClause('where', 'carrera_id', backpack_user()->carrera_id);
 
         } else if (backpack_user()->hasRole('docente')) {
-            
+
             $this->crud->addClause('where', 'user_id', backpack_user()->id);
             $this->crud->removeButton('update');
             $this->crud->removeButton('delete');
@@ -373,21 +373,24 @@ class AsignaturasCrudController extends CrudController
     {
 
 
-
+        $this->crud->addButtonFromView('line', 'asistencia', 'asistencia');
+        $this->crud->addButtonFromView('line', 'activity', 'actividad');
+        $this->crud->addButtonFromView('line', 'assigment_students', 'assigment_students', 'beginning');
 
         // logica roles: elimiar update y delete
-        if (backpack_user()->hasRole('docente')) {
-
+        if (backpack_user()->hasRole('docente') || backpack_user()->hasRole('estudiante') ) {
             $this->crud->removeButton('update');
+        $this->crud->addButtonFromView('line', 'actividades', 'actividades');
+
             $this->crud->removeButton('delete');
             $this->crud->removeButton('activity');
+            $this->crud->removeButton('assigment_students');
+            $this->crud->removeButton('asistencia');
         }
 
 
         // borones action
-        $this->crud->addButtonFromView('line', 'asistencia', 'asistencia');
-        $this->crud->addButtonFromView('line', 'activity', 'actividad');
-        $this->crud->addButtonFromView('line', 'assigment_students', 'assigment_students', 'beginning');
+
 
         // eliminar campos select
         $this->crud->removeColumn('facultad_id');

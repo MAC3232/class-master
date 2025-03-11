@@ -37,11 +37,17 @@
             <a href="javascript: window.print();" style="margin-left:10px" class=" p-2 btn h-100   float-end float-right "><i class="la la-print fs-1"></i></a>
             @if(Route::is('asignaturas.show'))
 
-            @if (!backpack_auth()->check() || !backpack_user()->hasRole('admin'))
+            @if (!backpack_auth()->check() || backpack_user()->hasRole('docente'))
 
             <a href="{{ url('/admin/assignment/calendario?id='. $entry->getKey() ) }}" class=" p-2 btn h-100  btn-primary">
                 <i class="la la-calendar fs-1"></i>
             </a>
+
+            <a href="{{ route( 'reportes.general' , ['id' => $entry->getKey() ]) }}" class=" p-2 m-3 btn h-100  btn-warning">
+
+<i class="la la-file fs-1"></i> Exportar informe excel
+</a>
+
 
             @endif
 
@@ -49,10 +55,6 @@
         </div>
 
     </div>
-    <a href="{{ route( 'reportes.general' , ['id' => $entry->getKey() ]) }}" class=" p-2 m-3 btn h-100  btn-warning">
-
-<i class="la la-file fs-1"></i> Exportar informe excel
-</a>
 
 @endsection
 
@@ -91,7 +93,7 @@
 	</div>
 	</div>
 
-    @if (!backpack_auth()->check() || !backpack_user()->hasRole('admin'))
+    @if (!backpack_auth()->check() || backpack_user()->hasRole('docente') )
 
 
         @if(Route::is('asignaturas.show'))
@@ -108,7 +110,7 @@
     @endif
 
 
-	@if(Route::is('actividad.show') && ( !backpack_auth()->check() || !backpack_user()->hasRole('admin')))
+	@if(Route::is('actividad.show') && ( !backpack_auth()->check() || !backpack_user()->hasRole('admin') || !backpack_user()->hasRole('estudiante') ))
 	<a href="{{ route('rubrica_actividad.create', $entry->getKey()) }}" class="btn btn-primary m-1">
     Crear rubrica para la actividad
 </a>

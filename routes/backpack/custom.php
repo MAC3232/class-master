@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActividadStudentController;
 use App\Http\Controllers\Admin\AsignaturasCrudController;
 use App\Http\Controllers\admin\AsistenciaController;
 use App\Http\Controllers\Admin\AssignmentStudentController;
@@ -132,6 +133,9 @@ Route::group([
 
     Route::get('actividad/{id}/rubrica/', [RubricaActividadController::class, 'show'])
         ->name('rubrica_actividad.index');
+
+    Route::get('actividad/student/show', [ActividadStudentController::class, 'show'])
+        ->name('actividad-student.show');
 
 
     Route::get('actividad/{id}/rubrica/create', [RubricaActividadController::class, 'create'])->name('rubrica_actividad.create');
