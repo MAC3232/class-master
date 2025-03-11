@@ -11,7 +11,7 @@ $breadcrumbs = [
 
 
 @section('content')
-<a href="{{ url('/admin/reportes/') }}" class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center" 
+<a href="{{ url('/admin/reportes/') }}" class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center"
    style="width: 50px; height: 50px; padding: 0; position: relative; top: -10px; left: 17px;">
     <i class="la la-arrow-left" style="font-size: 1.5rem;"></i>
 </a>
@@ -23,7 +23,7 @@ $breadcrumbs = [
 <div class="container">
     <div class="card">
         <div class="card-body">
-            <h1>Estudiantes de la Asignatura: {{ $asignatura->nombre }}</h1>
+            <h1>Estudiantes de la Asignatura: {{ $asignatura->user->name }}</h1>
 
             <!-- Tabla de estudiantes -->
             <table class="table table-bordered">
@@ -39,13 +39,13 @@ $breadcrumbs = [
                     @foreach ($asignatura->students as $estudiante)
                         <tr>
                             <td>{{ $estudiante->id }}</td>
-                            <td>{{ $estudiante->nombre }}</td>
-                            <td>{{ $estudiante->correo }}</td>
+                            <td>{{ $estudiante->user->name }}</td>
+                            <td>{{ $estudiante->user->email }}</td>
                             <td class="">
                                  <a class="nav-link btn btn-link p-1" href="{{ route('graph', ['id' => $asignatura->id, 'student' => $estudiante->id]) }}">
                                 <i class="la la-chart-bar p-1"></i><small> Reporte grafico </small>
                             </a>
-                              
+
 
                         </td>
                         </tr>
