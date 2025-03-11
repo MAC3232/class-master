@@ -23,3 +23,6 @@
 
 @endif
 
+
+
+<link rel="stylesheet" href="{{asset('css/global-styles.css')}}">

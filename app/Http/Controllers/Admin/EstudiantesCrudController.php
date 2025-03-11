@@ -8,6 +8,7 @@ use App\Models\Asignaturas;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Illuminate\Support\Facades\Request;
+use Prologue\Alerts\Facades\Alert;
 
 /**
  * Class EstudiantesCrudController
@@ -95,7 +96,26 @@ class EstudiantesCrudController extends CrudController
     protected function setupCreateOperation()
     {
         CRUD::setValidation(EstudiantesRequest::class);
+
+        CRUD::addField([
+            'name'      => 'nombre',
+            'label'     => 'Nombre',
+            'type'      => 'text',
+            'value'     => optional($this->crud->getCurrentEntry()->user)->name, // Accede al nombre del usuario relacionado
+
+            'fake'      => true,
+        ]);
+        CRUD::addField([
+            'name'      => 'correo',
+            'label'     => 'Correo Electrónico',
+            'type'      => 'text',
+            'value'     => optional($this->crud->getCurrentEntry()->user)->email, // Accede al email del usuario relacionado
+
+            'fake'      => true,
+        ]);
         CRUD::setFromDb();
+        CRUD::removeField('user_id');
+
 
         $carreras = \App\Models\Carrera::all()->count();
         if ($carreras == 0) {
@@ -115,18 +135,7 @@ class EstudiantesCrudController extends CrudController
             ]);
         }
 
-        // Campo para seleccionar el usuario con rol 'estudiante'
-        CRUD::addField([
-            'name'      => 'user_id',
-            'label'     => 'Usuario Estudiante',
-            'type'      => 'select2',
-            'entity'    => 'user',
-            'model'     => 'App\Models\User',
-            'attribute' => 'name',
-            'options'   => function ($query) {
-                return $query->where('role', 'estudiante')->get();
-            }
-        ]);
+
 
         CRUD::addField([
             'name'      => 'assignments',
@@ -151,6 +160,33 @@ class EstudiantesCrudController extends CrudController
         $this->setupCreateOperation();
 
     }
+
+    protected function update($id)
+{
+    $data = request()->all();
+
+
+    $student = \App\Models\Estudiantes::findOrFail($id);
+    $user = $student->user;
+
+    $user->update([
+        'name'  => $data['nombre'],
+        'email' => $data['correo']
+    ]);
+
+    $student->update([
+        'carrera_id' => $data['carrera_id'],
+        'codigo_estudiantil' => $data['codigo_estudiantil'],
+        'cedula' => $data['cedula']
+    ]);
+
+
+
+    $student->assignments()->sync($data['assignments'] ?? []);
+    Alert::success('Usuario editado exitosamente')->flash();
+
+    return redirect()->route('estudiantes.index');
+}
 
 
     public function obtenerAsignaturas(Request $request)
