@@ -10,6 +10,7 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\NewUserCredentials;
+use Prologue\Alerts\Facades\Alert;
 
 /**
  * Class UserCrudController
@@ -156,7 +157,7 @@ class UserCrudController extends CrudController
             // Asegúrate de haber creado una Mailable: php artisan make:mail NewUserCredentials
             Mail::to($item->email)->send(new \App\Mail\NewUserCredentials($item, $plainPassword));
 
-            \Alert::success('Usuario creado y correo enviado con las credenciales.')->flash();
+            Alert::success('Usuario creado y correo enviado con las credenciales.')->flash();
 
             return redirect()->to($this->crud->route);
     }

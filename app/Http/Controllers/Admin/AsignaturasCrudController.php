@@ -58,16 +58,21 @@ class AsignaturasCrudController extends CrudController
         $this->crud->addButtonFromView('top', 'create','Addcourses',  'beginning');
 
         CRUD::setValidation(AsignaturasRequest::class);
-         if (backpack_user()->hasRole('docente')) {
+
+
+  // 2. Filtrar si el usuario es admin
+  if (backpack_user()->hasRole('admin')) {
+    // Solo muestra asignaturas de la carrera a la que pertenece el admin
+    $this->crud->addClause('where', 'carrera_id', backpack_user()->carrera_id);
+}
+
+
+        else if (backpack_user()->hasRole('docente')) {
         $this->crud->addClause('where', 'user_id', backpack_user()->id);
         $this->crud->removeButton('update');
         $this->crud->removeButton('delete');
     }
-    // 2. Filtrar si el usuario es admin
-    else if (backpack_user()->hasRole('admin')) {
-        // Solo muestra asignaturas de la carrera a la que pertenece el admin
-        $this->crud->addClause('where', 'carrera_id', backpack_user()->carrera_id);
-    }
+
 
         // Filtrar asignaturas si el usuario es docente
 
@@ -77,7 +82,7 @@ class AsignaturasCrudController extends CrudController
         $this->crud->addColumn(['name' => 'codigo', 'label' => 'N° clase', 'type' => 'text']);
         $this->crud->addColumn(['name' => 'catalogo', 'label' => 'Catálogo', 'type' => 'text']);
 
-        
+
     }
 
     /**
