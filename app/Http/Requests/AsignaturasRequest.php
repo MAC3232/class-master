@@ -12,7 +12,6 @@ class AsignaturasRequest extends FormRequest
      */
     public function authorize()
     {
-        // Si es necesario, cambia esta lógica para verificar si el usuario está autorizado a crear o editar asignaturas
         return true;
     }
 
@@ -23,21 +22,28 @@ class AsignaturasRequest extends FormRequest
      */
     public function rules()
     {
-
         return [
             'nombre' => 'required|string|max:255',
-            'codigo' => 'required|string|max:100|unique:asignaturas,codigo,' . $this->route('id'),
+            'codigo' => 'required|integer|max:100|unique:asignaturas,codigo,' . $this->route('id'),
+            'competencia' => 'required|string|max:255',
+            'descripcion_competencia' => 'required|string',
+            'justificacion' => 'required|string',
+            'facultad_id' => 'required|exists:facultades,id',
+            'carrera_id' => 'required|exists:carreras,id',
+            'prerequisitos' => 'required|string|max:255',
+            'correquisitos' => 'required|string|max:255',
+            'user_id' => 'required|exists:users,id',
+            'area_formacion' => 'required|string|max:255',
+            'tipo_asignatura' => 'required|string|in:practica,teorica,teorica con laboratorio',
+            'nivel_formacion' => 'required|string|max:255',
+            'modalidad' => 'required|string|in:virtual,presencial,distancia,dual',
+            'creditos_academicos' => 'required|integer|min:1|max:15',
+            'horas_presenciales' => 'required|integer|min:0',
+            'horas_independientes' => 'required|integer|min:0',
+            'horas_totales' => 'required|integer|min:0',
             'catalogo' => 'required|string|max:255',
-            'facultad_id' => 'nullable|exists:facultades,id', // Asegúrate de que la facultad exista
-
-            'carrera_id' => 'nullable|exists:carreras,id', // Asegúrate de que la carrera exista
-            'area_formacion' => 'nullable|string|max:255',
-            'creditos_academicos' => 'nullable|integer|min:1|max:15', // Asegúrate de que los créditos estén dentro de un rango válido
-            'modalidad' => 'nullable|string|in:virtual,presencial,distancia,dual',
-            'type_asignatura' => 'nullable|string|in:practica,teorica,teorica con laboratorio',
-            'horas_presenciales' => 'nullable|integer|min:0',
-            'horas_independientes' => 'nullable|integer|min:0',
-            'horas_totales' => 'nullable|integer|min:0', // Este campo podría ser calculado, pero se valida por si acaso
+            'periodo_academico' => 'required|integer|min:1|max:10',
+            'numero_estudiantes' => 'required|integer|min:1'
         ];
     }
 
@@ -52,42 +58,36 @@ class AsignaturasRequest extends FormRequest
             'nombre.required' => 'El nombre de la asignatura es obligatorio.',
             'codigo.required' => 'El código es obligatorio.',
             'codigo.unique' => 'Este código de asignatura ya está registrado.',
-            'catalogo.required' => 'El catálogo es obligatorio.',
-            'user_id.required' => 'El docente es obligatorio.',
-            'user_id.exists' => 'El docente seleccionado no es válido.',
-
+            'competencia.required' => 'La competencia es obligatoria.',
+            'descripcion_competencia.required' => 'La descripción de la competencia es obligatoria.',
+            'justificacion.required' => 'La justificación es obligatoria.',
+            'facultad_id.required' => 'La facultad es obligatoria.',
             'facultad_id.exists' => 'La facultad seleccionada no es válida.',
+            'carrera_id.required' => 'La carrera es obligatoria.',
             'carrera_id.exists' => 'La carrera seleccionada no es válida.',
+            'prerequisitos.required' => 'Los prerrequisitos son obligatorios.',
+            'correquisitos.required' => 'Los correquisitos son obligatorios.',
+            'area_formacion.required' => 'El área de formación es obligatoria.',
+            'tipo_asignatura.required' => 'El tipo de asignatura es obligatorio.',
+            'nivel_formacion.required' => 'El nivel de formación es obligatorio.',
+            'modalidad.required' => 'La modalidad es obligatoria.',
+            'creditos_academicos.required' => 'Los créditos académicos son obligatorios.',
             'creditos_academicos.integer' => 'Los créditos académicos deben ser un número entero.',
             'creditos_academicos.min' => 'Los créditos académicos deben ser al menos 1.',
             'creditos_academicos.max' => 'Los créditos académicos no pueden exceder los 15.',
+            'horas_presenciales.required' => 'Las horas presenciales son obligatorias.',
             'horas_presenciales.integer' => 'Las horas presenciales deben ser un número entero.',
+            'horas_independientes.required' => 'Las horas independientes son obligatorias.',
             'horas_independientes.integer' => 'Las horas independientes deben ser un número entero.',
+            'horas_totales.required' => 'Las horas totales son obligatorias.',
             'horas_totales.integer' => 'Las horas totales deben ser un número entero.',
-        ];
-    }
-
-    /**
-     * Get the attributes that are used in the validation.
-     *
-     * @return array
-     */
-    public function attributes()
-    {
-        return [
-            'nombre' => 'nombre de la asignatura',
-            'codigo' => 'código',
-            'catalogo' => 'catálogo',
-            'facultad_id' => 'facultad',
-            'user_id' => 'docente',
-            'carrera_id' => 'carrera',
-            'area_formacion' => 'área de formación',
-            'creditos_academicos' => 'créditos académicos',
-            'modalidad' => 'modalidad',
-            'type_asignatura' => 'tipo de asignatura',
-            'horas_presenciales' => 'horas presenciales',
-            'horas_independientes' => 'horas independientes',
-            'horas_totales' => 'horas totales',
+            'periodo_academico.required' => 'El periodo académico es obligatorio.',
+            'periodo_academico.integer' => 'El periodo académico debe ser un número entero.',
+            'periodo_academico.min' => 'El periodo académico debe ser al menos 1.',
+            'periodo_academico.max' => 'El periodo académico no puede ser mayor a 10.',
+            'numero_estudiantes.required' => 'El número de estudiantes es obligatorio.',
+            'numero_estudiantes.integer' => 'El número de estudiantes debe ser un número entero.',
+            'numero_estudiantes.min' => 'Debe haber al menos un estudiante inscrito.'
         ];
     }
 }
