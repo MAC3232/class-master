@@ -69,6 +69,10 @@ class AsignaturasCrudController extends CrudController
             $this->crud->removeButton('delete'); // Eliminar botón de eliminar
 
         }
+     //   if (backpack_user()->hasRole('super-admin')) {
+
+
+       // };
         if (backpack_user()->hasRole('estudiante')) {
             // Obtener el estudiante autenticado
             $estudiante = Estudiantes::where('user_id', backpack_user()->id)->first();
