@@ -135,7 +135,7 @@ td.seleccionado .overlay:hover {
 
 <script>let actividad = '{{$actividad->id}}';</script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+<script src="{{ asset('js/modal.js') }}"></script>
 
 <script src="{{asset('js/checksCriterios.js')}}"></script>
 @endsection
