@@ -31,6 +31,7 @@ class ReportesController extends Controller
         if (!backpack_auth()->check() || !backpack_user()->hasRole('docente')) {
             abort(403, 'No tienes permiso para acceder a esta sección.');
         }
+
         $asignatura = Asignaturas::with('students.user')->findOrFail($id);
         $estudiantes = $asignatura->students;
 
@@ -52,14 +53,6 @@ class ReportesController extends Controller
             $corte = $corteRequest;
         }
 
-
-
-
-        $notas = [3.5, 4.0, 2.8, 4.5]; // Notas de actividades
-        $promedio = 3.75; // Promedio general
-
-
-
         $asignatura = Asignaturas::where('id', $id)
         ->with(['rubrica.ra' => function($query) use ($corte) {
             $query->where('corte', $corte); // Filtra los RA por corte
@@ -80,8 +73,6 @@ class ReportesController extends Controller
         $resultados =$actividades_nota ; // Resultados de aprendizaje
 
 
-
-        // Suponiendo que una actividad está aprobada si la nota es >= 3.0
 $aprobadas = 0;
 $no_aprobadas = 0;
 

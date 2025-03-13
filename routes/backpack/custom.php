@@ -164,8 +164,6 @@ Route::group([
     Route::get('/asistencias/{asignatura_id}', [AsistenciaController::class, 'index'])->name('asistencias.index');
 
     // Calendario
-
-    // Route::get('/calendario/{id}', [CalendarController::class, 'index'])->name('calendario');
      Route::resource('/assignment/calendario', 'CalendarController');
 
      Route::get('/descargar-plantilla', function () {
