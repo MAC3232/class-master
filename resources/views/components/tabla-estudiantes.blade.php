@@ -18,7 +18,7 @@
                 <tbody>
                     @forelse($estudiantes as $estudiante)
                         <tr>
-                            <td>{{ $estudiante->nombre }}</td>
+                            <td>{{ $estudiante->user->name }}</td>
                             <td>{{ $estudiante->codigo_estudiantil }}</td>
                             <td>
                                 {{-- Botón de acción para evaluar al estudiante --}}

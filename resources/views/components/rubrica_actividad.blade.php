@@ -250,7 +250,7 @@ if (!is_null($valoracionEstudiante) && !is_null($valoracionEstudiante->nota)) {
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" id="cancelButton" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                     <button type="button" class="btn btn-primary" onclick="submitCustomModal()">Agregar</button>
                 </div>
             </div>

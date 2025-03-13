@@ -31,12 +31,12 @@ class DatabaseSeeder extends Seeder
             $user = User::factory()->create([
                 'email' => 'admin@google.com',
                 'name' => 'Admin',
-                'password' => 'admin', // Hasheado con bcrypt
+                'password' => bcrypt('admin'), // Hasheado con bcrypt
             ]);
             $user2 = User::factory()->create([
                 'email' => 'docente@google.com',
                 'name' => 'Docente',
-                'password' => 'docente', // Hasheado con bcrypt
+                'password' => bcrypt('Docente'), // Hasheado con bcrypt
             ]);
 
             // Asignar el rol predeterminado al usuario

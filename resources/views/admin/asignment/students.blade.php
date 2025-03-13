@@ -84,74 +84,92 @@
         </ul>
     </div>
 @endif
+
+        @if(session('successImport'))
+        <div class="alert alert-success" role="alert">
+            {{session('successImport')}}
+            </div>
+
+        @endif
             @if (session('error'))
     <div class="alert alert-danger">
         <h4>⚠️ Errores en la Importación</h4>
         <ul>
-            @foreach (session('error') as $error)
-                <li>{{ $error }}</li>
-            @endforeach
+
+     @if(session('error') && is_array(session('error')))
+    @foreach (session('error') as $error)
+        <li>{{ $error }}</li>
+    @endforeach
+@else
+    <p>{{session('error')}}.</p>
+@endif
+
         </ul>
     </div>
 @endif
-            <div class="float-end float-right d-flex justify-content-end mb-3">
-                <!-- Botón Añadir con Modal -->
-                <button class="m-1 btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAdd">
-                    <i class="la la-plus-circle"></i> Añadir
-                </button>
+<div class="float-end float-right d-flex justify-content-end mb-3">
+    <!-- Botón Añadir con Modal -->
+    <button class="m-1 btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAdd">
+        <i class="la la-plus-circle"></i> Añadir
+    </button>
+    <!-- Botón Seleccionar/Borrar -->
+    <button id="btnSeleccionar" class="m-1 btn btn-warning">
+        <i class="la la-check-square"></i> Seleccionar
+    </button>
+      <!-- Botón Cancelar (Oculto por defecto) -->
+    <button id="btnCancelar" class="m-1 btn btn-danger d-none">
+     <i class="la la-times-circle"></i> Cancelar
+    </button>
+    <!-- Botón Importar con Modal -->
+    <button class="m-1 btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalImport">
+        <i class="la la-upload"></i> Importar
+    </button>
+</div>
 
-                <!-- Botón Borrar -->
-                <button class="m-1 btn btn-danger">
-                    <i class="la la-trash"></i> Borrar
-                </button>
+<div class="container">
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th id="headerCheckAll" class="d-none">
+                        <div id="checkAllContainer" class="m-1">
+                            <input type="checkbox" id="checkAll">
+                            <label for="checkAll">Seleccionar Todo</label>
+                        </div>
+                    </th>
+                    <th>N°</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Código</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($students as $index => $student)
+                    <tr>
+                        <td class="check-col d-none">
+                            <input type="checkbox" class="check-student" value="{{ $student->id }}">
+                        </td>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $student->user->name }}</td>
+                        <td>{{ $student->user->email }}</td>
+                        <td>{{ $student->codigo_estudiantil }}</td>
+                        <td>
+                            <a href="" class="btn btn-sm btn-info">
+                                <i class="la la-eye fs-2"></i>
+                            </a>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="6" class="text-center">No hay estudiantes matriculados en esta asignatura.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+</div>
 
-                <!-- Botón Importar con Modal -->
-                <button class="m-1 btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalImport">
-                    <i class="la la-upload"></i> Importar
-                </button>
-            </div>
-
-            <div class="container">
-                <div class="table-responsive">
-
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-
-                                <th>N°</th>
-                                <th>Nombre</th>
-                                <th>Email</th>
-                                <th>Codigo</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($students as $student)
-                                <tr>
-
-                                    <td>{{$index+= 1}}</td>
-                                    <td>{{ $student->user->name }}</td>
-                                    <td>{{ $student->user->email }}</td>
-                                    <td>{{ $student->codigo_estudiantil }}</td>
-                                    <td>
-                                        <!-- Botones o acciones -->
-                                        <a href="" class="btn btn-sm btn-info"> <i class="la la-eye fs-2 " ></i> </a>
-
-                                        <a href="#" class="btn btn-sm btn-danger btn-borrar"
-           data-estudiante-id="{{ $student->id }}"
-           data-asignatura-id="{{ $asignatura['id'] }}">
-            <i class="la la-trash fs-2"></i>
-        </a>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="5" class="text-center">No hay estudiantes matriculados en esta asignatura.</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
 
                 <!-- Paginación -->
                 <div class="d-flex justify-content-center">
@@ -241,9 +259,39 @@
             </div>
             <div class="modal-body">
 
-                     <!-- Instrucciones de Importación -->
-        <p>Por favor, cargue un archivo Excel o CSV con los códigos de los estudiantes. Si el código no existe, se producirá un error.</p>
+            <div class="container mt-4">
+            <p>
+            <span class="fs-1">📌</span> El archivo debe estar en formato 📂 <strong>CSV</strong> o 📊 <strong>Excel</strong> para garantizar una importación exitosa ✅.
+        </p>
 
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover">
+                        <thead class="table-primary text-center">
+                            <tr>
+                                <th>📌 Código</th>
+                                <th>📌 Nombre</th>
+                                <th>📌 Identificacion</th>
+                                <th>📌 Correo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Juan Pérez</td>
+                                <td>25</td>
+                                <td>juan@example.com</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Ana López</td>
+                                <td>30</td>
+                                <td>ana@example.com</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         <!-- Opciones de Subida de Archivos -->
         <form action="{{route('assignment.students.import', ['id' =>$asignatura['id'] ]  )}}" method="POST" enctype="multipart/form-data">
           @csrf
@@ -317,14 +365,34 @@
     }
 
     .carrer{
-        white-space: nowrap;           /* Impide el salto de línea */
-  overflow: hidden;              /* Oculta el texto que excede el límite */
-  text-overflow: ellipsis;       /* Agrega los "..." al final */
-  max-width: 300px;              /* Máximo tamaño del contenedor */
-  font-size: 16px;               /* Tamaño de fuente ajustable */
-  font-family: Arial, sans-serif;/* Fuente ajustable */
+        white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 300px;
+  font-size: 16px;
+  font-family: Arial, sans-serif;
   color: #333;
     }
+    /* Centrar los checkboxes en la tabla */
+.check-col,
+#headerCheckAll {
+    text-align: center;
+    vertical-align: middle;
+    width: 50px; /* Ajusta el ancho si es necesario */
+}
+
+/* Estilo para el checkbox de "Seleccionar Todo" */
+#checkAllContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#checkAll {
+    transform: scale(1.3); /* Aumenta el tamaño */
+    margin-right: 5px;
+}
+
 </style>
 @endpush
 
@@ -333,11 +401,42 @@
 @push('after_scripts')
 
 <!-- SweetAlert2 -->
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-
+<script src="{{asset('js/deleteAll.js')}}"></script>
 <script>
 let asignatura = `{{$asignatura['id']}}`;
+let studentsSelect = [];
+
+
+
+
+function cambiarEstado(checkbox, id) {
+
+
+    if (checkbox.checked) {
+        studentsSelect.push(id);
+    }else{
+        let index = studentsSelect.indexOf(id);
+
+        if (index !== -1) {
+            studentsSelect.splice(index, 1);
+
+}
+
+
+    }
+
+
+
+
+    // Aquí puedes enviar el estado a tu backend si es necesario
+  }
+
+
+
+
  $(document).ready(function() {
     function cargarEstudiantes(page = 1, search = '', carrera_id = '', asignatura_id = asignatura) {
     $.ajax({
@@ -345,8 +444,6 @@ let asignatura = `{{$asignatura['id']}}`;
         type: 'GET',
         dataType: 'json',
         success: function(response) {
-            console.log(response);
-
             if (!response || !response.data) {
                 console.error("Respuesta inválida del servidor.");
                 return;
@@ -355,8 +452,20 @@ let asignatura = `{{$asignatura['id']}}`;
             let asignados = response.asignados || []; // Estudiantes ya asignados
             let html = '';
 
+
+
+asignados.forEach(element => {
+    studentsSelect.push(element);
+});
+
             response.data.data.forEach(estudiante => {
                 let checked = asignados.includes(estudiante.id) ? 'checked' : ''; // Marcar si ya está asignado
+
+                if(checked === 'checked' && !studentsSelect.includes(estudiante.id)){
+                    studentsSelect.push(estudiante.id);
+
+                }
+
 
                 html += `
                     <tr>
@@ -470,9 +579,11 @@ let asignatura = `{{$asignatura['id']}}`;
     // Guardar selección de estudiantes
     $('#guardar-seleccion').on('click', function() {
         let seleccionados = [];
-        $('.checkbox-materia:checked').each(function() {
-            seleccionados.push($(this).data('id'));
-        });
+        seleccionados = studentsSelect
+
+
+
+
 
         if (seleccionados.length === 0) {
             Swal.fire('Atención', 'Debe seleccionar al menos un estudiante.', 'warning');
@@ -552,4 +663,3 @@ let asignatura = `{{$asignatura['id']}}`;
 
  </script>
 @endpush
-

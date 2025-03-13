@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Prologue\Alerts\Facades\Alert;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NewUserCredentials;
+
 
 /**
  * Class UserCrudController
@@ -73,7 +77,14 @@ class UserCrudController extends CrudController
         ]);
 
         // Proteger acceso a admin
-
+        $this->crud->addField([
+            'name'      => 'carrera_id',
+            'label'     => 'Carrera',
+            'type'      => 'select',
+            'entity'    => 'carrera',       // Relación definida en el modelo User
+            'attribute' => 'nombre',        // Campo que se mostrará (asumiendo que la carrera tiene 'nombre')
+            'model'     => "App\Models\Carrera",
+        ]);
     }
 
     /**
@@ -134,7 +145,7 @@ class UserCrudController extends CrudController
     {
 
      $request = $this->crud->validateRequest();
-     
+
     // Encuentra y actualiza al usuario de forma elegante
     $user = User::findOrFail($request->id);
 
@@ -156,4 +167,6 @@ class UserCrudController extends CrudController
     return redirect()->back() ;
 
     }
+
+
 }

@@ -16,6 +16,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'carrera_id',
     ];
 
 
@@ -25,9 +26,17 @@ class User extends Authenticatable
         return $this->belongsTo(User::class, 'user_id');
     }
 
+
     public function estudiante()
     {
         return $this->hasOne(Estudiantes::class, 'user_id');
+}
+
+
+    public function carrera()
+    {
+        return $this->belongsTo(\App\Models\Carrera::class, 'carrera_id');
+
     }
 
 

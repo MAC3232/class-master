@@ -2,7 +2,7 @@
 
 @section('header')
 <section class="content-header">
-    <h1 class="text-light">
+    <h1 class="">
         Evaluar estudiantes
     </h1>
     <ol class="breadcrumb m-2">
@@ -14,7 +14,7 @@
         </li>
     </ol>
 
-    
+
 
 </section>
 

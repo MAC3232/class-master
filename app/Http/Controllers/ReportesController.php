@@ -31,9 +31,10 @@ class ReportesController extends Controller
         if (!backpack_auth()->check() || !backpack_user()->hasRole('docente')) {
             abort(403, 'No tienes permiso para acceder a esta sección.');
         }
-        $asignatura = Asignaturas::find($id);
+        $asignatura = Asignaturas::with('students.user')->findOrFail($id);
         $estudiantes = $asignatura->students;
-        return view('reportes.estudiante', compact('asignatura'));
+
+        return view('reportes.estudiante', compact('asignatura','estudiantes'));
     }
 
 
@@ -41,6 +42,7 @@ class ReportesController extends Controller
 
     function  graph($id, $student)
     {
+
         if (!backpack_auth()->check() || !backpack_user()->hasRole('docente')) {
             abort(403, 'No tienes permiso para acceder a esta sección.');
         }
@@ -94,6 +96,7 @@ foreach ($resultados as $actividad => $nota) {
 // Calcula el total de actividades
 
 
+
     $total_actividades = $aprobadas + $no_aprobadas;
 
 // Calcula los porcentajes
@@ -113,7 +116,7 @@ if($no_aprobadas== 0){
     $porcentaje_no_aprobadas = ($no_aprobadas / $total_actividades) * 100;
 }
 
-$student = Estudiantes::all()->findOrFail($student);
+$student = Estudiantes::with(['carrera', 'user'])->findOrFail($student);
 
 
 
