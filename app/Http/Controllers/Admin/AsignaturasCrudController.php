@@ -107,9 +107,9 @@ class AsignaturasCrudController extends CrudController
     protected function setupCreateOperation()
     {
 
-        if (!backpack_auth()->check() || !backpack_user()->hasRole('admin')) {
-            abort(403, 'No tienes permiso para acceder a esta sección.');
-        }
+            if (!backpack_auth()->check() || !backpack_user()->hasRole(['admin','super-admin'])) {
+                abort(403, 'No tienes permiso para acceder a esta sección.');
+            }
 
             CRUD::setValidation(AsignaturasRequest::class);
 
@@ -194,7 +194,7 @@ class AsignaturasCrudController extends CrudController
             'model' => "App\Models\User", // Modelo de User para la relación
             'attribute' => 'name', // Campo que queremos mostrar en el select
             'options'   => (function ($query) {
-                return $query->role('docente')->get(); // Filtra solo usuarios con rol "docente"
+                return $query->role(['docente','super-admin'])->get(); // Filtra solo usuarios con rol "docente"
             }), // Filtro para mostrar solo los usuarios que tienen el rol "docente"
         ]);
 
@@ -340,7 +340,7 @@ class AsignaturasCrudController extends CrudController
     }
     protected function setupUpdateOperation()
     {
-        if (!backpack_auth()->check() || !backpack_user()->hasRole('admin')) {
+        if (!backpack_auth()->check() || !backpack_user()->hasRole(['admin','super-admin'])) {
             abort(403, 'No tienes permiso para acceder a esta sección.');
         }
         $this->setupCreateOperation();

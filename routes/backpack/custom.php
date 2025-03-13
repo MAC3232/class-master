@@ -204,6 +204,9 @@ Route::group([
     Route::get('reportes/graphGeneral/{id}', [ReportesController::class, 'graphGeneral'])
          ->name('graphGeneral')
          ->middleware(['web']);
+         Route::get('/assignment/students', [AssignmentController::class, 'students'])
+    ->name('assignment.students');
+
 });
 /**
  * DO NOT ADD ANYTHING HERE.
