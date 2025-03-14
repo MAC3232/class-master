@@ -36,7 +36,7 @@ class UserCrudController extends CrudController
     public function setup()
     {
 
-        if (!backpack_auth()->check() || !backpack_user()->hasRole('admin')) {
+        if (!backpack_auth()->check() || !backpack_user()->hasRole('super-admin')) {
             abort(403, 'No tienes permiso para acceder a esta sección.');
         }
 
