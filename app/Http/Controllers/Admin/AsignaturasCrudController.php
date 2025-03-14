@@ -376,7 +376,7 @@ class AsignaturasCrudController extends CrudController
 
 
         // logica roles: elimiar update y delete
-        if (backpack_user()->hasRole('docente')) {
+        if (backpack_user()->hasRole(['docente', 'super-admin'])) {
 
             $this->crud->removeButton('update');
             $this->crud->removeButton('delete');

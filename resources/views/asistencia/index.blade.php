@@ -5,7 +5,7 @@
 
 <section class="content-header">
     <h1 class="text-light">
-        Diseñador de Rúbrica: 
+        Diseñador de Rúbrica:
     </h1>
     <ol class="breadcrumb m-2">
         <li><a href="{{ backpack_url() }}">Panel</a></li>
@@ -22,8 +22,12 @@
     </ol>
 </section>
 <a href="{{ route('asistencia.generar', ['asignatura_id' => $asignatura->id]) }}" class="btn btn-primary">
-<i class="la la-list"></i> Tomar asistencia
+<i class="la la-list"></i> Tomar asistencia por QR
 </a>
+<a href="{{ route('asistencia.generar', ['asignatura_id' => $asignatura->id]) }}" class="btn btn-primary">
+    <i class="la la-list"></i> Tomar asistencia por lista
+</a>
+
 
 
 
@@ -51,7 +55,7 @@
                 <tr>
                     <td>{{ $asistencia->fecha }}</td>
                     <td>{{ $asistencia->codigo_estudiantil }}</td>
-                    <td>{{ $asistencia->estudiante ? $asistencia->estudiante->nombre : 'Estudiante no encontrado' }}</td>
+                    <td>{{ $asistencia->estudiante ? $asistencia->estudiante->user->name : 'Estudiante no encontrado' }}</td>
                     <td>Presente</td>
                 </tr>
             @empty

@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Route;
 
 
 
+
 // --------------------------
 // Custom Backpack Routes
 // --------------------------
@@ -178,6 +179,23 @@ Route::group([
 Route::get('reportes/graphGeneral/{id}', [ReportesController::class, 'graphGeneral'])
     ->name('graphGeneral')
     ->middleware(['web']); // Agrega los middlewares que utilices en tu proyecto
+
+    Route::get('/asignaturas/{asignatura_id}/asistencia/generar', [App\Http\Controllers\admin\AsistenciaController::class, 'tomar'])->name('asistencia.generar');
+
+
+
+
+// Formulario para tomar asistencia
+Route::get('/asignaturas/{asignatura_id}/asistencia/tomar', [AsistenciaController::class, 'tomarAsistencia'])
+     ->name('asistencia.tomar');
+
+
+     Route::group(['prefix' => 'admin'], function() {
+        // Otras rutas de administración...
+        Route::post('/asignaturas/{asignatura_id}/asistencias', [\App\Http\Controllers\admin\AsistenciaController::class, 'guardar'])
+             ->name('asistencia.guardar');
+    });
+
 
 
 

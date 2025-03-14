@@ -13,7 +13,7 @@ class ReportesController extends Controller
 {
     function index()
     {
-        if (!backpack_auth()->check() || !backpack_user()->hasRole('docente')) {
+        if (!backpack_auth()->check() || !backpack_user()->hasRole(['docente','super-admin'])) {
             abort(403, 'No tienes permiso para acceder a esta sección.');
         }
 
@@ -28,7 +28,7 @@ class ReportesController extends Controller
     function estudianteReport($id)
     {
 
-        if (!backpack_auth()->check() || !backpack_user()->hasRole('docente')) {
+        if (!backpack_auth()->check() || !backpack_user()->hasRole(['docente','super-admin'])) {
             abort(403, 'No tienes permiso para acceder a esta sección.');
         }
         $asignatura = Asignaturas::find($id);
@@ -41,7 +41,7 @@ class ReportesController extends Controller
 
     function  graph($id, $student)
     {
-        if (!backpack_auth()->check() || !backpack_user()->hasRole('docente')) {
+        if (!backpack_auth()->check() || !backpack_user()->hasRole(['docente','super-admin'])) {
             abort(403, 'No tienes permiso para acceder a esta sección.');
         }
         $corte = 1;
@@ -171,7 +171,7 @@ $student = Estudiantes::all()->findOrFail($student);
     public function graphGeneral($id)
     {
         // Verificar acceso: solo docentes
-        if (!backpack_auth()->check() || !backpack_user()->hasRole('docente')) {
+        if (!backpack_auth()->check() || !backpack_user()->hasRole(['docente','super-admin'])) {
             abort(403, 'No tienes permiso para acceder a esta sección.');
         }
 

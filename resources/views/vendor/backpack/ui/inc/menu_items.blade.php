@@ -3,7 +3,7 @@
 <li class="nav-item"><a class="nav-link" href="{{ backpack_url('dashboard') }}"><i class="la la-home nav-icon"></i> Inicio</a></li>
 
 <x-backpack::menu-item title="Asignaturas" icon="la la-book" :link="backpack_url('asignaturas')" />
-@if (  backpack_user()->hasRole('docente')   )
+@if (  backpack_user()->hasRole(['docente','super-admin'])  )
 
 {{-- Nueva opción de menú personalizada fuera de Backpack --}}
 <li class="nav-item">
@@ -14,7 +14,7 @@
 
 @endif
 
-@if ( backpack_user()->hasRole('admin'))
+@if ( backpack_user()->hasRole(['admin','super-admin']))
 {{-- Visible para otros roles --}}
 <x-backpack::menu-item title="Usuarios" icon="la la-user" :link="backpack_url('user')" />
 <x-backpack::menu-item title="Estudiantes" icon="la la-users" :link="backpack_url('estudiantes')" />
