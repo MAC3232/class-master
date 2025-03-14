@@ -24,7 +24,7 @@ class AsignaturasRequest extends FormRequest
     {
         return [
             'nombre' => 'required|string|max:255',
-            'codigo' => 'required|integer|max:100|unique:asignaturas,codigo,' . $this->route('id'),
+            'codigo' => 'required|integer|unique:asignaturas,codigo,' . $this->route('id'),
             'competencia' => 'required|string|max:255',
             'descripcion_competencia' => 'required|string',
             'justificacion' => 'required|string',
@@ -42,8 +42,7 @@ class AsignaturasRequest extends FormRequest
             'horas_independientes' => 'required|integer|min:0',
             'horas_totales' => 'required|integer|min:0',
             'catalogo' => 'required|string|max:255',
-            'periodo_academico' => 'required|integer|min:1|max:10',
-            'numero_estudiantes' => 'required|integer|min:1'
+
         ];
     }
 

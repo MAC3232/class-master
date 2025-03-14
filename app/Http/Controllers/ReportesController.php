@@ -17,13 +17,15 @@ class ReportesController extends Controller
             abort(403, 'No tienes permiso para acceder a esta sección.');
         }
 
-
         $user = backpack_user()->id;
 
-        $asignaturas = Asignaturas::where('user_id', $user)->get();
+        $asignaturas = Asignaturas::whereHas('asignaturasDocentes', function ($query) use ($user) {
+            $query->where('docente_id', $user);
+        })->get();
 
         return view('reportes.index', compact('asignaturas'));
     }
+
 
     function estudianteReport($id)
     {

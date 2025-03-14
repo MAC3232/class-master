@@ -3,12 +3,18 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\AsignaturasRequest;
+use App\Models\AsignaturaDocente;
 use App\Models\Asignaturas;
 use App\Models\Carrera;
 use App\Models\Estudiantes;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Exception;
+
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
+use Prologue\Alerts\Facades\Alert;
+
 
 /**
  * Class AsignaturasCrudController
@@ -74,14 +80,13 @@ class AsignaturasCrudController extends CrudController
         }
 
 
-        // 2. Filtrar si el usuario es admin
         if (backpack_user()->hasRole('admin')) {
-            // Solo muestra asignaturas de la carrera a la que pertenece el admin
             $this->crud->addClause('where', 'carrera_id', backpack_user()->carrera_id);
+        } elseif (backpack_user()->hasRole('docente')) {
+            $this->crud->addClause('whereHas', 'asignaturasDocentes', function ($query) {
+                $query->where('docente_id', backpack_user()->id);
+            });
 
-        } else if (backpack_user()->hasRole('docente')) {
-
-            $this->crud->addClause('where', 'user_id', backpack_user()->id);
             $this->crud->removeButton('update');
             $this->crud->removeButton('delete');
         }
@@ -183,19 +188,22 @@ class AsignaturasCrudController extends CrudController
 
         // Campo de selección para el docente
 
-     
 
-        CRUD::addField([
-            'label' => 'Docente',
-            'type' => 'select',
-            'name' => 'docente_id', // No está en asignaturas directamente, se usará en la relación
-            'entity' => 'asignaturasDocentes',
-            'model' => 'App\Models\User',
-            'attribute' => 'name',
-            'options' => (function ($query) {
-                return $query->role('docente')->get();
-            })
-        ]);
+
+
+
+        // Campo de selección para el docente
+    CRUD::addField([
+        'label' => 'Docente',
+        'type' => 'select',
+        'name' => 'user_id', // No está en asignaturas directamente, se usará en la relación
+        'entity' => 'asignaturasDocentes',
+        'model' => 'App\Models\User',
+        'attribute' => 'name',
+        'options' => (function ($query) {
+            return $query->role('docente')->get();
+        })
+    ]);
 
 
         // Botón para avanzar al paso 2
@@ -456,4 +464,63 @@ class AsignaturasCrudController extends CrudController
         $asignaturas = Asignaturas::where('carrera_id', $carreraId)->get(['id', 'nombre', 'codigo']);
         return response()->json($asignaturas);
     }
+
+    protected function store()
+    {
+
+        try {
+            DB::beginTransaction();
+
+            $asignatura = Asignaturas::create([
+                'nombre' => request()->nombre,
+                'codigo' => request()->codigo,
+                'competencia' => request()->competencia,
+                'descripcion_competencia' => request()->descripcion_competencia,
+                'justificacion' => request()->justificacion,
+                'facultad_id' => request()->facultad_id,
+                'carrera_id' => request()->carrera_id,
+                'prerequisitos' => request()->prerequisitos,
+                'correquisitos' => request()->correquisitos,
+                'area_formacion' => request()->area_formacion,
+                'tipo_asignatura' => request()->tipo_asignatura,
+                'nivel_formacion' => request()->nivel_formacion,
+                'modalidad' => request()->modalidad,
+                'creditos_academicos' => request()->creditos_academicos,
+                'horas_presenciales' => request()->horas_presenciales,
+                'horas_independientes' => request()->horas_independientes,
+                'horas_totales' => request()->horas_totales,
+                'catalogo' => request()->catalogo
+            ]);
+
+            if (!$asignatura) {
+
+            }
+
+            AsignaturaDocente::create([
+                'asignatura_id' => $asignatura->id,
+                'docente_id' => request()->asignaturasDocentes
+            ]);
+
+            DB::commit();
+
+        Alert::success('Asignatura agregada exitosamente')->flash();
+
+            return redirect()->back();
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            Alert::error('No se pudo agregar la asignatura')->flash();
+            return redirect()->back();
+
+        }
+
+
+        // if (request()->has('docente_id')) {
+        //     \App\Models\AsignaturaDocente::create([
+        //         'asignatura_id' => $entry->id,
+        //         'user_id'      => request('docente_id'),
+        //     ]);
+        // }
+    }
+
 }
