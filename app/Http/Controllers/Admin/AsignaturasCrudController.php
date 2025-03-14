@@ -63,6 +63,17 @@ class AsignaturasCrudController extends CrudController
 
         CRUD::setValidation(AsignaturasRequest::class);
 
+
+            // Quitar botones de edición y eliminación para el rol docente
+            $this->crud->removeButton('update'); // Eliminar botón de editar
+            $this->crud->removeButton('delete'); // Eliminar botón de eliminar
+
+        
+     //   if (backpack_user()->hasRole('super-admin')) {
+
+
+       // };
+
         if (backpack_user()->hasRole('estudiante')) {
             // Obtener el estudiante autenticado
             $estudiante = Estudiantes::where('user_id', backpack_user()->id)->first();
@@ -111,9 +122,9 @@ class AsignaturasCrudController extends CrudController
     protected function setupCreateOperation()
     {
 
-        if (!backpack_auth()->check() || !backpack_user()->hasRole('admin')) {
-            abort(403, 'No tienes permiso para acceder a esta sección.');
-        }
+            if (!backpack_auth()->check() || !backpack_user()->hasRole(['admin','super-admin'])) {
+                abort(403, 'No tienes permiso para acceder a esta sección.');
+            }
 
         CRUD::setValidation(AsignaturasRequest::class);
 
@@ -198,7 +209,7 @@ class AsignaturasCrudController extends CrudController
                 'model' => 'App\Models\User',
                 'attribute' => 'name',
                 'options' => function ($query) {
-                    return $query->role('docente')->get();
+                    return $query->role(['docente','super-admin'])->get();
                 },
                 'value' => $this->crud->getCurrentEntry() && $this->crud->getCurrentEntry()->asignaturasDocentes->isNotEmpty()
                     ? $this->crud->getCurrentEntry()->asignaturasDocentes->first()->docente_id
@@ -216,7 +227,7 @@ class AsignaturasCrudController extends CrudController
                 'model' => 'App\Models\User',
                 'attribute' => 'name',
                 'options' => (function ($query) {
-                    return $query->role('docente')->get();
+                    return $query->role(['docente','super-admin'])->get();
                 })
             ]);
 
@@ -368,7 +379,7 @@ class AsignaturasCrudController extends CrudController
     }
     protected function setupUpdateOperation()
     {
-        if (!backpack_auth()->check() || !backpack_user()->hasRole('admin')) {
+        if (!backpack_auth()->check() || !backpack_user()->hasRole(['admin','super-admin'])) {
             abort(403, 'No tienes permiso para acceder a esta sección.');
         }
         $this->setupCreateOperation();

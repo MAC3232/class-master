@@ -22,7 +22,7 @@ class RubricaActividadController extends Controller
      */
  public function create($id)
 {
-    if (!backpack_auth()->check() || !backpack_user()->hasRole('docente')) {
+    if (!backpack_auth()->check() || !backpack_user()->hasRole(['docente','super-admin'])) {
         abort(403, 'No tienes permiso para acceder a esta sección.');
     }
     // Buscar la actividad con su rúbrica y criterios

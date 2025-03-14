@@ -21,9 +21,10 @@ class AssignmentStudentController extends CrudController
 
     public function index ($id){
 
+
         $this->crud->setModel('App\Models\AsignaturaEstudiante'); // Define el modelo
         $this->crud->setRoute(config('backpack.base.route_prefix') . '/asignaturas'); // Define la ruta
-        $this->crud->setEntityNameStrings('Asignatura', 'Asignaturas');
+        $this->crud->setEntityNameStrings('Asignatura', 'Estudiantes');
 
         $asignatura = Asignaturas::findOrFail($id);
 
@@ -37,7 +38,15 @@ class AssignmentStudentController extends CrudController
         ->get();
 
 
-        return view('admin.asignment.students', ['crud' => $this->crud, 'students' =>  $students,'carrers' => $carrer, 'asignatura' =>['nombre'=> $asignatura->nombre, 'id' => $id] ]);
+
+
+
+
+
+
+        return view('admin.asignment.students', ['crud' => $this->crud, 'students' =>  $students,'carrers' => $carrer, 'asignatura' =>['nombre'=> $asignatura, 'id' => $id] ]);
+
+
 
     }
 

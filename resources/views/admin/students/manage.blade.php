@@ -119,7 +119,7 @@ $breadcrumbs = $breadcrumbs ?? $defaultBreadcrumbs;
                     <div class="col-md-6">
 
                         <div class="container mt-4">
-                            <p class="fs-5">
+                            <p class="fs-5 ">
                                 📌El archivo debe estar en formato 📂 <strong>CSV</strong> o 📊 <strong>Excel</strong> para garantizar una importación exitosa ✅.
                             </p>
 
@@ -184,26 +184,62 @@ $breadcrumbs = $breadcrumbs ?? $defaultBreadcrumbs;
                         <div class="alert {{ session('successImport') ?  'alert-success' :  'alert-error' }}">{{ session('successImport') ?? session("error") }}</div>
                         @endif
 
-                        <form action="{{route('import.students')}}" method="POST" enctype="multipart/form-data">
-                            @csrf
+                       <!-- Tu formulario -->
+<form id="uploadForm" action="{{ route('import.students') }}" method="POST" enctype="multipart/form-data">
+    @csrf
+    <div class="form-group">
+        <label>Selecciona la carrera a la que pertenece el estudiante</label>
+        <select name="career_id" class="form-select">
+            <option value="">Selecciona una Carrera</option>
+            @foreach ($carreras as $carrera)
+                <option value="{{ $carrera->id }}">{{ $carrera->nombre }}</option>
+            @endforeach
+        </select>
+    </div>
 
-                            <div class="form-group">
-                                <label>Selecciona la carrera a la que pertenece el estudiante</label>
-                                <select name="career_id" class="form-select" id="">
-                                    <option value=""> selecciona una Carrera</option>
-                                    @foreach ( $carreras as $carrera )
-                                    <option value="{{$carrera->id}}"> {{$carrera->nombre}}</option>
+    <div class="form-group">
+        <label>Archivo Excel/CSV</label>
+        <input type="file" name="file" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-success">Subir Archivo</button>
+</form>
 
-                                    @endforeach
-                                </select>
-                            </div>
+<!-- Overlay de carga -->
+<div id="loadingOverlay" style="
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+">
+    <div style="
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        
+    ">
+        <!-- Spinner (puedes usar el de Bootstrap o uno propio) -->
+        <div class="spinner-border" role="status" style="width: 3rem; height: 3rem;">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <div  style="margin-top: 15px; font-size: 1.2rem;">
+            Por favor, sé paciente, se están cargando los estudiantes...
+        </div>
+    </div>
+</div>
 
-                            <div class="form-group">
-                                <label>Archivo Excel/CSV</label>
-                                <input type="file" name="file" class="form-control" required>
-                            </div>
-                            <button type="submit" class="btn btn-success">Subir Archivo</button>
-                        </form>
+<!-- Script para mostrar el overlay al enviar el formulario -->
+<script>
+document.getElementById('uploadForm').addEventListener('submit', function() {
+    document.getElementById('loadingOverlay').style.display = 'block';
+});
+</script>
+
                     </div>
                 </div>
             </div>

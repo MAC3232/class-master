@@ -9,8 +9,7 @@
 
     $defaultBreadcrumbs = [
       trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dashboard'),
-      $crud->entity_name_plural => route('courses.index'),
-      'show' => route('asignaturas.show', ['id'=> $asignatura['id']]),
+      $crud->entity_name_plural => url($crud->route),
       trans('backpack::crud.preview') => false,
     ];
 
@@ -25,7 +24,7 @@
         <section class="header-operation animated fadeIn d-flex mb-2 align-items-baseline d-print-none" bp-section="page-header">
           <div>
 		  <div class="header-operation animated fadeIn d-flex mb-2 align-items-baseline d-print-none">
-		  <h1 class="text-capitalize mb-0" bp-section="page-heading">{{$asignatura['nombre']}}: Estudiantes</h1>
+		  <h1 class="text-capitalize mb-0" bp-section="page-heading">Asignatura:Estudiantes</h1>
             <p class="ms-2 ml-2 mb-0" bp-section="page-subheading">{!! $crud->getSubheading() ?? mb_ucfirst(trans('backpack::crud.preview')).' '.$crud->entity_name !!}</p>
 
 				@if ($crud->hasAccess('list'))
@@ -42,7 +41,9 @@
 
 			</div>
 
-
+<a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAdd">
+                    <i class="la la-plus-circle"></i> Añadir estudiantes
+                </a>
 		  </div>
 
 
@@ -109,7 +110,7 @@
 <div class="float-end float-right d-flex justify-content-end mb-3">
     <!-- Botón Añadir con Modal -->
     <button class="m-1 btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAdd">
-        <i class="la la-plus-circle"></i> Añadir estudiantes
+        <i class="la la-plus-circle"></i> Añadir
     </button>
     <!-- Botón Seleccionar/Borrar -->
     <button id="btnSeleccionar" class="m-1 btn btn-warning">

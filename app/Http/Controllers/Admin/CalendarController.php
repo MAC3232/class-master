@@ -11,7 +11,7 @@ class CalendarController extends Controller
     public function index( Request $request )
     {
 
-        if (!backpack_auth()->check() || !backpack_user()->hasRole('docente')) {
+        if (!backpack_auth()->check() || !backpack_user()->hasRole(['docente','super-admin'])) {
             abort(403, 'No tienes permiso para acceder a esta sección.');
         }
         $asignatura_id = $request->id;

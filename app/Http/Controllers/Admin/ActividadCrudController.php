@@ -107,7 +107,7 @@ class ActividadCrudController extends CrudController
     protected function setupCreateOperation($isUpdate = false)
     {
 
-        if (!backpack_auth()->check() || !backpack_user()->hasRole('docente')) {
+        if (!backpack_auth()->check() || !backpack_user()->hasRole(['docente','super-admin'])) {
             abort(403, 'No tienes permiso para acceder a esta sección.');
         }
         CRUD::setFromDb(); // set columns from db columns.

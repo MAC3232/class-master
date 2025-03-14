@@ -1,6 +1,6 @@
 @extends(backpack_view('blank'))
 
-<<<<<<< HEAD
+
 @php
     $breadcrumbs = [
         trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dashboard'),

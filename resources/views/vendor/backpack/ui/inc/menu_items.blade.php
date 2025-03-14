@@ -16,6 +16,7 @@
 
 @if ( backpack_user()->hasRole('admin'))
 {{-- Visible para otros roles --}}
+
 <x-backpack::menu-item title="Estudiantes" icon="la la-users" :link="backpack_url('estudiantes')" />
 
 @endif
