@@ -22,6 +22,7 @@ use App\Http\Controllers\RubricaController;
 use App\Models\Asignaturas;
 use Illuminate\Support\Facades\Route;
 
+
 // --------------------------
 // Custom Backpack Routes
 // --------------------------
@@ -239,7 +240,25 @@ Route::group([
 
          Route::post('assignment/{id}/students/import', [AssignmentStudentController::class, 'import'])->name('assignment.students.import');
 
-      
+
+    Route::get('/asignaturas/{asignatura_id}/asistencia/generar', [App\Http\Controllers\admin\AsistenciaController::class, 'tomar'])->name('asistencia.generar');
+
+
+
+
+// Formulario para tomar asistencia
+Route::get('/asignaturas/{asignatura_id}/asistencia/tomar', [AsistenciaController::class, 'tomarAsistencia'])
+     ->name('asistencia.tomar');
+
+
+     Route::group(['prefix' => 'admin'], function() {
+        // Otras rutas de administración...
+        Route::post('/asignaturas/{asignatura_id}/asistencias', [\App\Http\Controllers\admin\AsistenciaController::class, 'guardar'])
+             ->name('asistencia.guardar');
+    });
+
+
+
 
 });
 /**
