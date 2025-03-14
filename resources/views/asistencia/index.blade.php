@@ -4,7 +4,7 @@
 
 
 <section class="content-header">
-    <h1 class="text-light">
+    <h1 class="">
         Diseñador de Rúbrica:
     </h1>
     <ol class="breadcrumb m-2">

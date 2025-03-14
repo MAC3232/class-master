@@ -142,31 +142,40 @@ class UserCrudController extends CrudController
 
 
     public function update()
-    {
-
-     $request = $this->crud->validateRequest();
+{
+    $request = $this->crud->validateRequest();
 
     // Encuentra y actualiza al usuario de forma elegante
     $user = User::findOrFail($request->id);
 
     $user->update([
-    'name' => $request->name,
-    'email' => $request->email,
-    'password' => bcrypt($request->password)
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => bcrypt($request->password)
     ]);
 
 
 
+
+    if ($request->has('roles')) {
+
+        $roles = \Spatie\Permission\Models\Role::whereIn('id', $request->roles)
+            ->where('guard_name', 'web') // Asegura que solo tome roles del guard correcto
+            ->get();
+        
+        $user->syncRoles($roles);
+    }
+
+
     Alert::success('Usuario editado exitosamente')->flash();
 
-    if($request->_save_action == 'save_and_back'){
-
+    if ($request->_save_action == 'save_and_back') {
         return Redirect::to('/admin/user');
     }
+    dd('no paso');
 
-    return redirect()->back() ;
-
-    }
+    return redirect()->back();
+}
 
 
 }
