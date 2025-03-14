@@ -41,9 +41,7 @@
 
 			</div>
 
-<a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAdd">
-                    <i class="la la-plus-circle"></i> Añadir estudiantes
-                </a>
+
 		  </div>
 
 
@@ -109,9 +107,9 @@
 @endif
 <div class="float-end float-right d-flex justify-content-end mb-3">
     <!-- Botón Añadir con Modal -->
-    <button class="m-1 btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAdd">
+    <!-- <button class="m-1 btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAdd">
         <i class="la la-plus-circle"></i> Añadir
-    </button>
+    </button> -->
     <!-- Botón Seleccionar/Borrar -->
     <button id="btnSeleccionar" class="m-1 btn btn-warning">
         <i class="la la-check-square"></i> Seleccionar
@@ -122,7 +120,7 @@
     </button>
     <!-- Botón Importar con Modal -->
     <button class="m-1 btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalImport">
-        <i class="la la-upload"></i> Importar
+        <i class="la la-upload"></i> Importar Estudiantes
     </button>
 </div>
 
@@ -155,9 +153,12 @@
                         <td>{{ $student->user->email }}</td>
                         <td>{{ $student->codigo_estudiantil }}</td>
                         <td>
-                            <a href="" class="btn btn-sm btn-info">
-                                <i class="la la-eye fs-2"></i>
-                            </a>
+
+                            <a href="#" class="btn btn-sm btn-danger btn-borrar"
+           data-estudiante-id="{{ $student->id }}"
+           data-asignatura-id="{{ $asignatura['id'] }}">
+            <i class="la la-trash fs-2"></i>
+        </a>
                         </td>
                     </tr>
                 @empty
@@ -246,6 +247,8 @@
         </div>
     </div>
 </div>
+
+
 
 
 
@@ -579,11 +582,9 @@ asignados.forEach(element => {
     // Guardar selección de estudiantes
     $('#guardar-seleccion').on('click', function() {
         let seleccionados = [];
-        seleccionados = studentsSelect
-
-
-
-
+        $('.checkbox-materia:checked').each(function() {
+            seleccionados.push($(this).data('id'));
+        });
 
         if (seleccionados.length === 0) {
             Swal.fire('Atención', 'Debe seleccionar al menos un estudiante.', 'warning');

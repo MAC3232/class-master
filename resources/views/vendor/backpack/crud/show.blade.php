@@ -75,10 +75,12 @@ if ($crud->hasAccess('list') && Route::is('asignaturas.show')){
         </div>
 
     </div>
+    @if (Route::is('asignaturas.show'))
     <a href="{{ route( 'reportes.general' , ['id' => $entry->getKey() ]) }}" class=" p-2 m-3 btn h-100  btn-warning">
 
 <i class="la la-file fs-1"></i> Exportar informe excel
 </a>
+    @endif
 
 @endsection
 

@@ -110,8 +110,8 @@ td.seleccionado .overlay:hover {
 @section('header')
 
 <section class="content-header">
-    <h1 class="text-light">
-        Evaluando a: {{$estudiante->nombre}}
+    <h1 class="">
+        Evaluando a: {{$estudiante->user->name}}
     </h1>
     <ol class="breadcrumb m-2">
         <li><a href="{{ backpack_url() }}">Panel</a></li>

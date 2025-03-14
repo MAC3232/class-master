@@ -25,7 +25,7 @@ class CarreraRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|min:4|max:255'
+            'nombre' => 'required|min:4|max:255'
         ];
     }
 
