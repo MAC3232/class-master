@@ -8,14 +8,14 @@ class AsignaturaDocente extends Model
 {
     protected $table = 'asignatura_docente';
 
-    public function asignatura()
-    {
-        return $this->belongsTo(Asignaturas::class);
-    }
-
     public function docente()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function asignatura()
+    {
+        return $this->belongsTo(Asignaturas::class, 'asignatura_id');
     }
 }
 

@@ -80,7 +80,7 @@ class AsignaturasCrudController extends CrudController
             $this->crud->addClause('where', 'carrera_id', backpack_user()->carrera_id);
 
         } else if (backpack_user()->hasRole('docente')) {
-            
+
             $this->crud->addClause('where', 'user_id', backpack_user()->id);
             $this->crud->removeButton('update');
             $this->crud->removeButton('delete');
@@ -183,19 +183,19 @@ class AsignaturasCrudController extends CrudController
 
         // Campo de selección para el docente
 
+     
+
         CRUD::addField([
-            'label' => "Docente",
+            'label' => 'Docente',
             'type' => 'select',
-            'name' => 'user_id', // El campo en la base de datos
-            'entity' => 'docente', // La relación en el modelo Asignatura
-            'model' => "App\Models\User", // Modelo de User para la relación
-            'attribute' => 'name', // Campo que queremos mostrar en el select
-            'options'   => (function ($query) {
-                return $query->role('docente')->get(); // Filtra solo usuarios con rol "docente"
-            }), // Filtro para mostrar solo los usuarios que tienen el rol "docente"
+            'name' => 'docente_id', // No está en asignaturas directamente, se usará en la relación
+            'entity' => 'asignaturasDocentes',
+            'model' => 'App\Models\User',
+            'attribute' => 'name',
+            'options' => (function ($query) {
+                return $query->role('docente')->get();
+            })
         ]);
-
-
 
 
         // Botón para avanzar al paso 2
@@ -397,15 +397,15 @@ class AsignaturasCrudController extends CrudController
 
 
         // agregar select de docente
-        $this->crud->addColumn([
-            'name' => 'user_id',
-            'label' => 'Docente',
-            'type' => 'text',
-            'value' => function ($entry) {
+        // $this->crud->addColumn([
+        //     'name' => 'user_id',
+        //     'label' => 'Docente',
+        //     'type' => 'text',
+        //     'value' => function ($entry) {
 
-                return $entry->docente ? $entry->docente->name : 'N/A'; // Asegúrate de que exista la relación
-            },
-        ]);
+        //         return $entry->docente ? $entry->docente->name : 'N/A'; // Asegúrate de que exista la relación
+        //     },
+        // ]);
 
         // Campos básicos
         $this->crud->addColumn(['name' => 'nombre', 'label' => 'Nombre de la Asignatura', 'type' => 'text']);
