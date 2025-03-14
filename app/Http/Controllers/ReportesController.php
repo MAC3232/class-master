@@ -13,24 +13,27 @@ class ReportesController extends Controller
 {
     function index()
     {
-        if (!backpack_auth()->check() || !backpack_user()->hasRole('docente')) {
+        if (!backpack_auth()->check() || !backpack_user()->hasRole(['docente','super-admin'])) {
             abort(403, 'No tienes permiso para acceder a esta sección.');
         }
 
-
         $user = backpack_user()->id;
 
-        $asignaturas = Asignaturas::where('user_id', $user)->get();
+        $asignaturas = Asignaturas::whereHas('asignaturasDocentes', function ($query) use ($user) {
+            $query->where('docente_id', $user);
+        })->get();
 
         return view('reportes.index', compact('asignaturas'));
     }
 
+
     function estudianteReport($id)
     {
 
-        if (!backpack_auth()->check() || !backpack_user()->hasRole('docente')) {
+        if (!backpack_auth()->check() || !backpack_user()->hasRole(['docente','super-admin'])) {
             abort(403, 'No tienes permiso para acceder a esta sección.');
         }
+
         $asignatura = Asignaturas::with('students.user')->findOrFail($id);
         $estudiantes = $asignatura->students;
 
@@ -43,7 +46,8 @@ class ReportesController extends Controller
     function  graph($id, $student)
     {
 
-        if (!backpack_auth()->check() || !backpack_user()->hasRole('docente')) {
+        if (!backpack_auth()->check() || !backpack_user()->hasRole(['docente','super-admin'])) {
+
             abort(403, 'No tienes permiso para acceder a esta sección.');
         }
         $corte = 1;
@@ -51,14 +55,6 @@ class ReportesController extends Controller
         if (isset($corteRequest)) {
             $corte = $corteRequest;
         }
-
-
-
-
-        $notas = [3.5, 4.0, 2.8, 4.5]; // Notas de actividades
-        $promedio = 3.75; // Promedio general
-
-
 
         $asignatura = Asignaturas::where('id', $id)
         ->with(['rubrica.ra' => function($query) use ($corte) {
@@ -80,8 +76,6 @@ class ReportesController extends Controller
         $resultados =$actividades_nota ; // Resultados de aprendizaje
 
 
-
-        // Suponiendo que una actividad está aprobada si la nota es >= 3.0
 $aprobadas = 0;
 $no_aprobadas = 0;
 
@@ -174,7 +168,7 @@ $student = Estudiantes::with(['carrera', 'user'])->findOrFail($student);
     public function graphGeneral($id)
     {
         // Verificar acceso: solo docentes
-        if (!backpack_auth()->check() || !backpack_user()->hasRole('docente')) {
+        if (!backpack_auth()->check() || !backpack_user()->hasRole(['docente','super-admin'])) {
             abort(403, 'No tienes permiso para acceder a esta sección.');
         }
 

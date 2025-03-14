@@ -1,52 +1,52 @@
 @extends(backpack_view('blank'))
 
 @php
-    $defaultBreadcrumbs = [
-      trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dashboard'),
-      $crud->entity_name_plural => url($crud->route),
-      trans('backpack::crud.preview') => false,
-    ];
+$defaultBreadcrumbs = [
+trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dashboard'),
+$crud->entity_name_plural => url($crud->route),
+trans('backpack::crud.preview') => false,
+];
 
-    // if breadcrumbs aren't defined in the CrudController, use the default breadcrumbs
-    $breadcrumbs = $breadcrumbs ?? $defaultBreadcrumbs;
+// if breadcrumbs aren't defined in the CrudController, use the default breadcrumbs
+$breadcrumbs = $breadcrumbs ?? $defaultBreadcrumbs;
 @endphp
 @section('header')
-    <div class="container-fluid d-flex justify-content-between my-3">
-        <section class="header-operation animated fadeIn d-flex mb-2 align-items-baseline d-print-none" bp-section="page-header">
-          <div>
-		  <div class="header-operation animated fadeIn d-flex mb-2 align-items-baseline d-print-none">
-		  <h1 class="text-capitalize mb-0" bp-section="page-heading">{!! $crud->getHeading() ?? $crud->entity_name_plural !!}</h1>
-            <p class="ms-2 ml-2 mb-0" bp-section="page-subheading">{!! $crud->getSubheading() ?? mb_ucfirst(trans('backpack::crud.preview')).' '.$crud->entity_name !!}</p>
+<div class="container-fluid d-flex justify-content-between my-3">
+    <section class="header-operation animated fadeIn d-flex mb-2 align-items-baseline d-print-none" bp-section="page-header">
+        <div>
+            <div class="header-operation animated fadeIn d-flex mb-2 align-items-baseline d-print-none">
+                <h1 class="text-capitalize mb-0" bp-section="page-heading">{!! $crud->getHeading() ?? $crud->entity_name_plural !!}</h1>
+                <p class="ms-2 ml-2 mb-0" bp-section="page-subheading">{!! $crud->getSubheading() ?? mb_ucfirst(trans('backpack::crud.preview')).' '.$crud->entity_name !!}</p>
 
-				@if ($crud->hasAccess('list'))
-					<p class="ms-2 ml-2 mb-0" bp-section="page-subheading-back-button">
-						<small><a href="{{ url($crud->route) }}" class="font-sm"><i class="la la-angle-double-left"></i> {{ trans('backpack::crud.back_to_all') }} <span>{{ $crud->entity_name_plural }}</span></a></small>
-					</p>
-				@endif
-		  </div>
-		  <div>
+                @if ($crud->hasAccess('list'))
+                <p class="ms-2 ml-2 mb-0" bp-section="page-subheading-back-button">
+                    <small><a href="{{ url($crud->route) }}" class="font-sm"><i class="la la-angle-double-left"></i> {{ trans('backpack::crud.back_to_all') }} <span>{{ $crud->entity_name_plural }}</span></a></small>
+                </p>
+                @endif
+            </div>
+            <div>
 
 
-			</div>
+            </div>
 
-		  </div>
+        </div>
 
-        </section>
-<div class="float-end float-right ">
+    </section>
+    <div class="float-end float-right ">
         <a href="javascript: window.print();" style="margin-left:10px" class=" p-2 btn h-100   float-end float-right "><i class="la la-print fs-1"></i></a>
-@if(Route::is('asignaturas.show'))
+        @if(Route::is('asignaturas.show'))
 
-    @if (!backpack_auth()->check() || !backpack_user()->hasRole('admin'))
-	<a href="{{ url('/admin/assignment/calendario?id='. $entry->getKey() ) }}" class=" p-2 btn h-100  btn-primary">
-    <i class="la la-calendar fs-1"></i>
+        @if (!backpack_auth()->check() || !backpack_user()->hasRole('admin'))
+        <a href="{{ url('/admin/assignment/calendario?id='. $entry->getKey() ) }}" class=" p-2 btn h-100  btn-primary">
+            <i class="la la-calendar fs-1"></i>
 
-    @endif
-</a>
+            @endif
+        </a>
 
-		  @endif
-</div>
-
+        @endif
     </div>
+
+</div>
 
 @endsection
 
@@ -62,155 +62,191 @@
                 <div class="row">
                     <!-- Añadir Estudiante Individual -->
                     <div class="col-md-6">
-                        @if(session('success')  )
-            <div class="alert {{ session('success') ?  'alert-success' :  'alert-error' }}">{{ session('success') ?? session("errors") }}</div>
-            @endif
-            @if($errors->any())
-            <div class="alert alert-danger">
-                <strong>Por favor corrige los siguientes errores:</strong>
-                <ul>
-                    @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
+                        @if(session('success') )
+                        <div class="alert {{ session('success') ?  'alert-success' :  'alert-error' }}">{{ session('success') ?? session("errors") }}</div>
+                        @endif
+                        @if($errors->any())
+                        <div class="alert alert-danger">
+                            <strong>Por favor corrige los siguientes errores:</strong>
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        @endif
+                        <form action="{{route('only.students')}}" method="POST">
+                            @csrf
+                            <h2 class="mb-4">Añadir estudiantes</h2>
+                            <h4>Añade un estudiante</h4>
+                            <div class="form-group">
+                                <label>Nombre</label>
+                                <input type="text" name="name" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Identificacion (Dni)</label>
+                                <input type="number" name="cedula" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Correo</label>
+                                <input type="email" name="email" id="email" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Código</label>
+                                <input type="number" name="code" class="form-control" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Selecciona la carrera a la que pertenecen los estudiantes</label>
+                                <select name="carrera_id" class="form-select" id="">
+                                    <option value=""> selecciona una Carrera</option>
+                                    @foreach ( $carreras as $carrera )
+                                    <option value="{{$carrera->id}}"> {{$carrera->nombre}}</option>
+
+                                    @endforeach
+                                </select>
+                            </div>
+
+
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </form>
+                    </div>
+
+                    <!-- Importar Estudiantes -->
+
+
+
+                    <div class="col-md-6">
+
+                        <div class="container mt-4">
+                            <p class="fs-5 ">
+                                📌El archivo debe estar en formato 📂 <strong>CSV</strong> o 📊 <strong>Excel</strong> para garantizar una importación exitosa ✅.
+                            </p>
+
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped table-hover">
+                                    <thead class="table-primary text-center">
+                                        <tr>
+                                            <th>📌 Código</th>
+                                            <th>📌 Nombre</th>
+                                            <th>📌 Identificacion</th>
+                                            <th>📌 Correo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>Juan Pérez</td>
+                                            <td>0000000</td>
+                                            <td>juan@example.com</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>Ana López</td>
+                                            <td>0000000</td>
+                                            <td>ana@example.com</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <br>
+
+
+                        <a href="{{ route('descargar.plantilla') }}" download class="btn m-2 btn-info">
+                            <i class="la la-download"></i> Descargar Plantilla
+                        </a>
+
+                        <h4>Importar Estudiantes</h4>
+
+                        @if (session('import_success'))
+                        <div class="alert alert-success">
+                            <h4>Estudiante</h4>
+                            <ul>
+                                @foreach (session('import_success') as $error)
+                                <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        @endif
+                        @if (session('import_errors'))
+                        <div class="alert alert-danger">
+                            <h4>⚠️ Errores en la Importación</h4>
+                            <ul>
+                                @foreach (session('import_errors') as $error)
+                                <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        @endif
+
+                        @if(session('successImport') || session('error') )
+                        <div class="alert {{ session('successImport') ?  'alert-success' :  'alert-error' }}">{{ session('successImport') ?? session("error") }}</div>
+                        @endif
+
+                       <!-- Tu formulario -->
+<form id="uploadForm" action="{{ route('import.students') }}" method="POST" enctype="multipart/form-data">
+    @csrf
+    <div class="form-group">
+        <label>Selecciona la carrera a la que pertenece el estudiante</label>
+        <select name="career_id" class="form-select">
+            <option value="">Selecciona una Carrera</option>
+            @foreach ($carreras as $carrera)
+                <option value="{{ $carrera->id }}">{{ $carrera->nombre }}</option>
+            @endforeach
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Archivo Excel/CSV</label>
+        <input type="file" name="file" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-success">Subir Archivo</button>
+</form>
+
+<!-- Overlay de carga -->
+<div id="loadingOverlay" style="
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+">
+    <div style="
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        
+    ">
+        <!-- Spinner (puedes usar el de Bootstrap o uno propio) -->
+        <div class="spinner-border" role="status" style="width: 3rem; height: 3rem;">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <div  style="margin-top: 15px; font-size: 1.2rem;">
+            Por favor, sé paciente, se están cargando los estudiantes...
+        </div>
+    </div>
+</div>
+
+<!-- Script para mostrar el overlay al enviar el formulario -->
+<script>
+document.getElementById('uploadForm').addEventListener('submit', function() {
+    document.getElementById('loadingOverlay').style.display = 'block';
+});
+</script>
+
+                    </div>
+                </div>
             </div>
-            @endif
-            <form action="{{route('only.students')}}" method="POST">
-                @csrf
-                <h2 class="mb-4">Añadir estudiantes</h2>
-                <h4>Añade un estudiante</h4>
-                <div class="form-group">
-                    <label>Nombre</label>
-                    <input type="text" name="name" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label>Identificacion (Dni)</label>
-                    <input type="number" name="cedula" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label>Correo</label>
-                    <input type="email" name="email"  id="email" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label>Código</label>
-                    <input type="number" name="code" class="form-control" required>
-                </div>
 
-                <div class="form-group">
-                    <label>Selecciona la carrera a la que pertenecen los estudiantes</label>
-                  <select name="carrera_id" class="form-select" id="">
-                    <option value=""> selecciona una Carrera</option>
-                    @foreach ( $carreras as $carrera )
-                    <option value="{{$carrera->id}}">  {{$carrera->nombre}}</option>
-
-                    @endforeach
-                  </select>
-                </div>
-
-
-                <button type="submit" class="btn btn-primary">Guardar</button>
-            </form>
-        </div>
-
-        <!-- Importar Estudiantes -->
-
-
-
-        <div class="col-md-6">
-
-        <div class="container mt-4">
-    <p class="fs-5">
-    📌El archivo debe estar en formato 📂 <strong>CSV</strong> o 📊 <strong>Excel</strong> para garantizar una importación exitosa ✅.
-    </p>
-
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped table-hover">
-            <thead class="table-primary text-center">
-                <tr>
-                    <th>📌 Código</th>
-                    <th>📌 Nombre</th>
-                    <th>📌 Identificacion</th>
-                    <th>📌 Correo</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Juan Pérez</td>
-                    <td>0000000</td>
-                    <td>juan@example.com</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Ana López</td>
-                    <td>0000000</td>
-                    <td>ana@example.com</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-<br>
-
-
-<a href="{{ route('descargar.plantilla') }}" download class="btn m-2 btn-info">
-    <i class="la la-download"></i> Descargar Plantilla
-</a>
-
-            <h4>Importar Estudiantes</h4>
-
-            @if (session('import_success'))
-    <div class="alert alert-success">
-        <h4>Estudiante</h4>
-        <ul>
-            @foreach (session('import_success') as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
-            @if (session('import_errors'))
-    <div class="alert alert-danger">
-        <h4>⚠️ Errores en la Importación</h4>
-        <ul>
-            @foreach (session('import_errors') as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
-
-            @if(session('successImport') ||  session('error') )
-                <div class="alert {{ session('successImport') ?  'alert-success' :  'alert-error' }}">{{ session('successImport') ?? session("error") }}</div>
-            @endif
-
-            <form action="{{route('import.students')}}" method="POST" enctype="multipart/form-data">
-                @csrf
-
-                <div class="form-group">
-                    <label>Selecciona la carrera a la que pertenece el estudiante</label>
-                  <select name="career_id" class="form-select" id="">
-                    <option value=""> selecciona una Carrera</option>
-                    @foreach ( $carreras as $carrera )
-                    <option value="{{$carrera->id}}">  {{$carrera->nombre}}</option>
-
-                    @endforeach
-                  </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Archivo Excel/CSV</label>
-                    <input type="file" name="file" class="form-control" required>
-                </div>
-                <button type="submit" class="btn btn-success">Subir Archivo</button>
-            </form>
         </div>
     </div>
 </div>
-
-        </div>
-        </div>
-        </div>
 
 @endsection
 
@@ -218,16 +254,15 @@
 @push('after_scripts')
 
 <script>
-document.getElementById("email").addEventListener("input", function () {
-    const email = this.value;
-    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!regex.test(email)) {
-        this.setCustomValidity("Por favor, introduce un correo válido con una extensión como .com, .net, etc.");
-    } else {
-        this.setCustomValidity("");
-    }
-});
-
+    document.getElementById("email").addEventListener("input", function() {
+        const email = this.value;
+        const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!regex.test(email)) {
+            this.setCustomValidity("Por favor, introduce un correo válido con una extensión como .com, .net, etc.");
+        } else {
+            this.setCustomValidity("");
+        }
+    });
 </script>
 
 

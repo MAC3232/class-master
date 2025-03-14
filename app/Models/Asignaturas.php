@@ -20,7 +20,6 @@ class Asignaturas extends Model
         'carrera_id',
         'prerequisitos',
         'correquisitos',
-        'user_id',
         'area_formacion',
         'tipo_asignatura',
         'nivel_formacion',
@@ -50,10 +49,11 @@ class Asignaturas extends Model
         return $this->hasOne(Rubrica::class, 'asignatura_id');
     }
 
-    public function docente()
+    public function asignaturasDocentes()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->hasMany(AsignaturaDocente::class, 'asignatura_id');
     }
+
     public function evento()
     {
         return $this->belongsTo(Evento::class );
@@ -91,4 +91,3 @@ class Asignaturas extends Model
 }
 
 }
- 

@@ -26,7 +26,7 @@ class CarreraCrudController extends CrudController
      */
     public function setup()
     {
-        if (!backpack_auth()->check() || !backpack_user()->hasRole('admin')) {
+        if (!backpack_auth()->check() || !backpack_user()->hasRole('super-admin')) {
             abort(403, 'No tienes permiso para acceder a esta sección.');
         }
         CRUD::setModel(\App\Models\Carrera::class);
@@ -55,7 +55,7 @@ class CarreraCrudController extends CrudController
             'model' => 'App\Models\Facultad', // Modelo de facultad
         ]);
 
-        
+
         // set columns from db columns.
 
         /**
@@ -72,10 +72,10 @@ class CarreraCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-       
+
         CRUD::setValidation(CarreraRequest::class);
         CRUD::setFromDb(); // set fields from db columns.
-        
+
         $facultades = \App\Models\Facultad::count();
         if ($facultades == 0) {
             CRUD::addField([

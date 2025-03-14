@@ -60,13 +60,14 @@ $evalueRubrica= false;
 
 @endsection
 
+<!-- Contenido -->
 @section('content')
-
+<!-- Componente de la rubrica -->
 @include('components.rubrica_actividad', ['rubrica_actividad' => $rubrica_actividad])
 
 @endsection
 
-
+<!-- js -->
 @section('after_scripts')
 <script src="{{asset('js/modal.js')}}"></script>
 @endsection

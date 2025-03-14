@@ -7,6 +7,7 @@ $breadcrumbs = [
         'Listado' => false, // El último elemento no lleva URL
     ];
 @endphp
+
 @section('header')
 <section class="content-header">
     <h1 class="text-light">

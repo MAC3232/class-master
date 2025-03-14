@@ -3,12 +3,18 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\AsignaturasRequest;
+use App\Models\AsignaturaDocente;
 use App\Models\Asignaturas;
 use App\Models\Carrera;
 use App\Models\Estudiantes;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Exception;
+
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
+use Prologue\Alerts\Facades\Alert;
+
 
 /**
  * Class AsignaturasCrudController
@@ -57,6 +63,17 @@ class AsignaturasCrudController extends CrudController
 
         CRUD::setValidation(AsignaturasRequest::class);
 
+
+            // Quitar botones de edición y eliminación para el rol docente
+            $this->crud->removeButton('update'); // Eliminar botón de editar
+            $this->crud->removeButton('delete'); // Eliminar botón de eliminar
+
+        
+     //   if (backpack_user()->hasRole('super-admin')) {
+
+
+       // };
+
         if (backpack_user()->hasRole('estudiante')) {
             // Obtener el estudiante autenticado
             $estudiante = Estudiantes::where('user_id', backpack_user()->id)->first();
@@ -74,14 +91,13 @@ class AsignaturasCrudController extends CrudController
         }
 
 
-        // 2. Filtrar si el usuario es admin
         if (backpack_user()->hasRole('admin')) {
-            // Solo muestra asignaturas de la carrera a la que pertenece el admin
             $this->crud->addClause('where', 'carrera_id', backpack_user()->carrera_id);
+        } elseif (backpack_user()->hasRole('docente')) {
+            $this->crud->addClause('whereHas', 'asignaturasDocentes', function ($query) {
+                $query->where('docente_id', backpack_user()->id);
+            });
 
-        } else if (backpack_user()->hasRole('docente')) {
-            
-            $this->crud->addClause('where', 'user_id', backpack_user()->id);
             $this->crud->removeButton('update');
             $this->crud->removeButton('delete');
         }
@@ -106,9 +122,9 @@ class AsignaturasCrudController extends CrudController
     protected function setupCreateOperation()
     {
 
-        if (!backpack_auth()->check() || !backpack_user()->hasRole('admin')) {
-            abort(403, 'No tienes permiso para acceder a esta sección.');
-        }
+            if (!backpack_auth()->check() || !backpack_user()->hasRole(['admin','super-admin'])) {
+                abort(403, 'No tienes permiso para acceder a esta sección.');
+            }
 
         CRUD::setValidation(AsignaturasRequest::class);
 
@@ -183,17 +199,42 @@ class AsignaturasCrudController extends CrudController
 
         // Campo de selección para el docente
 
-        CRUD::addField([
-            'label' => "Docente",
-            'type' => 'select',
-            'name' => 'user_id', // El campo en la base de datos
-            'entity' => 'docente', // La relación en el modelo Asignatura
-            'model' => "App\Models\User", // Modelo de User para la relación
-            'attribute' => 'name', // Campo que queremos mostrar en el select
-            'options'   => (function ($query) {
-                return $query->role('docente')->get(); // Filtra solo usuarios con rol "docente"
-            }), // Filtro para mostrar solo los usuarios que tienen el rol "docente"
-        ]);
+
+        if ($this->crud->getCurrentEntry()) {
+            CRUD::addField([
+                'label' => 'Docente',
+                'type' => 'select',
+                'name' => 'user_id', // Este es el campo en la tabla intermedia
+                'entity' => 'asignaturasDocentes',
+                'model' => 'App\Models\User',
+                'attribute' => 'name',
+                'options' => function ($query) {
+                    return $query->role(['docente','super-admin'])->get();
+                },
+                'value' => $this->crud->getCurrentEntry() && $this->crud->getCurrentEntry()->asignaturasDocentes->isNotEmpty()
+                    ? $this->crud->getCurrentEntry()->asignaturasDocentes->first()->docente_id
+                    : ''
+            ]);
+
+
+        }else{
+
+            CRUD::addField([
+                'label' => 'Docente',
+                'type' => 'select',
+                'name' => 'user_id',
+                'entity' => 'asignaturasDocentes',
+                'model' => 'App\Models\User',
+                'attribute' => 'name',
+                'options' => (function ($query) {
+                    return $query->role(['docente','super-admin'])->get();
+                })
+            ]);
+
+        }
+
+
+
 
 
 
@@ -338,7 +379,7 @@ class AsignaturasCrudController extends CrudController
     }
     protected function setupUpdateOperation()
     {
-        if (!backpack_auth()->check() || !backpack_user()->hasRole('admin')) {
+        if (!backpack_auth()->check() || !backpack_user()->hasRole(['admin','super-admin'])) {
             abort(403, 'No tienes permiso para acceder a esta sección.');
         }
         $this->setupCreateOperation();
@@ -376,7 +417,7 @@ class AsignaturasCrudController extends CrudController
 
 
         // logica roles: elimiar update y delete
-        if (backpack_user()->hasRole('docente')) {
+        if (backpack_user()->hasRole(['docente', 'super-admin'])) {
 
             $this->crud->removeButton('update');
             $this->crud->removeButton('delete');
@@ -392,20 +433,20 @@ class AsignaturasCrudController extends CrudController
         // eliminar campos select
         $this->crud->removeColumn('facultad_id');
         $this->crud->removeColumn('carrera_id');
-        $this->crud->removeColumn('user_id');
+
 
 
 
         // agregar select de docente
-        $this->crud->addColumn([
-            'name' => 'user_id',
-            'label' => 'Docente',
-            'type' => 'text',
-            'value' => function ($entry) {
+        // $this->crud->addColumn([
+        //     'name' => 'user_id',
+        //     'label' => 'Docente',
+        //     'type' => 'text',
+        //     'value' => function ($entry) {
 
-                return $entry->docente ? $entry->docente->name : 'N/A'; // Asegúrate de que exista la relación
-            },
-        ]);
+        //         return $entry->docente ? $entry->docente->name : 'N/A'; // Asegúrate de que exista la relación
+        //     },
+        // ]);
 
         // Campos básicos
         $this->crud->addColumn(['name' => 'nombre', 'label' => 'Nombre de la Asignatura', 'type' => 'text']);
@@ -456,4 +497,56 @@ class AsignaturasCrudController extends CrudController
         $asignaturas = Asignaturas::where('carrera_id', $carreraId)->get(['id', 'nombre', 'codigo']);
         return response()->json($asignaturas);
     }
+
+    protected function store(AsignaturasRequest $request)
+{
+    try {
+        DB::beginTransaction();
+
+        $asignatura = Asignaturas::create($request->validated());
+
+        AsignaturaDocente::create([
+            'asignatura_id' => $asignatura->id,
+            'docente_id' => $request->user_id
+        ]);
+
+        DB::commit();
+
+        Alert::success('Asignatura agregada exitosamente')->flash();
+
+        return redirect()->back();
+    } catch (Exception $e) {
+        DB::rollBack();
+        Alert::error('No se pudo agregar la asignatura')->flash();
+        return redirect()->back();
+    }
+}
+protected function update($id, AsignaturasRequest $request)
+{
+    try {
+        DB::beginTransaction();
+
+        $asignatura = Asignaturas::findOrFail($id);
+
+        $asignatura->update($request->validated());
+
+        // Actualizar la relación en la tabla intermedia asignatura_docente
+        AsignaturaDocente::updateOrCreate(
+            ['asignatura_id' => $asignatura->id], // Condición para buscar
+            ['docente_id' => $request->user_id] // Valores a actualizar
+        );
+
+        DB::commit();
+
+        Alert::success('Asignatura actualizada exitosamente')->flash();
+
+        return redirect()->back();
+    } catch (Exception $e) {
+        DB::rollBack();
+        Alert::error('No se pudo actualizar la asignatura')->flash();
+        return redirect()->back();
+    }
+}
+
+
 }

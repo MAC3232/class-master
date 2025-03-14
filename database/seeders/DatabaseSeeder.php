@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
         Role::firstOrCreate(['name' => 'admin']);
         Role::firstOrCreate(['name' => 'estudiante']);
         Role::firstOrCreate(['name' => 'docente']);
+        Role::firstOrCreate(['name' => 'super-admin']);
 
 
         // $this->call(FacultadSeeder::class);
@@ -32,8 +33,10 @@ class DatabaseSeeder extends Seeder
                 'email' => 'admin@google.com',
                 'name' => 'Admin',
                 'password' => bcrypt('admin'), // Hasheado con bcrypt
+
             ]);
-            $user2 = User::factory()->create([
+
+            $docente = User::factory()->create([
                 'email' => 'docente@google.com',
                 'name' => 'Docente',
                 'password' => bcrypt('Docente'), // Hasheado con bcrypt
@@ -41,7 +44,7 @@ class DatabaseSeeder extends Seeder
 
             // Asignar el rol predeterminado al usuario
             $user->assignRole('admin');
-            $user2->assignRole('docente');
+            $docente->assignRole('docente');
         } else {
             // Si el usuario ya existe, se puede actualizar o simplemente ignorar
             echo "El usuario con email juliobonifacio53@gmail.com ya existe.\n";

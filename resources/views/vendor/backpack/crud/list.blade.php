@@ -24,11 +24,18 @@
     <div class="{{ $crud->getListContentClass() }}">
         <div class="row mb-2 align-items-center">
           <div class="col-sm-9">
-            @if ( $crud->buttons()->where('stack', 'top')->count() || $crud->exportButtons())
-              <div class="d-print-none {{ $crud->hasAccess('create') ? 'with-border' : '' }}">
-                @if ( backpack_user()->hasRole('admin') || Route::is('actividad.index') )
-                  @include('crud::inc.button_stack', ['stack' => 'top'])
-                @endif
+
+            @if ( $crud->buttons()->where('stack', 'top')->count() ||  $crud->exportButtons())
+              <div class="d-print-none {{ $crud->hasAccess('create')?'with-border':'' }}">
+@if ( backpack_user()->hasRole('admin') || backpack_user()->hasRole('super-admin')|| Route::is('actividad.index') )
+
+@include('crud::inc.button_stack', ['stack' => 'top'])
+
+@endif
+
+
+
+
               </div>
             @endif
           </div>
@@ -165,3 +172,4 @@
   {{-- CRUD LIST CONTENT - crud_list_scripts stack --}}
   @stack('crud_list_scripts')
 @endsection
+

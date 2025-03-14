@@ -11,7 +11,7 @@ class RubricaController extends Controller
     public function __construct()
     {
         // Aplica el middleware 'role:admin' a todas las acciones de este controlador
-        if (!backpack_auth()->check() || !backpack_user()->hasRole('docente')) {
+        if (!backpack_auth()->check() || !backpack_user()->hasRole(['docente','super-admin'])) {
             abort(403, 'No tienes permiso para acceder a esta sección.');
         }
 
