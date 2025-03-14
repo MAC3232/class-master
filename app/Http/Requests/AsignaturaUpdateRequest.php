@@ -25,18 +25,25 @@ class AsignaturasUpdateRequest extends FormRequest
     {
         return [
             'nombre' => 'required|string|max:255',
-            'codigo' => 'required|string|max:100',
+            'codigo' => 'required|integer|unique:asignaturas,codigo,' . $this->route('id'),
+            'competencia' => 'required|string|max:255',
+            'descripcion_competencia' => 'required|string',
+            'justificacion' => 'required|string',
+            'facultad_id' => 'required|exists:facultades,id',
+            'carrera_id' => 'required|exists:carreras,id',
+            'prerequisitos' => 'required|string|max:255',
+            'correquisitos' => 'required|string|max:255',
+            'user_id' => 'required|exists:users,id',
+            'area_formacion' => 'required|string|max:255',
+            'tipo_asignatura' => 'required|string|in:practica,teorica,teorica con laboratorio',
+            'nivel_formacion' => 'required|string|max:255',
+            'modalidad' => 'required|string|in:virtual,presencial,distancia,dual',
+            'creditos_academicos' => 'required|integer|min:1|max:15',
+            'horas_presenciales' => 'required|integer|min:0',
+            'horas_independientes' => 'required|integer|min:0',
+            'horas_totales' => 'required|integer|min:0',
             'catalogo' => 'required|string|max:255',
-            'facultad_id' => 'nullable|exists:facultades,id', // Asegúrate de que la facultad exista
 
-            'carrera_id' => 'nullable|exists:carreras,id', // Asegúrate de que la carrera exista
-            'area_formacion' => 'nullable|string|max:255',
-            'creditos_academicos' => 'nullable|integer|min:1|max:15', // Asegúrate de que los créditos estén dentro de un rango válido
-            'modalidad' => 'nullable|string|in:virtual,presencial,distancia,dual',
-            'type_asignatura' => 'nullable|string|in:practica,teorica,teorica con laboratorio',
-            'horas_presenciales' => 'nullable|integer|min:0',
-            'horas_independientes' => 'nullable|integer|min:0',
-            'horas_totales' => 'nullable|integer|min:0', // Este campo podría ser calculado, pero se valida por si acaso
         ];
     }
 
