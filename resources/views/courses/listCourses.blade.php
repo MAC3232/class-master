@@ -60,7 +60,7 @@
 
      .create-button{
         padding: 8px 16px;
-        background-color: #007bff;
+        background-color: #7C69EF;
         color: white;
         border: none;
         border-radius: 5px;
@@ -85,6 +85,7 @@
     
 
     .card {
+       height:10rem;
        max-width: 300px; 
        width: 100%; 
        border-radius: 10px;
@@ -96,9 +97,9 @@
        text-align: left;
        overflow: hidden;
        position: relative;
-       background-color: #1F2937; 
-       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); 
-       background-color: #4c6ef5; 
+       background-color: #F1F1F1; 
+       border:1px solid #c8c8c8;
+       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
     }
 
     .card-icon-container {
@@ -117,19 +118,20 @@
         width: 100%;
         display: flex;
         flex-direction: column;
-        align-items: flex-start;
         margin-top: 8px;
+        justify-content: space-between;
     }
 
     .card-title {
         font-size: 1.2em;
         font-weight: bold;
         margin-bottom: 5px;
+        color:#232121;
     }
 
     .card-info {
         font-size: 0.9em;
-        color: #C7D2FE;
+        color: #707070;
     }
 
     .options-icon {
@@ -322,24 +324,33 @@
     z-index: 1000; /* Asegura que esté encima de otros elementos */
 }
 
-.p-4.shadow-sm.bg-light.mt-4{
+.p-4.shadow-sm.bg-light.mt-4 {
     border-radius: 5px;
-}
-.pagination-container {
-    text-align: right;
-    margin-top: 20px;
+    position: relative;
 }
 
-   /* ... Pagination :D ... */
-   
+.pagination-wrapper {
+    position: relative;
+    padding: 40px 0;
+}
+
+.pagination-container {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+}
+
 .pagination-container button {
     padding: 8px 12px;
     margin: 0 5px;
     border: 1px solid #ddd;
-    background-color: #f0f0f0;
+    background-color: #F9FAFB;
     color: #333;
     cursor: pointer;
-    border-radius: 4px;
+    border-radius: 5px; /* Bordes redondeados */
+    font-size: 1em; /* Tamaño de fuente */
 }
 
 .pagination-container button:disabled {
@@ -348,7 +359,11 @@
     cursor: default;
 }
 
-
+.pagination-container button.current-page {
+    background-color: #7C69EF; /* Fondo azul */
+    color: white; /* Texto blanco */
+    border: 1px solid #4c6ef5;
+}
 
 </style>
 @endpush
@@ -376,36 +391,39 @@
                 <div class="spinner-blade"></div>
                 <div class="spinner-blade"></div>
             </div>
-        </div>  
+        </div>
     </div>
     <div class="no-results-message" style="display: none; text-align: center; width: 100%; font-size: 1.2em;">
         No hay asignaturas D:
     </div>
-    <div class="pagination-container" style="text-align: right; margin-top: 20px;"></div>
+    <div class="pagination-wrapper"> <div class="pagination-container" style="text-align: right;"></div>
+    </div>
 </div>
 @endsection
 
 @push('after_scripts')
 <script>
 let cardsData = [];
+let currentPage = 1;
+const cardsPerPage = 9;
 
+// Cargar datos iniciales y renderizar la primera página
 $.ajax({
     url: '/admin/searchCourses',
     type: 'GET',
     dataType: 'json',
     success: function(data) {
-        console.log('Datos recibidos:', data);
         cardsData = data;
-        renderCards(cardsData);
+        renderCards(cardsData, currentPage);
+        updatePagination(cardsData);
     },
 });
 
 function searchCourses() {
-    console.log("ejecutando searchCourses");
     let searchQuery = $('.search-input').val().trim();
 
-    $('.loading-indicator').show(); // Mostrar el indicador de carga
-    $('.card-container .card').remove(); // Eliminar tarjetas antiguas mientras se carga
+    $('.loading-indicator').show();
+    $('.card-container').empty();
 
     $.ajax({
         url: '/admin/searchCourses',
@@ -413,17 +431,19 @@ function searchCourses() {
         data: { search: searchQuery },
         dataType: 'json',
         success: function (data) {
-            $('.loading-indicator').hide(); // Ocultar el indicador de carga
+            $('.loading-indicator').hide();
+            cardsData = data;
 
             if (data.length === 0) {
-                // Si no hay resultados, oculta el card-container y muestra el mensaje
                 $('.card-container').hide();
                 $('.no-results-message').show();
+                $('.pagination-container').empty();
             } else {
-                // Si hay resultados, muestra el card-container y oculta el mensaje
                 $('.card-container').show();
                 $('.no-results-message').hide();
-                renderCards(data);
+                currentPage = 1;
+                renderCards(cardsData, currentPage);
+                updatePagination(cardsData);
             }
         },
         error: function () {
@@ -432,63 +452,89 @@ function searchCourses() {
     });
 }
 
-function renderCards(cards) {
+function renderCards(cards, page = 1) {
     let cardContainer = $('.card-container');
+    cardContainer.empty();
 
-    // Ya no necesitas limpiar el contenedor aquí
+    const startIndex = (page - 1) * cardsPerPage;
+    const endIndex = startIndex + cardsPerPage;
+    const pageCards = cards.slice(startIndex, endIndex);
+
     let existingCards = cardContainer.children('.card');
 
-    cards.forEach(function(card, index) {
+    pageCards.forEach(function(card, index) {
         if (existingCards[index]) {
-            // Si la tarjeta ya existe, solo actualiza su contenido
             $(existingCards[index]).find('.card-title').text(card.nombre);
             $(existingCards[index]).find('.card-info').eq(0).text(`Catálogo: ${card.catalogo}`);
             $(existingCards[index]).find('.card-info').eq(1).text(`Código: ${card.codigo}`);
         } else {
-            // Si la tarjeta no existe, crea una nueva y la agrega al container
             let cardHtml = `
-                <div class="card" data-id="${card.id} style="background-color: ${getCardColor(index)};">
+                <div class="card bg-light" data-id="${card.id}" style="background-color: ${getCardColor(index)};">
                     <div class="card-dropdown-container">
                         <ul class="card-dropdown-menu" id="cardDropdownMenu${index}">
-                            <li class="card-dropdown-item" onclick="cardActionView(${card.id})">Ver</li>
+                            <li class="card-dropdown-item" onclick="cardActionView(${card.id}, event)">Ver</li>
                             @if (backpack_user()->hasRole('admin'))
                             <li class="card-dropdown-item" onclick="cardActionEdit()">Editar</li>
                             <li class="card-dropdown-item" onclick="cardActionDelete()">Eliminar</li>
                             @endif
                         </ul>
                     </div>
-                    <div class="options-icon" onclick="toggleDropdown('cardDropdownMenu${index}')">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-dots-vertical">
+                    <div class="options-icon" onclick="toggleDropdown('cardDropdownMenu${index}', event)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#232121" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-dots-vertical">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                            <path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
-                            <path d="M12 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
-                            <path d="M12 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+                            <path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/>
+                            <path d="M12 19m-1 0a1 1 0 1 0 2 0a1 1 0 -2 0"/>
+                            <path d="M12 5m-1 0a1 1 0 1 0 2 0a1 1 0 -2 0"/>
                         </svg>
                     </div>
                     <div class="card-content">
                         <h3 class="card-title">${card.nombre}</h3>
                         <p class="card-info">Catálogo: ${card.catalogo}</p>
-                        <p class="card-info">Código: ${card.codigo}</p>
+                        <p class="card-info">Código: ${card.codigo}</p> 
                     </div>
                 </div>
             `;
             cardContainer.append(cardHtml);
+
             let newCard = cardContainer.children('.card').last();
-            newCard.click(function() {
-                cardActionView(card.id);
+            newCard.click(function(event) {
+                if (!$(event.target).closest('.options-icon').length) {
+                    cardActionView(card.id);
+                }
             });
         }
     });
 
-    // Elimina las tarjetas que no se encuentran en la lista de datos recibida
     if (existingCards.length > cards.length) {
         existingCards.slice(cards.length).remove();
     }
 }
 
-// Agrega el color de Fondo para todas las tarjetas.
+function updatePagination(cards) {
+    const totalPages = Math.ceil(cards.length / cardsPerPage);
+    let paginationHtml = '';
+
+    // Botón "Anterior" siempre presente, deshabilitado en la primera página
+    paginationHtml += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">Anterior</button>`;
+
+    for (let i = 1; i <= totalPages; i++) {
+        paginationHtml += `<button class="${currentPage === i ? 'current-page' : ''}" onclick="changePage(${i})">${i}</button>`;
+    }
+
+    // Botón "Siguiente" siempre presente, deshabilitado en la última página
+    paginationHtml += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">Siguiente</button>`;
+
+    $('.pagination-container').html(paginationHtml);
+}
+
+function changePage(page) {
+    currentPage = page;
+    renderCards(cardsData, currentPage);
+    updatePagination(cardsData);
+}
+
 function getCardColor(index) {
-    return "#4c6ef5"; 
+    return "#F1F1F1";
 }
 
 function toggleDropdown(dropdownId) {
@@ -520,8 +566,10 @@ window.onclick = function(event) {
     }
 }
 
-
 function cardActionView(cardId) {
+    if (event) {
+        event.stopPropagation();
+    }
     window.location.href = `/admin/asignaturas/${cardId}/show`;
 }
 
