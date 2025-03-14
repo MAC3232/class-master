@@ -1,11 +1,29 @@
 @extends(backpack_view('blank'))
 
 @php
+if ($crud->hasAccess('list') && !Route::is('asignaturas.show')){
+
     $defaultBreadcrumbs = [
       trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dashboard'),
       $crud->entity_name_plural => url($crud->route),
       trans('backpack::crud.preview') => false,
     ];
+
+
+}
+
+
+if ($crud->hasAccess('list') && Route::is('asignaturas.show')){
+
+    $defaultBreadcrumbs = [
+      trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dashboard'),
+      $crud->entity_name_plural => route('courses.index'),
+      trans('backpack::crud.preview') => false,
+    ];
+}
+
+
+
 
     // if breadcrumbs aren't defined in the CrudController, use the default breadcrumbs
     $breadcrumbs = $breadcrumbs ?? $defaultBreadcrumbs;
@@ -19,11 +37,19 @@
 		  <h1 class="text-capitalize mb-0" bp-section="page-heading">{!! $crud->getHeading() ?? $crud->entity_name_plural !!}</h1>
             <p class="ms-2 ml-2 mb-0" bp-section="page-subheading">{!! $crud->getSubheading() ?? mb_ucfirst(trans('backpack::crud.preview')).' '.$crud->entity_name !!}</p>
 
-				@if ($crud->hasAccess('list'))
+				@if ($crud->hasAccess('list') && !Route::is('asignaturas.show'))
 					<p class="ms-2 ml-2 mb-0" bp-section="page-subheading-back-button">
 						<small><a href="{{ url($crud->route) }}" class="font-sm"><i class="la la-angle-double-left"></i> {{ trans('backpack::crud.back_to_all') }} <span>{{ $crud->entity_name_plural }}</span></a></small>
 					</p>
 				@endif
+
+
+                @if ($crud->hasAccess('list') && Route::is('asignaturas.show') )
+					<p class="ms-2 ml-2 mb-0" bp-section="page-subheading-back-button">
+						<small><a href="{{ route('courses.index') }}" class="font-sm"><i class="la la-angle-double-left"></i> {{ trans('backpack::crud.back_to_all') }} <span>{{ $crud->entity_name_plural }}</span></a></small>
+					</p>
+				@endif
+
             </div>
             <div>
 

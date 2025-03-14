@@ -193,15 +193,19 @@ class AsignaturasCrudController extends CrudController
             CRUD::addField([
                 'label' => 'Docente',
                 'type' => 'select',
-                'name' => 'user_id', // Asegúrate de que es el campo correcto en la tabla intermedia
+                'name' => 'user_id', // Este es el campo en la tabla intermedia
                 'entity' => 'asignaturasDocentes',
                 'model' => 'App\Models\User',
                 'attribute' => 'name',
-                'options' => (function ($query) {
+                'options' => function ($query) {
                     return $query->role('docente')->get();
-                }),
-                'value' => optional($this->crud->getCurrentEntry()->asignaturasDocentes->first())->docente_id
+                },
+                'value' => $this->crud->getCurrentEntry() && $this->crud->getCurrentEntry()->asignaturasDocentes->isNotEmpty()
+                    ? $this->crud->getCurrentEntry()->asignaturasDocentes->first()->docente_id
+                    : ''
             ]);
+
+
         }else{
 
             CRUD::addField([

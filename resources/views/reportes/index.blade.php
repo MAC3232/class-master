@@ -1,5 +1,6 @@
 @extends(backpack_view('blank'))
 
+<<<<<<< HEAD
 @php
     $breadcrumbs = [
         trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dashboard'),
@@ -7,6 +8,7 @@
         'Listado'                   => false, // El último elemento no lleva URL
     ];
 @endphp
+
 
 @section('content')
 <div class="container">

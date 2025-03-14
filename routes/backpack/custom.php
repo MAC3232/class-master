@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AsignaturasCrudController;
 use App\Http\Controllers\admin\AsistenciaController;
 use App\Http\Controllers\Admin\AssignmentStudentController;
+use App\Http\Controllers\admin\CourseController;
 use App\Http\Controllers\admin\CriterioActividadController;
 use App\Http\Controllers\Admin\CriterioController;
 use App\Http\Controllers\admin\DescripcionCriterioNivelController;
@@ -65,6 +66,10 @@ Route::group([
     Route::get('/estudianteReport/{id}/estudents/{student}', [ReportesController::class, 'graph'])->name('graph');
 
     Route::get('admin/api/asignaturas', [AsignaturasCrudController::class, 'getAsignaturas']);
+
+    Route::get('courses', [CourseController::class, 'index'])->name('courses.index');
+    Route::get('searchCourses', [CourseController::class, 'searchAsignatura']);
+
 
     Route::crud('asignaturas', 'AsignaturasCrudController');
 
