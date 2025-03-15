@@ -9,81 +9,206 @@ function showCustomModal(mode, criterio_id, nivel_id) {
     document.getElementById("levelInputs").style.display = mode === 'level' ? 'block' : 'none';
     document.getElementById("descripcionInputs").style.display = mode === 'descripcion' ? 'block' : 'none';
 
-    if (currentMode == 'calificar') {
-        document.getElementById("CalificarInputs").style.display = mode === 'calificar' ? 'block' : 'none';
-        document.getElementById("customModalLabel").innerText = 'Calificar al estudiante';
+
+
+    let currentMode = '';
+
+    function showCustomModal(mode, criterio_id, nivel_id, descripcion_id) {
+        currentMode = mode;
+        criterio = criterio_id
+        nivel = nivel_id
+        descripcion = descripcion_id
+        document.getElementById("addElementForm").reset();
+        document.getElementById("criteriaInputs").style.display = mode === 'criterion' ? 'block' : 'none';
+        document.getElementById("levelInputs").style.display = mode === 'level' ? 'block' : 'none';
+        document.getElementById("descripcionInputs").style.display = mode === 'descripcion' ? 'block' : 'none';
+        document.getElementById("levelInputsEdit").style.display = mode === 'update_modal_level' ? 'block' : 'none';
+        document.getElementById("descripcionInputsEdit").style.display = mode === 'update_modal_descripcion_criterio' ? 'block' : 'none';
+        document.getElementById("descripcionaInputUpdate").style.display = mode === 'update_modal_descripcion' ? 'block' : 'none';
+
+
+
+
+        if (currentMode == 'calificar') {
+            document.getElementById("CalificarInputs").style.display = mode === 'calificar' ? 'block' : 'none';
+            document.getElementById("customModalLabel").innerText = 'Calificar al estudiante';
+
+        }
+        if(currentMode == 'update_modal_level'){
+            document.getElementById("customModalLabel").innerText = 'Editar nivel';
+        }
+        if(currentMode == 'update_modal_descripcion_criterio'){
+            document.getElementById("customModalLabel").innerText = 'Editar criterio';
+        }
+        if(currentMode == 'update_modal_descripcion'){
+            document.getElementById("customModalLabel").innerText = 'Editar descripcion';
+        }
+
+        if (currentMode === 'descripcion') {
+
+            document.getElementById("customModalLabel").innerText = 'Agregar nueva descripcion';
+        }
+        if (currentMode === 'level') {
+
+            document.getElementById("customModalLabel").innerText = 'Agregar nuevo nivel';
+        }
+        if (currentMode === 'criterion') {
+
+            document.getElementById("customModalLabel").innerText = 'Agregar nuevo criterio';
+        }
+
+        // Show Bootstrap modal
+        $('#customModal').modal('show');
     }
 
-    if (currentMode === 'descripcion') {
-        document.getElementById("customModalLabel").innerText = 'Agregar nueva descripcion';
+    function submitCustomModal() {
+
+        if (currentMode === 'criterion') {
+            const criterionDesc = document.getElementById('criterionDesc').value;
+            const rubrica = document.getElementById('rubrica').value;
+            const data = {
+                descripcion: criterionDesc,
+                rubrica_actividad_id: rubrica
+            };
+
+
+
+
+
+
+            EnviarInformacion('/admin/criterios', data, 'POST', function(response) {
+                addCriterion(response.descripcion, response.id); // Asegúrate de manejar la respuesta
+
+
+            });
+        } else if (currentMode === 'level') {
+            const levelDesc = document.getElementById('levelDesc').value;
+            const scoreRangeFrom = document.getElementById('scoreRangeFrom').value;
+
+            const rubrica1 = document.getElementById('rubrica').value;
+
+            const data = {
+                nombre: levelDesc,
+                puntos: scoreRangeFrom,
+                rubrica_actividad_id: rubrica1,
+            };
+
+
+
+            EnviarInformacion('/admin/niveles', data,'POST', function(response) {
+                window.location.reload();
+
+                addLevel(response.nombre); // Asegúrate de manejar la respuesta
+            });
+        } else if( currentMode == 'update_modal_level'){
+            const edit_level = document.getElementById('edit_level').value;
+            const scoreRangeFromEdit =document.getElementById('scoreRangeFromEdit').value;
+            const data = {
+                nombre: edit_level,
+                puntos: scoreRangeFromEdit,
+            }
+            EnviarInformacion('/admin/niveles/'+ nivel, data, 'PUT', function(response) {
+                window.location.reload();
+
+                addLevel(response.nombre); // Asegúrate de manejar la respuesta
+            });
+
+        } else if( currentMode == 'update_modal_descripcion_criterio'){
+            const edit_d_criterio = document.getElementById('edit_d_criterio').value;
+
+            const data = {
+                descripcion:  edit_d_criterio,
+
+            }
+            EnviarInformacion('/admin/criterios/'+ criterio, data, 'PUT', function(response) {
+                window.location.reload();
+
+                addLevel(response.nombre); // Asegúrate de manejar la respuesta
+            });
+
+        }else if( currentMode == 'update_modal_descripcion'){
+            const edit_descripcion_nivel = document.getElementById('edit_descripcion_nivel').value;
+            const edit_criterio_id = document.getElementById('edit_criterio_id').value;
+            const edit_nivel_id = document.getElementById('edit_nivel_id').value;
+
+            console.log(edit_criterio_id, edit_descripcion_nivel, edit_nivel_id);
+            const data = {
+                descripcion:  edit_descripcion_nivel,
+                criterio_id: edit_criterio_id,
+                nivel_desempeno_id: edit_nivel_id,
+
+            }
+            EnviarInformacion('/admin/descripcionacriterionivel/'+  descripcion, data, 'PUT', function(response) {
+                window.location.reload();
+
+                addLevel(response.nombre); // Asegúrate de manejar la respuesta
+            });
+
+        } else if (currentMode === 'descripcion'){
+
+            const descripcion_input = document.getElementById('descripcion_input').value;
+
+            const data = {
+                descripcion: descripcion_input,
+                nivel_desempeno_id: nivel,
+                criterio_id: criterio
+            }
+
+
+
+
+            EnviarInformacion('/admin/descripcionacriterionivel', data,'POST', function(response) {
+                window.location.reload();
+
+
+                addDescription(criterio, nivel, response.descripcion); // Asegúrate de manejar la respuesta
+            });
+
+
+
+
+
+
+
+        }else if(currentMode === 'calificar'){
+            const estudiante_id = document.getElementById('estudiante').value;
+            const actividad_id = document.getElementById('actividad').value;
+            const CalificarDesc = document.getElementById('CalificarDesc').value;
+
+            const data = {
+                estudiante_id: estudiante_id,
+                actividad_id: actividad_id,
+                nota: CalificarDesc
+            }
+
+
+
+            EnviarInformacion('/admin/valoracion', data, 'POST', function(response) {
+                window.location.reload();
+            });
+
+
+        }
     }
-    if (currentMode === 'level') {
-        document.getElementById("customModalLabel").innerText = 'Agregar nuevo nivel';
-    }
-    if (currentMode === 'criterion') {
-        document.getElementById("customModalLabel").innerText = 'Agregar nuevo criterio';
-    }
 
-    // Show Bootstrap modal
-    $('#customModal').modal('show');
-}
+    function EnviarInformacion(url, objEvento, type, callback) {
+        $.ajax({
+            type: type,
+            url: url,
+            data: objEvento,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(msg) {
+                console.log(msg);
+                if (callback) callback(msg);
+                var modal = bootstrap.Modal.getInstance(document.getElementById('customModal'));
+                modal.hide();
+            },
+            error: function(xhr, status, error) {
+                alert("Completa todos los campos");
+            }
 
-function submitCustomModal() {
-    if (currentMode === 'criterion') {
-        const criterionDesc = document.getElementById('criterionDesc').value;
-        const rubrica = document.getElementById('rubrica').value;
-        const data = {
-            descripcion: criterionDesc,
-            rubrica_actividad_id: rubrica
-        };
-
-        EnviarInformacion('/admin/criterios', data, function(response) {
-            addCriterion(response.descripcion, response.id); // Asegúrate de manejar la respuesta
-        });
-
-    } else if (currentMode === 'level') {
-        const levelDesc = document.getElementById('levelDesc').value;
-        const scoreRangeFrom = document.getElementById('scoreRangeFrom').value;
-        const rubrica1 = document.getElementById('rubrica').value;
-
-        const data = {
-            nombre: levelDesc,
-            puntos: scoreRangeFrom,
-            rubrica_actividad_id: rubrica1,
-        };
-
-        EnviarInformacion('/admin/niveles', data, function(response) {
-            window.location.reload();
-            addLevel(response.nombre); // Asegúrate de manejar la respuesta
-        });
-
-    } else if (currentMode === 'descripcion') {
-        const descripcion_input = document.getElementById('descripcion_input').value;
-
-        const data = {
-            descripcion: descripcion_input,
-            nivel_desempeno_id: nivel,
-            criterio_id: criterio
-        };
-
-        EnviarInformacion('/admin/descripcionacriterionivel', data, function(response) {
-            window.location.reload();
-            addDescription(criterio, nivel, response.descripcion); // Asegúrate de manejar la respuesta
-        });
-
-    } else if (currentMode === 'calificar') {
-        const estudiante_id = document.getElementById('estudiante').value;
-        const actividad_id = document.getElementById('actividad').value;
-        const CalificarDesc = document.getElementById('CalificarDesc').value;
-
-        const data = {
-            estudiante_id: estudiante_id,
-            actividad_id: actividad_id,
-            nota: CalificarDesc
-        };
-
-        EnviarInformacion('/admin/valoracion', data, function(response) {
-            window.location.reload();
         });
     }
 }
