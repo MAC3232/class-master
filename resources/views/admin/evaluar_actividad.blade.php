@@ -110,16 +110,14 @@ td.seleccionado .overlay:hover {
 @section('header')
 
 <section class="content-header">
-    <h1 class="">
-        Evaluando a: {{$estudiante->user->name}}
-    </h1>
+<h1>Actividad:  {{ $actividad->nombre }}</h1>
+    <h2 class="">Evaluando a: {{$estudiante->user->name}}
+        </h2>
+        
+                    <a href="/admin/asignaturas/{{ $actividad->id }}/evaluar-estudiante" class="p-2 btn-link">
+                        < Volver a todos los estudiantes </a>
+
     <ol class="breadcrumb m-2">
-        <li><a href="{{ backpack_url() }}">Panel</a></li>
-        <li class="active">{{ $actividad->nombre }}</li>
-        <li>
-            <a href="/admin/asignaturas/{{ $actividad->id }}/evaluar-estudiante" class="p-2 btn-link">
-                < Volver a todos los estudiantes </a>
-        </li>
     </ol>
 </section>
 

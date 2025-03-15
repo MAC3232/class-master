@@ -40,7 +40,7 @@ function showCustomModal(mode, criterio_id, nivel_id, descripcion_id) {
     }
     if (currentMode === 'level') {
 
-        document.getElementById("customModalLabel").innerText = 'Agregar nuevo nivel';
+        document.getElementById("customModalLabel").innerText = 'Agregar nuevo nivel de desempeño';
     }
     if (currentMode === 'criterion') {
 

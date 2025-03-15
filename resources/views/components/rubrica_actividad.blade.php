@@ -2,7 +2,7 @@
     <div class="container mt-5">
         <div class="text-right mb-3">
             <button class="btn btn-primary d-print-none" onclick="showCustomModal('criterion')">Agregar Nuevo Criterio</button>
-            <button class="btn btn-primary d-print-none" onclick="showCustomModal('level')">Agregar Nuevo Nivel</button>
+            <button class="btn btn-primary d-print-none" onclick="showCustomModal('level')">Agregar Nuevo Nivel de desempeño</button>
             @if(Route::is('Evaluar_actividad.evaluar'))
 
 
@@ -84,7 +84,7 @@
                 <th class="text-center">
                     <div class="alert alert-info" role="alert">
 
-                        No hay un rango estipulado para esta nota (Puntaje: <span id="note-view">{{ $nota ?? 'No Calificado' }}</span> )
+                        La nota calculada del estudiante es de: (Puntaje: <span id="note-view">{{ $nota ?? 'No Calificado' }}</span> )
                     </div>
                 </th>
 
