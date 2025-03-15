@@ -25,7 +25,7 @@ class AsignaturasRequest extends FormRequest
         return [
             'nombre' => 'required|string|max:255',
             'codigo' => 'required|integer|unique:asignaturas,codigo,' . $this->route('id'),
-            'competencia' => 'required|string|max:255',
+            'competencia' => 'required|string',
             'descripcion_competencia' => 'required|string',
             'justificacion' => 'required|string',
             'facultad_id' => 'required|exists:facultades,id',

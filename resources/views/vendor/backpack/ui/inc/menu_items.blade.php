@@ -38,3 +38,18 @@
 
 
 <link rel="stylesheet" href="{{asset('css/global-styles.css')}}">
+
+<script>
+
+    // Selecciona el elemento que tiene las clases mencionadas
+const navbarElement = document.querySelector('.navbar.navbar-vertical.navbar-expand-lg.navbar-transparent');
+
+// Verifica si el elemento existe antes de agregar la clase
+if (navbarElement) {
+  // Agrega la nueva clase
+  navbarElement.classList.add('bg-light');
+} else {
+  console.error('No se encontró el elemento con las clases especificadas.');
+}
+
+</script>

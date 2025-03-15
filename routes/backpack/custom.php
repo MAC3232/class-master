@@ -1,25 +1,23 @@
 <?php
 
 use App\Http\Controllers\Admin\AsignaturasCrudController;
-use App\Http\Controllers\Admin\UserCrudController;
-use App\Http\Controllers\admin\AsistenciaController;
+use App\Http\Controllers\Admin\AsistenciaController;
 use App\Http\Controllers\Admin\AssignmentStudentController;
-use App\Http\Controllers\admin\CourseController;
-use App\Http\Controllers\admin\CriterioActividadController;
+use App\Http\Controllers\Admin\CourseController;
+use App\Http\Controllers\Admin\CriterioActividadController;
 use App\Http\Controllers\Admin\CriterioController;
-use App\Http\Controllers\admin\DescripcionCriterioNivelController;
-use App\Http\Controllers\admin\EjeContenidoController;
-use App\Http\Controllers\admin\EstrategiaController;
+use App\Http\Controllers\Admin\DescripcionCriterioNivelController;
+use App\Http\Controllers\Admin\EjeContenidoController;
+use App\Http\Controllers\Admin\EstrategiaController;
 use App\Http\Controllers\Admin\EstudiantesCrudController;
 use App\Http\Controllers\Admin\EvaluarEstudianteController;
-use App\Http\Controllers\admin\LevelController;
-use App\Http\Controllers\admin\QrAsistenciaController;
-use App\Http\Controllers\admin\RAController;
-use App\Http\Controllers\admin\RubricaActividadController;
+use App\Http\Controllers\Admin\LevelController;
+use App\Http\Controllers\Admin\QrAsistenciaController;
+use App\Http\Controllers\Admin\RAController;
+use App\Http\Controllers\Admin\RubricaActividadController;
 use App\Http\Controllers\Admin\StudentManagementController;
 use App\Http\Controllers\ReportesController;
 use App\Http\Controllers\RubricaController;
-use App\Models\Asignaturas;
 use Illuminate\Support\Facades\Route;
 
 
@@ -199,6 +197,7 @@ Route::group([
     // Rutas para Asistencia
     Route::get('/asistencia/generar/{asignatura_id}', [QrAsistenciaController::class, 'generarQrAsistencia'])
          ->name('asistencia.generar');
+         
     Route::get('/asistencias/{asignatura_id}', [AsistenciaController::class, 'index'])
          ->name('asistencias.index');
 

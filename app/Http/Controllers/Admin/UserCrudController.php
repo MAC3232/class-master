@@ -147,12 +147,25 @@ class UserCrudController extends CrudController
 
     // Encuentra y actualiza al usuario de forma elegante
     $user = User::findOrFail($request->id);
+    $adminRoleId = Role::where('name', 'admin')->value('id');
 
-    $user->update([
-        'name' => $request->name,
-        'email' => $request->email,
-        'password' => bcrypt($request->password)
-    ]);
+    if (in_array($adminRoleId, $request->roles)) {
+
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'carrera_id' => $request->carrera_id,
+            'password' => bcrypt($request->password)
+        ]);
+
+    }else{
+
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password)
+        ]);
+    }
 
 
 
@@ -162,7 +175,7 @@ class UserCrudController extends CrudController
         $roles = \Spatie\Permission\Models\Role::whereIn('id', $request->roles)
             ->where('guard_name', 'web') // Asegura que solo tome roles del guard correcto
             ->get();
-        
+
         $user->syncRoles($roles);
     }
 
@@ -172,10 +185,51 @@ class UserCrudController extends CrudController
     if ($request->_save_action == 'save_and_back') {
         return Redirect::to('/admin/user');
     }
-    dd('no paso');
+
 
     return redirect()->back();
 }
+
+public function store()
+{
+    $request = $this->crud->validateRequest();
+    $adminRoleId = Role::where('name', 'admin')->value('id');
+
+
+    if (in_array($adminRoleId, $request->roles)) {
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'carrera_id' => $request->carrera_id,
+            'password' => bcrypt($request->password),
+        ]);
+
+    }else{
+
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+        ]);
+    }
+
+
+    // Asignar múltiples roles al usuario
+    if (!empty($request->roles)) {
+        $user->roles()->sync($request->roles); // Suponiendo una relación muchos a muchos
+    }
+
+    Alert::success('Usuario creado y roles asignados exitosamente')->flash();
+
+    if ($request->_save_action == 'save_and_back') {
+        return Redirect::to('/admin/user');
+    }
+
+    return redirect()->back();
+}
+
 
 
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\admin;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\criterios_actividad;
@@ -17,12 +17,12 @@ class CriterioActividadController extends Controller
     // Almacena un nuevo criterio
     public function store(Request $request)
     {
-        
+
         // Validar la solicitud
         $validator = Validator::make($request->all(), [
             'descripcion' => 'required|string|max:255',
-          
-                
+
+
         ]);
 
         if ($validator->fails()) {

@@ -370,7 +370,7 @@
 @endpush
 
 @section('content')
-<div class="p-4 shadow-sm bg-light mt-4">
+<div class="p-4 shadow-sm   mt-4">
     <div class="search-filter-container">
         <input type="text" class="search-input" placeholder="Buscar Asignatura..." onkeyup="searchCourses()">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>

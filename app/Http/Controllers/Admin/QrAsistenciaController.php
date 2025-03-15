@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\admin;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\QrAsistencias;
@@ -15,7 +15,7 @@ class QrAsistenciaController extends Controller
     {
         $token = Str::random(64); // Genera un token único de 64 caracteres
         $fechaInicio = Carbon::now();
-        
+
         $fechaFin = $fechaInicio->copy()->addMinutes(5); // Expira en 15 minutos
 
         // Guardar la sesión de QR en la base de datos

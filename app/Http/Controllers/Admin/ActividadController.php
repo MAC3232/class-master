@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\admin;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Actividad;
@@ -41,7 +41,7 @@ class ActividadController extends Controller
     public function store(Request $request, $id)
     {
 
-       
+
 
         $request->validate([
             'nombre' => 'required|string|max:255',
