@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\descripciones_actividad_critrio_nivel;
+use App\Models\SelectCriterioEstudent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -68,9 +69,19 @@ class DescripcionCriterioNivelController extends Controller
     public function destroy($id)
     {
         $criterion = descripciones_actividad_critrio_nivel::find($id);
+
         if (!$criterion) {
             return response()->json(['message' => 'Criterio no encontrado'], 404);
         }
+        
+        $seleccionado = SelectCriterioEstudent::where('criterio_id', $criterion->criterio_id)
+            ->where('nivel_desempeno_id', $criterion->nivel_desempeno_id)
+            ->first();
+
+        if ($seleccionado) {
+            $seleccionado->delete();
+        }
+
 
         $criterion->delete();
         return response()->json(['message' => 'Criterio eliminado con éxito']);
