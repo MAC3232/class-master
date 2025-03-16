@@ -68,7 +68,7 @@ class AsignaturasCrudController extends CrudController
             $this->crud->removeButton('update'); // Eliminar botón de editar
             $this->crud->removeButton('delete'); // Eliminar botón de eliminar
 
-        
+
      //   if (backpack_user()->hasRole('super-admin')) {
 
 
@@ -109,7 +109,7 @@ class AsignaturasCrudController extends CrudController
 
         // Columnas a mostrar en la lista de asignaturas
         $this->crud->addColumn(['name' => 'nombre', 'label' => 'Nombre', 'type' => 'text']);
-        $this->crud->addColumn(['name' => 'codigo', 'label' => 'N° clase', 'type' => 'text']);
+        $this->crud->addColumn(['name' => 'codigo', 'label' => 'N° clase', 'type' => 'int']);
         $this->crud->addColumn(['name' => 'catalogo', 'label' => 'Catálogo', 'type' => 'text']);
     }
 
@@ -137,7 +137,7 @@ class AsignaturasCrudController extends CrudController
         ]);
 
         CRUD::addField(['name' => 'nombre', 'label' => 'Nombre de la Asignatura', 'type' => 'text']);
-        CRUD::addField(['name' => 'codigo', 'label' => 'N° clase', 'type' => 'text']);
+        CRUD::addField(['name' => 'codigo', 'label' => 'N° clase', 'type' => 'number']);
         CRUD::addField(['name' => 'catalogo', 'label' => 'Catalogo', 'type' => 'text']);
         CRUD::addField(['name' => 'competencia', 'label' => 'competencia', 'type' => 'text']);
         CRUD::addField(['name' => 'descripcion_competencia', 'label' => 'descripcion de la competencia', 'type' => 'text']);
@@ -514,11 +514,12 @@ class AsignaturasCrudController extends CrudController
 
         Alert::success('Asignatura agregada exitosamente')->flash();
 
-        return redirect()->back();
+        return redirect()->route('courses.index');
+
     } catch (Exception $e) {
         DB::rollBack();
         Alert::error('No se pudo agregar la asignatura')->flash();
-        return redirect()->back();
+        return redirect()->route('courses.index');
     }
 }
 protected function update($id, AsignaturasRequest $request)
@@ -540,11 +541,12 @@ protected function update($id, AsignaturasRequest $request)
 
         Alert::success('Asignatura actualizada exitosamente')->flash();
 
-        return redirect()->back();
+        return redirect()->route('courses.index');
+
     } catch (Exception $e) {
         DB::rollBack();
         Alert::error('No se pudo actualizar la asignatura')->flash();
-        return redirect()->back();
+        return redirect()->route('courses.index');
     }
 }
 

@@ -4,10 +4,42 @@
 
 $breadcrumbs = [
         trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dashboard'),
-        'Asignaturas' => route('asignaturas.index'),
-        'Listado' => false, // El último elemento no lleva URL
+        'Asignaturas' => route('courses.index'),
+        'Panel asignatura' => route('asignaturas.show', ['id'=> $asignatura_id]),
+        'Calendario' => false, // El último elemento no lleva URL
     ];
 @endphp
+
+@section('header')
+
+<section class="content-header">
+  <div class="container-fluid mb-3">
+    <div class="row">
+      <!-- Columna izquierda -->
+      <div class="col-sm-6 w-100 d-flex align-items-center">
+        <!-- Botón de retroceso -->
+        <a href="javascript:window.history.back();"
+           class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center "
+           style="width: 50px; height: 50px;">
+          <i class="la la-arrow-left" style="font-size: 1.5rem;"></i>
+        </a>
+
+        <!-- Títulos -->
+        <div class=" m-5 w-100 ">
+          <h1 class="mb-0 ">Asignatura:  </h1>
+          <p class="fs-2">{{$nombre}}</p>
+        </div>
+      </div>
+
+      <!-- Columna derecha (breadcrumb u otros enlaces) -->
+
+    </div>
+  </div>
+</section>
+
+
+
+@endsection
 
 @section('content')
 
@@ -18,8 +50,8 @@ $breadcrumbs = [
     <link rel="stylesheet" href="{{ asset('fullcalendar/timegrid/main.css')}}"> -->
 
     {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">--}}
-    
-    
+
+
     <script src="{{ asset('fullcalendar/core/main.js')}}" defer></script>
     <script src="{{ asset('fullcalendar/interaction/main.js')}}" defer></script>
     <script src="{{ asset('fullcalendar/daygrid/main.js')}}" defer></script>
@@ -32,7 +64,7 @@ $breadcrumbs = [
         padding: 0;
         font-family: Arial, Helvetica, sans-serif;
         font-size: 14px;
-      }   
+      }
       .modal-backdrop.show {
           pointer-events: none !important;
           z-index: 0 !important;
@@ -103,10 +135,10 @@ $breadcrumbs = [
                 var hora = fechaInicio.getHours();
                 var minutos = fechaInicio.getMinutes();
 
-              
+
                 mes = (mes < 10) ? "0" + mes : mes;
                 dia = (dia < 10) ? "0" + dia : dia;
-                hora = (hora < 10) ? "0" + hora : hora; 
+                hora = (hora < 10) ? "0" + hora : hora;
                 minutos = (minutos < 10) ? "0" + minutos : minutos;
 
                 var horario = (hora + ":" + minutos);
@@ -119,7 +151,7 @@ $breadcrumbs = [
         },
 
               events: "{{ url('/admin/assignment/calendario/'. $asignatura_id) }}"
-              
+
             });
 
             calendar.render();
@@ -129,7 +161,7 @@ $breadcrumbs = [
 
               EnviarInformacion('/admin/assignment/calendario/', objEvento, function(nuevoEvento) {
                 calendar.addEvent(nuevoEvento);
-                limpiarFormulario(); 
+                limpiarFormulario();
 
               });
             });
@@ -149,20 +181,20 @@ $breadcrumbs = [
                   eventToUpdate.setProp('color', objEvento.color);
                 }
 
-                limpiarFormulario(); 
+                limpiarFormulario();
               });
             });
 
 
             $('#btnBorrar').click(function() {
-              let eventoId = $('#txtId').val(); 
+              let eventoId = $('#txtId').val();
               EnviarInformacion('/admin/assignment/calendario/' + eventoId, { _method: 'DELETE' }, function() {
-                
+
                   let eventToRemove = calendar.getEventById(eventoId);
                   if (eventToRemove) {
-                      eventToRemove.remove(); 
+                      eventToRemove.remove();
                   }
-                  limpiarFormulario(); 
+                  limpiarFormulario();
               });
           });
 
@@ -180,7 +212,7 @@ $breadcrumbs = [
                 '_token': $("meta[name='csrf-token']").attr("content"),
                 '_method': method
               };
-            } 
+            }
 
             function EnviarInformacion(url, objEvento, callback) {
               $.ajax({
@@ -192,7 +224,7 @@ $breadcrumbs = [
                 },
                 success: function(msg) {
                   console.log("Evento procesado con éxito: ", msg);
-                  if (callback) callback(msg); 
+                  if (callback) callback(msg);
                   var modal = bootstrap.Modal.getInstance(document.getElementById('dateModal'));
                   modal.hide();
                 },
@@ -231,7 +263,7 @@ $breadcrumbs = [
         <div class="d-none">
           <label for="txtId" class="form-label">ID</label>
           <input type="number" class="form-control" name="txtID" id="txtId">
-      
+
           <label for="txtFecha" class="form-label">Fecha</label>
           <input type="date" class="form-control" name="txtFecha" id="txtFecha">
         </div>

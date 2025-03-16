@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Criterio;
 use App\Models\RA;
 use Illuminate\Http\Request;
+use Prologue\Alerts\Facades\Alert;
 
 class CriterioController extends Controller
 {
@@ -28,22 +29,30 @@ class CriterioController extends Controller
      */
     public function store(Request $request, $ra_id)
     {
+        try {
+            // Validar los datos de entrada
+            $validatedData = $request->validate([
+                'descripcion-' . $ra_id => 'required|string|max:250',
+            ]);
 
-        // Validar los datos de entrada
-        $request->validate([
-            'descripcion-'. $ra_id => 'required|string',
-        ]);
+            // Crear el criterio y asociarlo al RA específico
+            Criterio::create([
+                'descripcion' => $request->input('descripcion-'.$ra_id),
+                'ra_id' => $ra_id,
+            ]);
+            Alert::success('Criterio añadido con exito')->flush();
 
-        // Crear el criterio y asociarlo al RA específico
-        Criterio::create([
-            'descripcion' => $request->input('descripcion-'.$ra_id),
-            'ra_id' => $ra_id,
-        ]);
+            // Redirigir con mensaje de éxito
+            return redirect()->route('rubrica.editor', ['id' => RA::findOrFail($ra_id)->rubrica->asignatura_id]);
+        }  catch (\Exception $e) {
+            Alert::error('No se pudo añadir el Criterio ')->flush();
 
-        // Redirigir a la vista del diseñador de rúbrica con un mensaje de éxito
-        return redirect()->route('rubrica.editor', ['id' => RA::findOrFail($ra_id)->rubrica->asignatura_id])
-                         ->with('success', 'Criterio creado con éxito.');
+            // Capturar cualquier otro error inesperado
+
+            return redirect()->back();
+        }
     }
+
 
 
     public function edit($asignatura,$id)
@@ -56,20 +65,32 @@ class CriterioController extends Controller
 }
 public function update(Request $request, $id)
 {
+    try {
+        $request->validate([
+            'CriterioEdit-'. $id => 'required|string|max:250',
+        ]);
+
+        // Buscar el criterio y actualizarlo
+        $criterio = Criterio::findOrFail($id);
+        $criterio->update([
+            'descripcion' => $request->input('CriterioEdit-'.$id),
+        ]);
+
+        Alert::success('Criterio editado con exito')->flush();
+
+        // Redirigir a la vista anterior o a la lista de criterios con un mensaje de éxito
+        return redirect()->route('rubrica.editor', ['id' => $criterio->ra->rubrica->asignatura_id]);
+
+    } catch (\Throwable $th) {
+
+        Alert::error('No se pudo editar el criterio')->flush();
+
+        // Capturar cualquier otro error inesperado
+
+        return redirect()->back();
+
+    }
     // Validar los datos de entrada
-    $request->validate([
-        'CriterioEdit-'. $id => 'required|string',
-    ]);
-
-    // Buscar el criterio y actualizarlo
-    $criterio = Criterio::findOrFail($id);
-    $criterio->update([
-        'descripcion' => $request->input('CriterioEdit-'.$id),
-    ]);
-
-    // Redirigir a la vista anterior o a la lista de criterios con un mensaje de éxito
-    return redirect()->route('rubrica.editor', ['id' => $criterio->ra->rubrica->asignatura_id])
-                     ->with('success', 'Criterio actualizado con éxito.');
 }
 
 

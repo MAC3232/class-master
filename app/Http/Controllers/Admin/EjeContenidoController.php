@@ -19,7 +19,7 @@ class EjeContenidoController extends Controller
     public function store(Request $request, $ra_id)
     {
         $request->validate([
-            'Contenido-'.$ra_id => 'required|string|max:255',
+            'Contenido-'.$ra_id => 'required|string|max:250',
         ]);
 
         EjeContenido::create([
@@ -42,7 +42,7 @@ class EjeContenidoController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'EJeContenido-'.$id => 'required|string|max:255',
+            'EJeContenido-'.$id => 'required|string|max:250',
         ]);
 
         $ejeContenido = EjeContenido::findOrFail($id);

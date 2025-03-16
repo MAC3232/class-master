@@ -44,7 +44,7 @@ $breadcrumbs = [
                 <thead>
                     <tr>
                         <th>Nombre del Estudiante</th>
-                        <th>Codigo</th>
+
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -52,7 +52,7 @@ $breadcrumbs = [
                     @forelse($actividades as $actividad)
                         <tr>
                             <td>{{ $actividad->nombre }}</td>
-                            <td>{{ $actividad->codigo_estudiantil  }}</td>
+                         
                             <td>
                                 {{-- Botón de acción para evaluar al estudiante --}}
                                 <a href="{{route('Evaluar_actividad.evaluar', ['id'=> $estudiante->id, 'actividad_id'=> $actividad->id])}}" class="btn btn-sm btn-link">

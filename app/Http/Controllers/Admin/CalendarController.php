@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Asignaturas;
 use App\Models\Evento;
 use Illuminate\Http\Request;
 
@@ -16,8 +17,10 @@ class CalendarController extends Controller
         }
         $asignatura_id = $request->id;
 
+        $nombre = Asignaturas::where('id', $asignatura_id)->value('nombre');
 
-        return view('calendar', compact('asignatura_id')); // Asegúrate de que esta vista exista en `resources/views/calendario/index.blade.php`
+
+        return view('calendar', compact('asignatura_id', 'nombre')); // Asegúrate de que esta vista exista en `resources/views/calendario/index.blade.php`
     }
 
     public function create()

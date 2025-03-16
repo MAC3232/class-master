@@ -19,7 +19,7 @@ class EstrategiaController extends Controller
     public function store(Request $request, $ra_id)
     {
         $request->validate([
-            'Estrategia-'.$ra_id => 'required|string|max:255',
+            'Estrategia-'.$ra_id => 'required|string|max:250',
         ]);
 
         Estrategia::create([
@@ -42,7 +42,7 @@ class EstrategiaController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'EestrategiaEditar-'. $id => 'required|string|max:255',
+            'EestrategiaEditar-'. $id => 'required|string|max:250',
         ]);
 
         $estrategia = Estrategia::findOrFail($id);

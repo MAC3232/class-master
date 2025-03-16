@@ -28,7 +28,7 @@ $breadcrumbs = [
 @section('header')
     <section class="content-header">
         <h1 class="text-light">
-            
+
         </h1>
         <ol class="breadcrumb m-2">
             <li><a href="{{ backpack_url() }}">Panel</a></li>
@@ -50,7 +50,7 @@ $breadcrumbs = [
             {{-- Botón de Editar --}}
             <a href="{{ route('rubrica.editor', $asignatura->id) }}" class="btn btn-primary m-2">Editar syllabus</a>
         </div>
-        
+
 
 
     @endif
@@ -65,7 +65,7 @@ $breadcrumbs = [
 
 
         <div class="container">
-            <h1>Diseñador de Rúbrica - {{ $asignatura->nombre }}</h1>
+            <h1>Diseñador de Syllabus - {{ $asignatura->nombre }}</h1>
             <div class="card">
                 <div class="card-body">
                     <table class="table table-bordered avoid-break">
@@ -165,7 +165,7 @@ $breadcrumbs = [
                     <tr>
                         <td class=".btn-imprimir"><strong>MODALIDAD</strong></td>
                         <td>{{ $asignatura->modalidad }}</td>
-                        <td><strong>Numero de semanas</strong></td>
+                        <td><strong>NUMERO DE SEMANAS</strong></td>
                         <td> 1 </td>
                     </tr>
 
@@ -348,7 +348,7 @@ $breadcrumbs = [
                                             @else
                                                 <tr class="table-warning">
                                                     <td colspan="4" class="text-center">
-                                                        No hay Criterios de evaluacion para mostrar. <a
+                                                        No hay estrategias para mostrar. <a
                                                             href="{{ route('rubrica.editor', $asignatura->id) }}"
                                                             class="btn btn-link"> Quieres editar la Rúbrica?</a>
                                                     </td>
@@ -386,7 +386,7 @@ $breadcrumbs = [
                                             @else
                                                 <tr class="table-warning">
                                                     <td colspan="4" class="text-center">
-                                                        No hay Criterios de evaluacion para mostrar. <a
+                                                        No hay Ejes de contenido para mostrar. <a
                                                             href="{{ route('rubrica.editor', $asignatura->id) }}"
                                                             class="btn btn-link"> Quieres editar la Rúbrica?</a>
                                                     </td>
@@ -435,7 +435,7 @@ $breadcrumbs = [
                                     <div class="d-flex col">
                                         <div class="col-md-2 "><strong>Corte</strong></div>
 
-                                        <div class="col-md-2 border-bottom border-start"><strong>Ponderacion</strong></div>
+                                        <div class="col-md-2 border-bottom border-start"><strong>Ponderacion (%)</strong></div>
                                         <div class="col-md border-bottom  border-start p-2"><strong>MECANISMOS DE
                                                 EVALUACIÓN, EVIDENCIAS Y SEGUIMIENTO CON PARTICIPACIÓN PORCENTUAL DENTRO DEL
                                                 CORTE</strong></div>
@@ -460,7 +460,7 @@ $breadcrumbs = [
                                                                 <div class="d-flex ">
                                                                     <div class="col border-end bg-danger p-2">Actividades
                                                                     </div>
-                                                                    <div class="col bg-danger p-2">Ponderacion</div>
+                                                                    <div class="col bg-danger p-2">Ponderacion (%)</div>
                                                                 </div>
 
                                                                 @if ($ra->actividades->isNotEmpty())
@@ -469,7 +469,7 @@ $breadcrumbs = [
                                                                             <div class="col border-end p-2">
                                                                                 {{ $actividad->nombre }}</div>
                                                                             <div class="col p-2">
-                                                                                {{ $actividad->ponderacion }}</div>
+                                                                                {{ $actividad->ponderacion }}%</div>
                                                                         </div>
                                                                     @endforeach
                                                                 @else

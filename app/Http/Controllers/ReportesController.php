@@ -116,7 +116,7 @@ $student = Estudiantes::with(['carrera', 'user'])->findOrFail($student);
 
 
 
-        return view('reportes.graph', compact('notas','asignatura','student','porcentaje_aprobadas','porcentaje_no_aprobadas', 'resultados', 'promedio'));
+        return view('reportes.graph', compact('asignatura','student','porcentaje_aprobadas','porcentaje_no_aprobadas', 'resultados'));
 
 
     }

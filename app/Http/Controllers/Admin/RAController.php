@@ -30,10 +30,9 @@ class RAController extends Controller
 
         $request->validate([
             'nombre' => 'required|string|max:255',
-            'descripcion' => 'required|string',
-
-
+            'descripcion' => 'required|string|max:1000',
         ]);
+
 
         RA::create([
             'nombre' => $request->input('nombre'),
@@ -60,7 +59,7 @@ class RAController extends Controller
     {
 
         $request->validate([
-            'Ra-'.$id => 'required|string|max:255',
+            'Ra-'.$id => 'required|string|max:1000',
         ]);
 
         $ra = RA::findOrFail($id);

@@ -222,7 +222,7 @@
                                                                                 'type' => 'textarea',
                                                                                 'label' => 'Editar descripcion',
                                                                                 'value' => $criterio->descripcion ?? '',
-                                                                                  'maxLength' => '500'
+                                                                                  'maxLength' => '250'
                                                                             ],
                                                                         ]" :idField="[
                                                                         'method'=> 'PUT' ,
@@ -455,7 +455,7 @@
 
                                 </tr>
                             @empty
-                                <li>No hay estrategias registradas para este RA.</li>
+                                <li>No hay ejes de contenido registradas para este RA.</li>
                             @endforelse
                             <tr>
 
@@ -528,7 +528,7 @@
                                 <div class="d-flex col">
                                     <div class="col-md-2 "><strong>Corte</strong></div>
 
-                                    <div class="col-md-2 border-bottom border-start"><strong>Ponderacion</strong></div>
+                                    <div class="col-md-2 border-bottom border-start"><strong>Ponderacion (%)</strong></div>
                                     <div class="col-md border-bottom  border-start p-2"><strong>MECANISMOS DE EVALUACIÓN,
                                             EVIDENCIAS Y SEGUIMIENTO CON PARTICIPACIÓN PORCENTUAL DENTRO DEL CORTE</strong>
                                     </div>
@@ -553,7 +553,7 @@
                                                         <div class="col ">
                                                             <div class="d-flex ">
                                                                 <div class="col border-end bg-danger p-2">Actividades</div>
-                                                                <div class="col bg-danger p-2">Ponderacion</div>
+                                                                <div class="col bg-danger p-2">Ponderacion(%)</div>
                                                             </div>
 
                                                             @if ($ra->actividades->isNotEmpty())
@@ -561,7 +561,7 @@
                                                                     <div class="d-flex border-top ">
                                                                         <div class="col border-end p-2">
                                                                             {{ $actividad->nombre }}</div>
-                                                                        <div class="col p-2">{{ $actividad->ponderacion }}
+                                                                        <div class="col p-2">{{ $actividad->ponderacion }}%
                                                                         </div>
                                                                     </div>
                                                                 @endforeach

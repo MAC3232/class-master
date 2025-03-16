@@ -90,7 +90,7 @@
        width: 100%;
        border-radius: 10px;
        padding: 20px;
-       color: white;
+     
        display: flex;
        cursor: pointer;
        flex-direction: column;
@@ -127,7 +127,7 @@
         font-size: 1.2em;
         font-weight: bold;
         margin-bottom: 5px;
-        color:#232121;
+
     }
 
     .card-info {
@@ -498,7 +498,7 @@ function renderCards(cards, page = 1) {
                         </svg>
                     </div>
                     <div class="card-content">
-                        <h3 class="card-title">${card.nombre}</h3>
+                        <h3 class="">${card.nombre}</h3>
                         <p class="card-info">Catálogo: ${card.catalogo}</p>
                         <p class="card-info">Código: ${card.codigo}</p>
                     </div>

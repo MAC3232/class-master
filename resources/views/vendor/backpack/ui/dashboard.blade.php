@@ -16,7 +16,6 @@
     font-family: 'roboto', serif;
     font-size: 3.5rem;
     font-weight: 700;
-      color:rgb(0, 0, 0);
     text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
 
     text-align: center;

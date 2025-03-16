@@ -568,7 +568,7 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="cancelButton" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Cancelar</button>
                     <button type="button" class="btn btn-primary" onclick="submitCustomModal()">Agregar</button>
                 </div>
             </div>

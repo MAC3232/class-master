@@ -102,29 +102,60 @@ td.seleccionado .overlay:hover {
             font-size: 14px;
             margin-top: 5px;
         }
+        .margin-l{
+            margin-left: 2rem;
+        }
+        .margin-l-2{
+            margin-left: 5rem;
+        }
 </style>
 
 @endpush
 
+@php
+    $index = 0;
+    $defaultBreadcrumbs = [
+        'Admin' => url('admin'),
+        'Actividades' => 'javascript:window.history.back();', // Regresar atrás
+        trans('Rubrica') => false,
+    ];
+
+    $breadcrumbs = $breadcrumbs ?? $defaultBreadcrumbs;
+@endphp
+
 
 @section('header')
-
 <section class="content-header">
-<h1>Actividad:  {{ $actividad->nombre }}</h1>
-    <h2 class="">Evaluando a: {{$estudiante->user->name}}
-        </h2>
-        
-                    <a href="/admin/asignaturas/{{ $actividad->id }}/evaluar-estudiante" class="p-2 btn-link">
-                        < Volver a todos los estudiantes </a>
+  <div class="container-fluid mb-3">
+    <div class="row">
+      <!-- Columna izquierda -->
+      <div class="col-sm-6 d-flex align-items-center">
+        <!-- Botón de retroceso -->
+        <a href="javascript:window.history.back();"
+           class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center mr-3"
+           style="width: 50px; height: 50px;">
+          <i class="la la-arrow-left" style="font-size: 1.5rem;"></i>
+        </a>
 
-    <ol class="breadcrumb m-2">
-    </ol>
+        <!-- Títulos -->
+        <div class=" margin-l">
+          <h1 class="mb-0">Actividad: {{ $actividad->nombre }}</h1>
+          <small class="text-muted">Evaluando a: {{ $estudiante->user->name }}</small>
+        </div>
+      </div>
+
+      <!-- Columna derecha (breadcrumb u otros enlaces) -->
+      <div class="col-sm-6 text-right">
+<!-- Botón para imprimir -->
+<div class="d-flex m-2 justify-content-end ">
+  <button onclick="window.print()" class="btn btn-secundary h-100 fs-1 d-print-none"> <i class="la la-print"></i></button>
+</div>
+      </div>
+    </div>
+  </div>
 </section>
 
-<div class="d-flex justify-content-start mb-4">
-    {{-- Botón de Imprimir --}}
-    <button onclick="window.print()" class="btn btn-primary m-2 d-print-none">Imprimir Rúbrica</button>
-</div>
+
 @endsection
 
 @section('content')
