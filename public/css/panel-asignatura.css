@@ -1,5 +1,622 @@
 /* Css */
-*
-{
+
+*{
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 0 0 0;
+    box-sizing: border-box;
+    
+}
+
+/* Header */
+.header {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 32px;
+    padding-top: .5rem;
+}
+
+.header-info{
+    margin-right: 40px;
+}
+
+.header-info h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #FFFFFF;
+}
+
+.course-details {
+    color: #9CA3AF;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.separator {
+    display: flex;
+    align-items: center;
+}
+
+.header-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 0;
+    margin-left: auto;
+}
+
+/* Buttons */
+.btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    height: 44px;
+}
+
+.btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+.btn-primary {
+    background-color: #6366f1;
+    color: white;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #4f46e5;
+}
+
+.btn-outline {
+    background-color: #1E1E1E;
+    border: none; /* Elimina el borde */
+    outline: none;
+    border-radius: 6px;
+}
+
+.btn-outline:hover {
+    background-color: #252525;
+}
+
+.btn-calendar {
+    color: #4338CA;
+    background-color: #E0E7FF;
+}
+
+.btn-calendar:hover{
+    background-color: #C7D2FE;
+    color: #4338CA;
+}
+
+.btn-excel {
+    color: #2A8D4F;
+    background-color: #DCFCE7;
+}
+
+
+
+.btn-excel:hover{
+    background-color: #BBF7D0;
+    color: #2A8D4F;
+}
+
+.btn-attendance {
+    color: #1D4ED8;
+    background-color: #DBEAFE;
+}
+
+.btn-attendance:hover{
+    background-color: #BFDBFE;
+    color: #1D4ED8;
+}
+
+/* Activities Tab */
+.activities-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.activities-header h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #FFFFFF;
+}
+
+.activity-card {
+    background-color: #1E1E1E;
+    border: 1px solid #252525;
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.activity-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: #FFFFFF;
+}
+
+.activity-date {
+    color: #9CA3AF;
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+.activity-tags {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.activity-tag {
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 14px;
+}
+
+.tag-task {
+    background-color: #E0E7FF;
+    color: #4338CA;
+}
+
+.tag-percentage {
+    background-color: #DCFCE7;
+    color: #16A34A;
+}
+
+/* Nueva Actividad button */
+.btn-nueva-actividad {
+    background-color: #6366F1;
+    color: white;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    height: 44px;
+}
+
+.btn-nueva-actividad:hover {
+    background-color: #4F46E5;
+}
+
+.btn-nueva-actividad svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Stats Cards */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.stat-card {
+    background-color: #1E1E1E;
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+}
+
+.stat-label {
+    color: #9ca3af;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.stat-value {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: #FFFFFF;
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stat-icon-blue {
+    background-color:#E0E7FF;
+}
+
+.stat-icon-blue svg {
+    color: #4F46E5;
+}
+
+.stat-icon-green {
+    background-color:#DCFCE7;
+}
+
+.stat-icon-green svg {
+    color: #16A34A;
+}
+
+.stat-icon-yellow {
+    background-color: #FEF9C3;
+}
+
+.stat-icon-yellow svg {
+    color: #CA8A04;
+}
+
+/* Tabs */
+.tabs {
+    margin-bottom: 24px;
+}
+
+.tabs-list {
+    display: flex;
+    margin-bottom: 24px;
+}
+
+.tab-trigger {
+    background: transparent;
+    border: none;
+    color: #9ca3af;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    position: relative;
+}
+
+.tab-trigger.active {
+    color: #818CF8;
+}
+
+.tab-trigger.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #6366F1;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.content-card {
+    background-color: #1E1E1E;
+    border-radius: 8px;
+    padding: 24px;
+}
+
+.empty-content {
+    text-align: center;
+    padding: 48px 0;
+    color: #9ca3af;
+}
+
+/* Search and Actions */
+.search-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.search-container {
+    position: relative;
+    flex: 1;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 16px 10px 40px;
+    background-color: #252525;
+    border: 1px solid #374151;
+    border-radius: 6px;
+    color: white;
+    font-size: 14px;
+    height: 44px;
+}
+
+.search-input::placeholder {
+    color: #9ca3af;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+.search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+}
+
+/* Table */
+.table-container {
+    overflow-x: auto;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table th {
+    background-color: #252525;
+    color: #D1D5DB;
+    text-align: left;
+    padding: 12px 16px;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.data-table th:first-child {
+    border-top-left-radius: 8px;
+}
+
+.data-table th:last-child {
+    border-top-right-radius: 8px;
+}
+
+.data-table td {
+    padding: 16px;
+    border-bottom: 1px solid #374151;
+}
+
+
+
+.data-table tr:last-child td {
+    border-bottom: none;
+}
+
+.student-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.student-avatar {
+    background-color: #374151;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.student-avatar svg {
+    color: #9ca3af;
+}
+
+.student-name {
+    font-weight: 50;
+    color: #FFFFFF;
+    top: 12px;
+    display: block;
+    position: relative;
+}
+
+.student-email {
+    color: #9CA3AF;
+    font-size: 14px;
+}
+
+.attendance-badge {
+    background-color: rgba(22, 163, 74, 0.2);
+    color: #16a34a;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+.attendance-cell {
+    text-align: center; /* Centra horizontalmente */
+    vertical-align: middle; /* Centra verticalmente */
+}
+
+
+.grade {
+    vertical-align: middle; /* Alinea verticalmente */
+    text-align: center; /* Centra horizontalmente */
+}
+
+
+.action-buttons {
+    display: flex;
+    align-items: center; 
+    justify-content: center; 
+    gap: 8px;
+}
+
+
+/* Botones agreados */
+
+.btn-secondary{
+    background-color: #1E1E1E;
+    border: none; /* Elimina el borde */
+    outline: none;
+    border-radius: 6px;
+}
+
+.btn-secondary:hover{
+    background-color: #252525;
+}
+
+.btn-third{
+    background-color: #1E1E1E;
+    border: none; /* Elimina el borde */
+    outline: none;
+    border-radius: 6px;
+}
+
+.btn-third:hover{
+    background-color: #252525;
+}
+
+.action-btn {
+    background-color: transparent;
+    border: none;
+    color: #9ca3af;
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.action-btn:hover {
+    background-color: #374151;
+    color: white;
+}
+
+.delete-btn {
+    color: #fb6060;
+}
+
+.delete-btn:hover {
+    background-color: #374151;
+    color: #fb6060;
+}
+
+/* Pagination */
+.pagination-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 24px;
+    color: #9ca3af;
+}
+
+.pagination-info {
+    margin-bottom: 16px;
+}
+
+.pagination-controls {
+    display: flex;
+    gap: 8px;
+}
+
+.pagination-btn {
+    background-color: #252525;
+    border: 1px solid #374151;
+    color: #9ca3af;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none; /* Elimina el borde */
+    outline: none; 
+}
+
+.pagination-btn:hover {
+    background-color: #2A2A2A;
+}
+
+.pagination-btn-active {
+    background-color: #6366f1;
+    border-color: #6366f1;
+    color: white;
+}
+
+.pagination-btn-active:hover {
+    background-color: #6366F1;
+}
+
+/* Bottom Action */
+#syllab{
+    margin-left: auto;
+}
+
+
+/* Responsive */
+@media (min-width: 640px) {
+    .stats-grid {
+        grid-template-columns: repeat(4, minmax(250px, 1fr));
+    }
+    
+    .search-actions {
+        flex-direction: row;
+    }
+    
+    .pagination-container {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    
+    .pagination-info {
+        margin-bottom: 0;
+    }
+}
+
+@media (min-width: 768px) {
+    .header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .header-actions {
+        margin-top: 0;
+    }
+}
+
+@media (min-width: 1024px) {
+    .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+
+th:last-child, td:last-child {
+    text-align: center;
+}
+
+th.calificacion {
+    text-align: center;
+    vertical-align: middle;
+}
+th.asistencia {
+    text-align: center;
+    vertical-align: middle;
+}
+    
 
 }
