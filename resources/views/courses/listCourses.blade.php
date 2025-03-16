@@ -483,7 +483,7 @@ function renderCards(cards, page = 1) {
                     <div class="card-dropdown-container">
                         <ul class="card-dropdown-menu" id="cardDropdownMenu${index}">
                             <li class="card-dropdown-item" onclick="cardActionView(${card.id}, event)">Ver</li>
-                            @if (backpack_user()->hasRole('admin'))
+                            @if (backpack_user()->hasRole(['admin', 'super-admin']))
                             <li class="card-dropdown-item" onclick="cardActionEdit(${card.id})">Editar</li>
                             <li class="card-dropdown-item" onclick="cardActionDelete(${card.id}, '{{ route('asignaturas.destroy', ['id' => 'alg']) }}'.replace('alg', ${card.id}))">Eliminar</li>
                             @endif
