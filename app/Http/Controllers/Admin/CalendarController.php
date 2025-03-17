@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\AsignaturaDocente;
 use App\Models\Asignaturas;
 use App\Models\Evento;
 use Illuminate\Http\Request;
@@ -12,10 +13,30 @@ class CalendarController extends Controller
     public function index( Request $request )
     {
 
+
+
+
         if (!backpack_auth()->check() || !backpack_user()->hasRole(['docente','super-admin'])) {
             abort(403, 'No tienes permiso para acceder a esta sección.');
         }
         $asignatura_id = $request->id;
+        $user = backpack_user();
+
+
+        // Para el docente, se valida que tenga asignada la materia
+       if ($user->hasRole('docente')) {
+        // Verificamos en la tabla intermedia (modelo AsignaturaDocente)
+        $tieneAcceso = AsignaturaDocente::where('docente_id', $user->id)
+            ->where('asignatura_id', $asignatura_id)
+            ->exists();
+
+        if (! $tieneAcceso) {
+            abort(404);
+
+        }
+
+
+    }
 
         $nombre = Asignaturas::where('id', $asignatura_id)->value('nombre');
 

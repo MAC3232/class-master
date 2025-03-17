@@ -98,9 +98,9 @@ trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dash
             @endif
             <div class="float-end float-right d-flex justify-content-end mb-3">
                 <!-- Botón Añadir con Modal -->
-                <!-- <button class="m-1 btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAdd">
+                <button class="m-1 btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAdd">
         <i class="la la-plus-circle"></i> Añadir
-    </button> -->
+    </button>
                 <!-- Botón Seleccionar/Borrar -->
                 <button id="btnSeleccionar" class="m-1 btn btn-warning">
                     <i class="la la-check-square"></i> Seleccionar
@@ -145,7 +145,11 @@ trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dash
                                 <td>{{ $student->codigo_estudiantil }}</td>
                                 <td>
 
-                                    <a href="#" class="btn btn-sm btn-danger btn-borrar"
+                                    <a href="{{route('estudiantes.show', ['id' =>  $student->id ])}}" class=" m-1 "
+                                        data-estudiante-id="{{ $student->id }}">
+                                        <i class="la la-eye fs-2"></i>
+                                    </a>
+                                    <a href="#" class="btn m-1 btn-sm btn-danger btn-borrar"
                                         data-estudiante-id="{{ $student->id }}"
                                         data-asignatura-id="{{ $asignatura['id'] }}">
                                         <i class="la la-trash fs-2"></i>

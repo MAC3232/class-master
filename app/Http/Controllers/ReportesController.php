@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Exports\DynamicReporteExport;
 use App\Exports\ReporteNotasExport;
+use App\Models\AsignaturaDocente;
+use App\Models\AsignaturaEstudiante;
 use App\Models\Asignaturas;
 use App\Models\Estudiantes;
 use Illuminate\Http\Request;
@@ -29,6 +31,26 @@ class ReportesController extends Controller
 
     function estudianteReport($id)
     {
+        $user = backpack_user();
+
+        // Para el docente, se valida que tenga asignada la materia
+       if ($user->hasRole('docente')) {
+        // Obtenemos el ID de la asignatura actual (asumiendo que está en la ruta)
+        $asignaturaId = $id;
+
+        // Verificamos en la tabla intermedia (modelo AsignaturaDocente)
+        $tieneAcceso = AsignaturaDocente::where('docente_id', $user->id)
+            ->where('asignatura_id', $asignaturaId)
+            ->exists();
+
+
+        if (! $tieneAcceso) {
+            abort(404);
+
+        }
+
+
+    }
 
         if (!backpack_auth()->check() || !backpack_user()->hasRole(['docente','super-admin'])) {
             abort(403, 'No tienes permiso para acceder a esta sección.');
@@ -45,6 +67,34 @@ class ReportesController extends Controller
 
     function  graph($id, $student)
     {
+        $user = backpack_user();
+
+        $asignaturaId = $id;
+        // Para el docente, se valida que tenga asignada la materia
+       if ($user->hasRole('docente')) {
+        // Obtenemos el ID de la asignatura actual (asumiendo que está en la ruta)
+
+        // Verificamos en la tabla intermedia (modelo AsignaturaDocente)
+        $tieneAcceso = AsignaturaDocente::where('docente_id', $user->id)
+            ->where('asignatura_id', $asignaturaId)
+            ->exists();
+
+        if (! $tieneAcceso) {
+            abort(404);
+
+        }
+
+
+    }
+
+    $existe = AsignaturaEstudiante::where('asignatura_id', $asignaturaId)
+    ->where('estudiante_id', $student)
+    ->exists();
+
+if (!$existe) {
+    abort(404);
+}
+
 
         if (!backpack_auth()->check() || !backpack_user()->hasRole(['docente','super-admin'])) {
 
@@ -124,6 +174,30 @@ $student = Estudiantes::with(['carrera', 'user'])->findOrFail($student);
 
     public function exportReporte($asignaturaId)
     {
+        $user = backpack_user();
+
+
+       if ($user->hasRole('docente')) {
+        // Obtenemos el ID de la asignatura actual (asumiendo que está en la ruta)
+
+        // Verificamos en la tabla intermedia (modelo AsignaturaDocente)
+        $tieneAcceso = AsignaturaDocente::where('docente_id', $user->id)
+            ->where('asignatura_id', $asignaturaId)
+            ->exists();
+
+        if (! $tieneAcceso) {
+            abort(404);
+
+        }
+
+
+    }
+
+
+
+
+
+
         $asignatura = Asignaturas::with([
             'actividades.valoraciones.estudiante'
         ])->findOrFail($asignaturaId);
@@ -167,6 +241,26 @@ $student = Estudiantes::with(['carrera', 'user'])->findOrFail($student);
     }
     public function graphGeneral($id)
     {
+        $user = backpack_user();
+
+
+        // Para el docente, se valida que tenga asignada la materia
+       if ($user->hasRole('docente')) {
+        // Obtenemos el ID de la asignatura actual (asumiendo que está en la ruta)
+        $asignaturaId = $id;
+
+        // Verificamos en la tabla intermedia (modelo AsignaturaDocente)
+        $tieneAcceso = AsignaturaDocente::where('docente_id', $user->id)
+            ->where('asignatura_id', $asignaturaId)
+            ->exists();
+
+        if (! $tieneAcceso) {
+            abort(404);
+
+        }
+
+
+    }
         // Verificar acceso: solo docentes
         if (!backpack_auth()->check() || !backpack_user()->hasRole(['docente','super-admin'])) {
             abort(403, 'No tienes permiso para acceder a esta sección.');

@@ -26,6 +26,7 @@ class DescripcionCriterioNivelController extends Controller
 
         ]);
 
+
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
@@ -54,7 +55,7 @@ class DescripcionCriterioNivelController extends Controller
 
         // Validar la solicitud
         $validator = Validator::make($request->all(), [
-            'description' => 'sometimes|required|string|max:255',
+            'descripcion' => 'sometimes|required|string|max:255',
         ]);
 
         if ($validator->fails()) {
@@ -73,7 +74,7 @@ class DescripcionCriterioNivelController extends Controller
         if (!$criterion) {
             return response()->json(['message' => 'Criterio no encontrado'], 404);
         }
-        
+
         $seleccionado = SelectCriterioEstudent::where('criterio_id', $criterion->criterio_id)
             ->where('nivel_desempeno_id', $criterion->nivel_desempeno_id)
             ->first();

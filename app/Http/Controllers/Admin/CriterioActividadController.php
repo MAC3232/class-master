@@ -53,7 +53,7 @@ class CriterioActividadController extends Controller
 
         // Validar la solicitud
         $validator = Validator::make($request->all(), [
-            'description' => 'sometimes|required|string|max:255',
+            'descripcion' => 'sometimes|required|string|max:255',
         ]);
 
         if ($validator->fails()) {

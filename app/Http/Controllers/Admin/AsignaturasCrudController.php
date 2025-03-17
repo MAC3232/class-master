@@ -41,6 +41,11 @@ class AsignaturasCrudController extends CrudController
         CRUD::setRoute(config('backpack.base.route_prefix') . '/asignaturas');
         CRUD::setEntityNameStrings('asignaturas', 'asignaturas');
 
+        $user = backpack_user();
+
+    if ($user->hasRole('docente')) {
+        $this->crud->denyAccess(['delete']); // Bloquea eliminar
+    }
 
         $this->crud->setOperationSetting('destroy', [
             'message' => '¿Estás seguro de eliminar este registro? Esta acción no puede deshacerse.',
@@ -380,7 +385,7 @@ class AsignaturasCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         if (!backpack_auth()->check() || !backpack_user()->hasRole(['admin','super-admin'])) {
-            abort(403, 'No tienes permiso para acceder a esta sección.');
+            abort(404);
         }
         $this->setupCreateOperation();
     }
@@ -414,10 +419,29 @@ class AsignaturasCrudController extends CrudController
     {
 
 
+        $user = backpack_user();
 
+
+       // Para el docente, se valida que tenga asignada la materia
+       if ($user->hasRole('docente')) {
+        // Obtenemos el ID de la asignatura actual (asumiendo que está en la ruta)
+        $asignaturaId = $this->crud->getCurrentEntryId();
+
+        // Verificamos en la tabla intermedia (modelo AsignaturaDocente)
+        $tieneAcceso = AsignaturaDocente::where('docente_id', $user->id)
+            ->where('asignatura_id', $asignaturaId)
+            ->exists();
+
+        if (! $tieneAcceso) {
+            abort(404);
+
+        }
+
+
+    }
 
         // logica roles: elimiar update y delete
-        if (backpack_user()->hasRole(['docente', 'super-admin'])) {
+        if (backpack_user()->hasRole(['docente'])) {
 
             $this->crud->removeButton('update');
             $this->crud->removeButton('delete');
@@ -482,6 +506,8 @@ class AsignaturasCrudController extends CrudController
         ]);
     }
 
+    
+
 
     public function getCarrerasByFacultad($facultadId)
     {
@@ -500,6 +526,27 @@ class AsignaturasCrudController extends CrudController
 
     protected function store(AsignaturasRequest $request)
 {
+    $user = backpack_user();
+
+
+    // Para el docente, se valida que tenga asignada la materia
+    if ($user->hasRole('docente')) {
+     // Obtenemos el ID de la asignatura actual (asumiendo que está en la ruta)
+     $asignaturaId = $request;
+
+     // Verificamos en la tabla intermedia (modelo AsignaturaDocente)
+     $tieneAcceso = AsignaturaDocente::where('docente_id', $user->id)
+         ->where('asignatura_id', $asignaturaId)
+         ->exists();
+
+     if (! $tieneAcceso) {
+         abort(404);
+
+     }
+
+
+ }
+
     try {
         DB::beginTransaction();
 

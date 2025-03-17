@@ -59,6 +59,7 @@ class ActividadCrudController extends CrudController
     }else{
         return back();
     }
+
     CRUD::setFromDb(); // set columns from db columns.
 
     // Obtener `asignatura_id` de la URL (desde el contexto de asignatura)
@@ -72,7 +73,16 @@ class ActividadCrudController extends CrudController
     if ($asignatura_id) {
         $this->crud->addClause('where', 'asignatura_id', $asignatura_id);
     }
+
+    $this->crud->removeColumn('ponderacion');
+    $this->crud->addColumn([
+        'name' => 'ponderacion',
+        'label' => 'Ponderacion (%)',
+        'type' => 'text',
+    ]);
+
     $this->crud->removeColumn('ra_id');
+    $this->crud->removeColumn('descripcion');
     $this->crud->removeColumn('asignatura_id');
 
     // Agregar columna para el nombre del resultado de aprendizaje
@@ -85,6 +95,7 @@ class ActividadCrudController extends CrudController
             return $entry->ra ? $entry->ra->nombre. '(corte: '. $entry->ra->corte .' )' : 'N/A'; // Asegúrate de que exista la relación
         },
     ]);
+
 
     // Agregar columna para el nombre de la asignatura
 

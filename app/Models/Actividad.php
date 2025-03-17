@@ -14,6 +14,7 @@ class Actividad extends Model
         'nombre',
         'fecha',
         'ponderacion',
+        'descripcion',
         'ra_id',
         'asignatura_id'
     ];

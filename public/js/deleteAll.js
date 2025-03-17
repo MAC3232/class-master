@@ -46,8 +46,11 @@ document.addEventListener("DOMContentLoaded", function() {
           btnSeleccionar.setAttribute("onclick", "borrarSeleccionados(asignatura)");
 
       } else {
+          btnSeleccionar.onclick = null;
+          btnSeleccionar.removeAttribute("onclick");
           btnSeleccionar.innerHTML = '<i class="la la-check-square"></i> Seleccionar';
           btnSeleccionar.classList.replace("btn-danger", "btn-warning");
+
       }
   }
 });
@@ -83,6 +86,8 @@ document.getElementById("btnCancelar").addEventListener("click", function () {
   });
   btnSeleccionar.innerHTML = '<i class="la la-select"></i> Seleccionar';
   btnSeleccionar.classList.replace("btn-danger", "btn-warning");
+  btnSeleccionar.onclick = null;
+  btnSeleccionar.removeAttribute("onclick");
 
   document.querySelectorAll(".check-student, #checkAll").forEach(function (checkbox) {
       checkbox.checked = false;

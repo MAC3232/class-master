@@ -53,9 +53,8 @@ class LevelController extends Controller
 
         // Validar la solicitud
         $validator = Validator::make($request->all(), [
-            'name' => 'sometimes|required|string|max:255',
-            'score_min' => 'sometimes|required|integer',
-            'score_max' => 'sometimes|required|integer|gte:score_min', // score_max debe ser mayor o igual a score_min
+            'nombre' => 'sometimes|required|string|max:255',
+            'puntos' => 'sometimes|integer',
         ]);
 
         if ($validator->fails()) {

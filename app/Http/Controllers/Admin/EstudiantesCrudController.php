@@ -34,6 +34,11 @@ class EstudiantesCrudController extends CrudController
         CRUD::setRoute(config('backpack.base.route_prefix') . '/estudiantes');
         CRUD::setEntityNameStrings('estudiantes', 'estudiantes');
 
+        $user = backpack_user();
+        if ($user->hasRole(['docente', 'estudiante'])) {
+            $this->crud->denyAccess(['delete']); // Bloquea eliminar
+        }
+
     }
 
     /**
@@ -44,6 +49,10 @@ class EstudiantesCrudController extends CrudController
      */
     protected function setupListOperation()
     {
+
+        if (!backpack_auth()->check() || !backpack_user()->hasRole(['super-admin','admin'])) {
+            abort(404);
+        }
         $this->crud->addButtonFromView('top', 'create', 'add_estudiante', 'beginning');
 
 
@@ -95,6 +104,9 @@ class EstudiantesCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
+        if (!backpack_auth()->check() || !backpack_user()->hasRole(['super-admin','admin'])) {
+            abort(404);
+        }
         CRUD::setValidation(EstudiantesRequest::class);
 
         CRUD::addField([
@@ -157,6 +169,9 @@ class EstudiantesCrudController extends CrudController
      */
     protected function setupUpdateOperation()
     {
+        if (!backpack_auth()->check() || !backpack_user()->hasRole(['super-admin','admin'])) {
+            abort(404);
+        }
         $this->setupCreateOperation();
 
     }
@@ -188,9 +203,48 @@ class EstudiantesCrudController extends CrudController
     return redirect()->route('estudiantes.index');
 }
 
+protected function setupShowOperation()
+{
+   // logica roles: elimiar update y delete
+   if (backpack_user()->hasRole(['docente'])) {
+
+    $this->crud->removeButton('update');
+    $this->crud->removeButton('delete');
+    $this->crud->removeButton('activity');
+}
+
+  // Mostrar Nombre del usuario
+  $this->crud->addColumn([
+    'name' => 'user.name',
+    'label' => 'Nombre',
+    'type' => 'text',
+]);
+  $this->crud->addColumn([
+    'name' => 'user.email',
+    'label' => 'Correo',
+    'type' => 'email',
+    'function' => function ($entry) {
+        return '<a href="mailto:' . e(optional($entry->user)->email) . '">' . e(optional($entry->user)->email) . '</a>';
+    },
+    'escaped' => false // Permite que el HTML se renderice correctamente
+]);
+
+$this->crud->addColumn(['name' => 'codigo_estudiantil', 'label' => 'Código', 'type' => 'text']);
+$this->crud->addColumn(['name' => 'cedula', 'label' => 'Cedula', 'type' => 'number']);
+$this->crud->addColumn([
+    'name' => 'carrera.nombre',
+    'label' => 'Programa',
+    'type' => 'text',
+]);
+
+
+}
+
 
     public function obtenerAsignaturas(Request $request)
-    {
+    { if (!backpack_auth()->check() || !backpack_user()->hasRole(['super-admin','admin'])) {
+        abort(404);
+    }
         $search = $request->get('search', '');
         $asignaturas = Asignaturas::when($search, function ($query, $search) {
             $query->where('nombre', 'like', "%{$search}%")
