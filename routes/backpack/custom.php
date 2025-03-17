@@ -255,6 +255,9 @@ Route::get('/asignaturas/{asignatura_id}/asistencia/tomar', [AsistenciaControlle
         Route::post('/asignaturas/{asignatura_id}/asistencias', [AsistenciaController::class, 'guardar'])
              ->name('asistencia.guardar');
     });
+    // buscador en estudiantes
+    Route::get('/admin/asignaturas/{id}', [AssignmentStudentController::class, 'index'])
+    ->name('admin.asignaturas.index');
 
 
 

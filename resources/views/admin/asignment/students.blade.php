@@ -97,6 +97,15 @@ trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dash
             </div>
             @endif
             <div class="float-end float-right d-flex justify-content-end mb-3">
+                <!-- Puedes colocar esto arriba de tu tabla de estudiantes -->
+                <form method="GET" action="{{ route('admin.asignaturas.index', ['id' => $asignatura['id']]) }}">
+                    <input type="text" name="search" placeholder="Buscar estudiante..." value="{{ request('search') }}">
+                    <button type="submit">Buscar</button>
+                  </form>
+
+
+
+
                 <!-- Botón Añadir con Modal -->
                 <button class="m-1 btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAdd">
         <i class="la la-plus-circle"></i> Añadir
@@ -318,6 +327,8 @@ trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dash
 
 
 @push('after_styles')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <style>
     .pagination-container {
         overflow-x: auto;
@@ -411,47 +422,30 @@ trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dash
 @endpush
 
 
-<!-- JS en línea -->
 @push('after_scripts')
-
-<!-- SweetAlert2 -->
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-<script src="{{asset('js/deleteAll.js')}}"></script>
 <script>
+    // Variable global para almacenar los IDs de estudiantes seleccionados
     let asignatura = `{{$asignatura['id']}}`;
     let studentsSelect = [];
 
-
-
-
+    // Función para actualizar la selección de un checkbox
     function cambiarEstado(checkbox, id) {
-
-
         if (checkbox.checked) {
-            studentsSelect.push(id);
+            // Agrega el ID solo si no está ya incluido
+            if (!studentsSelect.includes(id)) {
+                studentsSelect.push(id);
+            }
         } else {
             let index = studentsSelect.indexOf(id);
-
             if (index !== -1) {
                 studentsSelect.splice(index, 1);
-
             }
-
-
         }
-
-
-
-
-        // Aquí puedes enviar el estado a tu backend si es necesario
     }
 
-
-
-
     $(document).ready(function() {
+
+        // Función para cargar estudiantes vía AJAX
         function cargarEstudiantes(page = 1, search = '', carrera_id = '', asignatura_id = asignatura) {
             $.ajax({
                 url: `/admin/studentsassigment?page=${page}&search=${encodeURIComponent(search)}&carrera_id=${encodeURIComponent(carrera_id)}&asignatura_id=${asignatura_id}`,
@@ -463,33 +457,28 @@ trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dash
                         return;
                     }
 
-                    let asignados = response.asignados || []; // Estudiantes ya asignados
-                    let html = '';
-
-
-
-                    asignados.forEach(element => {
-                        studentsSelect.push(element);
+                    // Obtiene los estudiantes asignados desde el backend
+                    let asignados = response.asignados || [];
+                    // Si hay asignados, asegúrate de que también queden en studentsSelect
+                    asignados.forEach(id => {
+                        if (!studentsSelect.includes(id)) {
+                            studentsSelect.push(id);
+                        }
                     });
 
+                    let html = '';
+                    // Recorre la lista de estudiantes y marca el checkbox si su ID está en studentsSelect
                     response.data.data.forEach(estudiante => {
-                        let checked = asignados.includes(estudiante.id) ? 'checked' : ''; // Marcar si ya está asignado
-
-                        if (checked === 'checked' && !studentsSelect.includes(estudiante.id)) {
-                            studentsSelect.push(estudiante.id);
-
-                        }
-
-
-                        html += `
-                    <tr>
-                        <td class="text-center">
-                            <input type="checkbox" class="form-check-input checkbox-materia" data-id="${estudiante.id}" ${checked}>
-                        </td>
-                        <td>${estudiante.user.name}</td>
-                        <td>${estudiante.codigo_estudiantil}</td>
-                        <td class="carrer">${estudiante.carrera ? estudiante.carrera.nombre : 'Sin carrera'}</td>
-                    </tr>`;
+                        let checked = studentsSelect.includes(estudiante.id) ? 'checked' : '';
+                        html += `<tr>
+                                    <td class="text-center">
+                                        <input type="checkbox" class="form-check-input checkbox-materia" data-id="${estudiante.id}" ${checked}
+                                            onchange="cambiarEstado(this, ${estudiante.id})">
+                                    </td>
+                                    <td>${estudiante.user.name}</td>
+                                    <td>${estudiante.codigo_estudiantil}</td>
+                                    <td class="carrer">${estudiante.carrera ? estudiante.carrera.nombre : 'Sin carrera'}</td>
+                                </tr>`;
                     });
 
                     $('#tabla-estudiantes tbody').html(html);
@@ -502,86 +491,76 @@ trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dash
             });
         }
 
-
+        // Función para actualizar la paginación (puedes ajustar según tus necesidades)
         function actualizarPaginacion(response) {
             if (!response || !response.last_page) {
                 console.error("Error: datos de paginación no encontrados.");
                 return;
             }
-
             let currentPage = response.current_page;
             let lastPage = response.last_page;
             let paginacionHtml = '';
 
-            // Botón "Anterior"
             if (currentPage > 1) {
                 paginacionHtml += `<li class="page-item">
-                               <a href="#" class="page-link" data-page="${currentPage - 1}">&laquo;</a>
-                           </li>`;
+                                       <a href="#" class="page-link" data-page="${currentPage - 1}">&laquo;</a>
+                                   </li>`;
             }
 
-            // Páginas iniciales (1, 2, 3, 4)
             for (let i = 1; i <= Math.min(4, lastPage); i++) {
                 paginacionHtml += `<li class="page-item ${i === currentPage ? 'active' : ''}">
-                               <a href="#" class="page-link" data-page="${i}">${i}</a>
-                           </li>`;
+                                       <a href="#" class="page-link" data-page="${i}">${i}</a>
+                                   </li>`;
             }
 
-            // Primera separación "..."
             if (currentPage > 6) {
                 paginacionHtml += `<li class="page-item disabled">
-                               <span class="page-link">...</span>
-                           </li>`;
+                                       <span class="page-link">...</span>
+                                   </li>`;
             }
 
-            // Páginas cercanas a la actual
             let start = Math.max(5, currentPage - 2);
             let end = Math.min(lastPage - 4, currentPage + 2);
-
             for (let i = start; i <= end; i++) {
                 paginacionHtml += `<li class="page-item ${i === currentPage ? 'active' : ''}">
-                               <a href="#" class="page-link" data-page="${i}">${i}</a>
-                           </li>`;
+                                       <a href="#" class="page-link" data-page="${i}">${i}</a>
+                                   </li>`;
             }
 
-            // Segunda separación "..."
             if (currentPage < lastPage - 5) {
                 paginacionHtml += `<li class="page-item disabled">
-                               <span class="page-link">...</span>
-                           </li>`;
+                                       <span class="page-link">...</span>
+                                   </li>`;
             }
 
-            // Últimas páginas (ejemplo: 20, 21, 22)
             for (let i = Math.max(lastPage - 3, 5); i <= lastPage; i++) {
                 paginacionHtml += `<li class="page-item ${i === currentPage ? 'active' : ''}">
-                               <a href="#" class="page-link" data-page="${i}">${i}</a>
-                           </li>`;
+                                       <a href="#" class="page-link" data-page="${i}">${i}</a>
+                                   </li>`;
             }
 
-            // Botón "Siguiente"
             if (currentPage < lastPage) {
                 paginacionHtml += `<li class="page-item">
-                               <a href="#" class="page-link" data-page="${currentPage + 1}">&raquo;</a>
-                           </li>`;
+                                       <a href="#" class="page-link" data-page="${currentPage + 1}">&raquo;</a>
+                                   </li>`;
             }
 
             $('#paginacion').html(paginacionHtml);
         }
 
-
-        // Búsqueda
+        // Búsqueda: al escribir en el input con id="buscar"
         $('#buscar').on('keyup', function() {
             let search = $(this).val().trim();
             cargarEstudiantes(1, search);
         });
 
-        // Filtro por carrera
+        // Filtro por carrera: al cambiar el select
         $('#filtro-carrera').on('change', function() {
             let carrera_id = $(this).val();
             cargarEstudiantes(1, '', carrera_id);
         });
 
-        // Paginación
+        // Paginación: al hacer clic en algún enlace de paginación
         $(document).on('click', '.page-link', function(e) {
             e.preventDefault();
             let page = $(this).data('page');
@@ -590,14 +569,9 @@ trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dash
             }
         });
 
-        // Guardar selección de estudiantes
+        // Guardar la selección de estudiantes: se usa la variable global studentsSelect
         $('#guardar-seleccion').on('click', function() {
-            let seleccionados = [];
-            $('.checkbox-materia:checked').each(function() {
-                seleccionados.push($(this).data('id'));
-            });
-
-            if (seleccionados.length === 0) {
+            if (studentsSelect.length === 0) {
                 Swal.fire('Atención', 'Debe seleccionar al menos un estudiante.', 'warning');
                 return;
             }
@@ -606,16 +580,13 @@ trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dash
                 url: '/admin/estudiantes/materia',
                 type: 'POST',
                 data: {
-                    estudiantes: seleccionados,
+                    estudiantes: studentsSelect,
                     materia_id: $('#materia-id').val(),
                     _token: $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(response) {
-
-
                     Swal.fire('Guardado', 'Asignación guardada correctamente', 'success');
                     location.reload();
-
                 },
                 error: function(xhr, status, error) {
                     console.error("Error al guardar:", error);
@@ -624,12 +595,11 @@ trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dash
             });
         });
 
+        // Botón para borrar estudiante (mantén tu lógica actual)
         $(document).on('click', '.btn-borrar', function(e) {
             e.preventDefault();
-
             let estudianteId = $(this).data('estudiante-id');
             let asignaturaId = $(this).data('asignatura-id');
-
 
             Swal.fire({
                 title: "¿Estás seguro?",
@@ -646,15 +616,11 @@ trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dash
                         url: `/admin/asignaturas/${asignaturaId}/estudiantes/${estudianteId}`,
                         type: 'DELETE',
                         data: {
-                            _token: $('meta[name="csrf-token"]').attr('content') // CSRF Token de Laravel
+                            _token: $('meta[name="csrf-token"]').attr('content')
                         },
                         success: function(response) {
-
-
                             Swal.fire("Eliminado", response.message, "success");
                             location.reload();
-                            // Recargar la lista de estudiantes después de borrar
-
                         },
                         error: function(xhr) {
                             Swal.fire("Error", "No se pudo eliminar al estudiante de la asignatura.", "error");
@@ -664,9 +630,9 @@ trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dash
             });
         });
 
-
         // Cargar estudiantes al inicio
         cargarEstudiantes();
     });
 </script>
 @endpush
+
