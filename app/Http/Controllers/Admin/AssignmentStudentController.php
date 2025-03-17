@@ -179,18 +179,17 @@ public function deleteStudents($asignatura_id, $studentsList)
 }
 
 
+
 public function AssigmentStoreEstudents(Request $request)
 {
     $asignatura = Asignaturas::findOrFail($request->materia_id);
 
-    $asignatura->students()->sync($request->estudiantes);
-
-
+    // Agrega los nuevos estudiantes sin eliminar los que ya están asignados
+    $asignatura->students()->syncWithoutDetaching($request->estudiantes);
 
     return response()->json(['message' => 'Asignación guardada correctamente']);
-
-
 }
+
 
 public function DeleteStudentAsigment($asignatura_id, $estudiante_id)
 {
