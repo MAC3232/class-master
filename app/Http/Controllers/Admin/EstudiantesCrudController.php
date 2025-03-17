@@ -6,6 +6,7 @@ use App\Http\Requests\EstudiantesRequest;
 use App\Http\Requests\EstudiantesUpdateRequest;
 use App\Models\AsignaturaDocente;
 use App\Models\Asignaturas;
+use App\Models\Estudiantes;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Illuminate\Support\Facades\Request;
@@ -40,6 +41,8 @@ class EstudiantesCrudController extends CrudController
             $this->crud->denyAccess(['delete']); // Bloquea eliminar
         }
 
+
+
     }
 
     /**
@@ -49,52 +52,64 @@ class EstudiantesCrudController extends CrudController
      * @return void
      */
     protected function setupListOperation()
-    {
-
-        if (!backpack_auth()->check() || !backpack_user()->hasRole(['super-admin','admin'])) {
-            abort(404);
-        }
-        $this->crud->addButtonFromView('top', 'create', 'add_estudiante', 'beginning');
-
-
-        CRUD::addColumn([
-            'name'      => 'name',
-            'label'     => 'Nombre',
-            'entity'    => 'user', // nombre de la relación definida en el modelo
-            'attribute' => 'name', // asumiendo que el campo 'name' almacena el nombre del usuario
-            'model'     => 'App\Models\User'
-        ]);
-        CRUD::setFromDb();
-        $this->crud->removeColumn('carrera_id');
-        $this->crud->removeColumn('user_id');
-        $this->crud->removeColumn('cedula');
-        CRUD::addColumn([
-            'name'     => 'user_email', // este nombre es arbitrario
-            'label'    => 'Correo',
-            'type'     => 'closure',
-            'function' => function($entry) {
-                if ($entry->user) {
-                    return '<a href="mailto:' . $entry->user->email . '">' . $entry->user->email . '</a>';
-                }
-                return 'Sin correo';
-            },
-            'escaped'  => false, // Para que se renderice el HTML
-        ]);
-
-
-        // Agregar columna para mostrar la relación con Carrera
-        CRUD::addColumn([
-            'name'      => 'carrera_id',
-            'label'     => 'Carrera',
-            'entity'    => 'carrera',
-            'attribute' => 'nombre',
-            'model'     => 'App\Models\Carrera'
-        ]);
-
-
-
-
+{
+    if (!backpack_auth()->check() || !backpack_user()->hasRole(['super-admin','admin'])) {
+        abort(404);
     }
+
+    $this->crud->addButtonFromView('top', 'create', 'add_estudiante', 'beginning');
+
+    // Columna para el nombre (relación con user)
+    CRUD::addColumn([
+        'name'        => 'user.name',
+        'label'       => 'Nombre',
+        'type'        => 'relationship',
+        'entity'      => 'user', // nombre de la relación definida en el modelo
+        'attribute'   => 'name', // campo que se mostrará del usuario
+        'model'       => 'App\Models\User',
+        'searchLogic' => function ($query, $column, $searchTerm) {
+            // Se realiza la búsqueda en la relación "user"
+            $query->orWhereHas('user', function ($q) use ($searchTerm) {
+                $q->where('name', 'like', '%'.$searchTerm.'%');
+            });
+        },
+    ]);
+
+    CRUD::setFromDb();
+    $this->crud->removeColumn('carrera_id');
+    $this->crud->removeColumn('user_id');
+    $this->crud->removeColumn('cedula');
+
+    // Columna para el correo (con closure)
+    CRUD::addColumn([
+        'name'     => 'user_email',
+        'label'    => 'Correo',
+        'type'     => 'closure',
+        'function' => function($entry) {
+            if ($entry->user) {
+                return '<a href="mailto:' . $entry->user->email . '">' . $entry->user->email . '</a>';
+            }
+            return 'Sin correo';
+        },
+        'escaped'  => false,
+        'searchLogic' => function ($query, $column, $searchTerm) {
+            // Se realiza la búsqueda en la relación "user"
+            $query->orWhereHas('user', function ($q) use ($searchTerm) {
+                $q->where('email', 'like', '%'.$searchTerm.'%');
+            });
+        },
+    ]);
+
+    // Columna para mostrar la relación con Carrera
+    CRUD::addColumn([
+        'name'      => 'carrera_id',
+        'label'     => 'Carrera',
+        'entity'    => 'carrera',
+        'attribute' => 'nombre',
+        'model'     => 'App\Models\Carrera'
+    ]);
+}
+
 
 
     /**
@@ -177,9 +192,11 @@ class EstudiantesCrudController extends CrudController
 
     }
 
-    protected function update($id)
+    protected function update( EstudiantesRequest $request, $id)
 {
-    $data = request()->all();
+
+
+    $data = $request;
 
 
     $student = \App\Models\Estudiantes::findOrFail($id);
@@ -220,7 +237,7 @@ protected function setupShowOperation()
        if ($user->hasRole('docente')) {
         // Obtenemos el ID de la asignatura actual (asumiendo que está en la ruta)
         $asignaturaId = request()->id;
-        
+
 
         // Verificamos en la tabla intermedia (modelo AsignaturaDocente)
         $tieneAcceso = AsignaturaDocente::where('docente_id', $user->id)

@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Estudiante;
+use App\Models\Estudiantes;
 
 class EstudiantesRequest extends FormRequest
 {
@@ -24,11 +26,19 @@ class EstudiantesRequest extends FormRequest
      */
     public function rules()
     {
+        // Obtiene el id del estudiante de la ruta
+        $estudianteId = $this->route('id');
+
+        // Buscamos el estudiante para extraer el user_id asociado.
+        $estudiante = $estudianteId ? Estudiantes::find($estudianteId) : null;
+        $userId = $estudiante ? $estudiante->user_id : null;
+
         return [
             'nombre' => 'required|string|max:255',
-            'cedula' => 'required|string|max:10|unique:estudiantes,cedula,'. $this->route('id'),
-            'correo' => 'required|email|max:255|unique:estudiantes,correo,'.$this->route('id'),
-            'codigo_estudiantil' => 'required|string|max:20|unique:estudiantes,codigo_estudiantil,'.$this->route('id'),
+            'cedula' => 'required|string|max:10|unique:estudiantes,cedula,' . $estudianteId,
+            // Para correo se utiliza el user_id, ya que el correo está en la tabla users
+            'correo' => 'required|email|max:255|unique:users,email,' . $userId,
+            'codigo_estudiantil' => 'required|string|max:20|unique:estudiantes,codigo_estudiantil,' . $estudianteId,
             'carrera_id' => 'required|exists:carreras,id',
         ];
     }
