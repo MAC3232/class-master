@@ -9,6 +9,7 @@ use App\Models\Asignaturas;
 use App\Models\Rubrica;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Prologue\Alerts\Facades\Alert;
 
 /**
  * Class ActividadCrudController
@@ -70,7 +71,7 @@ class ActividadCrudController extends CrudController
 
 
 
-            
+
             // Verificar si el docente imparte la asignatura
             $tieneAcceso = AsignaturaDocente::where('docente_id', $user->id)
                 ->where('asignatura_id', $asignaturaId)
@@ -96,6 +97,8 @@ class ActividadCrudController extends CrudController
      */
     protected function setupListOperation()
 {
+
+
     if ( request()->has('asignatura_id')) {
         $asignatura_id = request()->input('asignatura_id');
         $rubricaName = Asignaturas::where('id', $asignatura_id)->first();
@@ -199,6 +202,8 @@ class ActividadCrudController extends CrudController
                 abort(404);
             }
         }
+        $actividadId = $this->crud->getCurrentEntryId();
+
 
 
         CRUD::setFromDb(); // set columns from db columns.
@@ -266,4 +271,32 @@ class ActividadCrudController extends CrudController
 
         $this->setupCreateOperation(true);
     }
+
+    protected function store(ActividadRequest $request)
+    {
+
+        // Crear la actividad si la validación pasa
+         Actividad::create($request->validated());
+
+         Alert::success('Se agrego con exito la actividad')->flash();
+        return redirect()->route('actividad.index')->with('success', 'Actividad creada correctamente.');
+    }
+
+    protected function update(ActividadRequest $request)
+    {
+
+        // Crear la actividad si la validación pasa
+         Actividad::create($request->validated());
+
+         Alert::success('Se edito con exito la actividad')->flash();
+        return redirect()->route('actividad.index')->with('success', 'Actividad creada correctamente.');
+    }
+
+
+
+
+
+
+
+
 }

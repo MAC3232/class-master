@@ -155,7 +155,7 @@ Route::group([
          ->name('rubrica_actividad.index');
     Route::get('actividad/{id}/rubrica/create', [RubricaActividadController::class, 'create'])
          ->name('rubrica_actividad.create');
-    Route::post('actividad/rubrica/store', [App\Http\Controllers\admin\RubricaActividadController::class, 'store'])
+    Route::post('actividad/rubrica/store', [RubricaActividadController::class, 'store'])
          ->name('rubrica_actividad.store');
 
     // Rutas para Criterio de Actividad
@@ -197,7 +197,7 @@ Route::group([
     // Rutas para Asistencia
     Route::get('/asistencia/generar/{asignatura_id}', [QrAsistenciaController::class, 'generarQrAsistencia'])
          ->name('asistencia.generar');
-         
+
     Route::get('/asistencias/{asignatura_id}', [AsistenciaController::class, 'index'])
          ->name('asistencias.index');
 
@@ -240,7 +240,7 @@ Route::group([
          Route::post('assignment/{id}/students/import', [AssignmentStudentController::class, 'import'])->name('assignment.students.import');
 
 
-    Route::get('/asignaturas/{asignatura_id}/asistencia/generar', [App\Http\Controllers\admin\AsistenciaController::class, 'tomar'])->name('asistencia.generar');
+    Route::get('/asignaturas/{asignatura_id}/asistencia/generar', [AsistenciaController::class, 'tomar'])->name('asistencia.generar');
 
 
 
@@ -252,7 +252,7 @@ Route::get('/asignaturas/{asignatura_id}/asistencia/tomar', [AsistenciaControlle
 
      Route::group(['prefix' => 'admin'], function() {
         // Otras rutas de administración...
-        Route::post('/asignaturas/{asignatura_id}/asistencias', [\App\Http\Controllers\admin\AsistenciaController::class, 'guardar'])
+        Route::post('/asignaturas/{asignatura_id}/asistencias', [AsistenciaController::class, 'guardar'])
              ->name('asistencia.guardar');
     });
 

@@ -54,6 +54,17 @@ class CalendarController extends Controller
      */
     public function store(Request $request)
     {
+
+
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'descripcion' => 'nullable|string',
+            'start' => 'required',
+            'end' => 'required',
+            'color' => 'required|string|max:7', // Si es un código de color hexadecimal
+        ]);
+
+
         $datosEvento = $request->except(['_token', '_method']);
         Evento::insert(($datosEvento));
         return response()->json($datosEvento);
@@ -86,6 +97,16 @@ return response()->json($data['eventos']);
      */
   public function update(Request $request, string $id)
 {
+
+    $request->validate([
+        'title' => 'required|string|max:255',
+        'descripcion' => 'nullable|string',
+        'start' => 'required',
+        'end' => 'required',
+        'color' => 'required|string|max:7', // Si es un código de color hexadecimal
+    ]);
+
+
     $datosEvento = $request->except(['_token', '_method']);
     $respuesta = Evento::where('id', "=", $id)->update($datosEvento);
     return response()->json($respuesta);

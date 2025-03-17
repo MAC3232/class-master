@@ -3,24 +3,37 @@
 
 $breadcrumbs = [
         trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dashboard'),
-        'Asignaturas' => route('asignaturas.index'),
+        'Asignaturas' => route('courses.index'),
         'Listado' => false, // El último elemento no lleva URL
     ];
 @endphp
 
 @section('header')
 <section class="content-header">
-    <h1 class="text-light">
-        Evaluar estudiante: {{$estudiante->nombre}}
-    </h1>
-    <ol class="breadcrumb m-2">
-        <li><a href="{{ backpack_url() }}">Panel</a></li>
 
-        <li>
+ <div class="container-fluid mb-3">
+    <div class="row">
+      <!-- Columna izquierda -->
+      <div class="col-sm-6 w-100 d-flex align-items-center">
+        <!-- Botón de retroceso -->
+        <a href="javascript:window.history.back();"
+           class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center "
+           style="width: 50px; height: 50px;">
+          <i class="la la-arrow-left" style="font-size: 1.5rem;"></i>
+        </a>
 
-            <a href="" class="p-2 btn-link">< Volver a asignatura </a>
-        </li>
-    </ol>
+        <!-- Títulos -->
+        <div class=" m-5 w-100 ">
+          <h1 class="mb-0 ">Evaluar estudiante:  </h1>
+          Evaluar estudiante: {{$estudiante->user->name}}
+
+        </div>
+      </div>
+
+      <!-- Columna derecha (breadcrumb u otros enlaces) -->
+
+    </div>
+  </div>
 </section>
 
 <div class="d-flex justify-content-start mb-4">
@@ -43,7 +56,7 @@ $breadcrumbs = [
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
-                        <th>Nombre del Estudiante</th>
+                        <th>Nombre de la actividad</th>
 
                         <th>Acciones</th>
                     </tr>
@@ -52,7 +65,7 @@ $breadcrumbs = [
                     @forelse($actividades as $actividad)
                         <tr>
                             <td>{{ $actividad->nombre }}</td>
-                         
+
                             <td>
                                 {{-- Botón de acción para evaluar al estudiante --}}
                                 <a href="{{route('Evaluar_actividad.evaluar', ['id'=> $estudiante->id, 'actividad_id'=> $actividad->id])}}" class="btn btn-sm btn-link">

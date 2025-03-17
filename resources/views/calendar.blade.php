@@ -229,6 +229,8 @@ $breadcrumbs = [
                   modal.hide();
                 },
                 error: function(xhr, status, error) {
+                    console.log(error);
+
                   alert("Completa todo los campos");
                 }
               });
