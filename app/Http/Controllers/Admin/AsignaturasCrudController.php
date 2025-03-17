@@ -43,7 +43,7 @@ class AsignaturasCrudController extends CrudController
 
         $user = backpack_user();
 
-    if ($user->hasRole('docente')) {
+    if (!$user->hasRole(['super-admin', 'admin'])) {
         $this->crud->denyAccess(['delete']); // Bloquea eliminar
     }
 
@@ -506,7 +506,7 @@ class AsignaturasCrudController extends CrudController
         ]);
     }
 
-    
+
 
 
     public function getCarrerasByFacultad($facultadId)

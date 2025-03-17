@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\ActividadRequest;
 use App\Models\Actividad;
+use App\Models\AsignaturaDocente;
 use App\Models\Asignaturas;
 use App\Models\Rubrica;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
@@ -32,14 +33,58 @@ class ActividadCrudController extends CrudController
 
         CRUD::setModel(\App\Models\Actividad::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/actividad');
-    if ( request()->has('asignatura_id')) {
-        $asignatura_id = request()->input('asignatura_id');
-        $rubricaName = Asignaturas::where('id', $asignatura_id)->first();
 
-        CRUD::setEntityNameStrings('actividad', 'actividades: '. $rubricaName->nombre ?? '');
-    }else{
-        return back();
-    }
+        if( !backpack_user()->hasRole(['super-admin','admin','docente'])){
+            abort(404);
+        }
+
+        if ( request()->has('asignatura_id')) {
+            $asignatura_id = request()->input('asignatura_id');
+            $rubricaName = Asignaturas::where('id', $asignatura_id)->first();
+
+            CRUD::setEntityNameStrings('actividad', 'actividades: '. $rubricaName->nombre ?? '');
+        }else{
+            return back();
+        }
+
+        $user = backpack_user();
+
+        // Solo validar si el usuario es docente
+        if ($user->hasRole('docente')) {
+            // Obtener el ID de la actividad actual
+            $actividadId = $this->crud->getCurrentEntryId();
+
+            if(!$actividadId){
+                $asignaturaId = request()->input('asignatura_id');
+            }
+
+            if($actividadId){
+                $actividad = Actividad::find($actividadId);
+                if (!$actividad || !$actividad->asignatura_id) {
+                    abort(404); // La actividad no existe o no tiene asignatura
+                }
+
+                $asignaturaId = $actividad->asignatura_id;
+            }
+            // Obtener la asignatura de la actividad
+
+
+
+            
+            // Verificar si el docente imparte la asignatura
+            $tieneAcceso = AsignaturaDocente::where('docente_id', $user->id)
+                ->where('asignatura_id', $asignaturaId)
+                ->exists();
+
+            if (!$tieneAcceso) {
+
+                abort(404);
+            }
+        }
+
+
+
+
 
     }
 
@@ -121,6 +166,41 @@ class ActividadCrudController extends CrudController
         if (!backpack_auth()->check() || !backpack_user()->hasRole(['docente','super-admin'])) {
             abort(403, 'No tienes permiso para acceder a esta sección.');
         }
+        $user = backpack_user();
+
+        // Solo validar si el usuario es docente
+        if ($user->hasRole('docente')) {
+            // Obtener el ID de la actividad actual
+            $actividadId = $this->crud->getCurrentEntryId();
+
+            if(!$actividadId){
+                $asignaturaId = request()->input('asignatura_id');
+            }
+
+            if($actividadId){
+                $actividad = Actividad::find($actividadId);
+                if (!$actividad || !$actividad->asignatura_id) {
+                    abort(404); // La actividad no existe o no tiene asignatura
+                }
+
+                $asignaturaId = $actividad->asignatura_id;
+            }
+            // Obtener la asignatura de la actividad
+
+
+
+
+            // Verificar si el docente imparte la asignatura
+            $tieneAcceso = AsignaturaDocente::where('docente_id', $user->id)
+                ->where('asignatura_id', $asignaturaId)
+                ->exists();
+
+            if (!$tieneAcceso) {
+                abort(404);
+            }
+        }
+
+
         CRUD::setFromDb(); // set columns from db columns.
 
         CRUD::setValidation(ActividadRequest::class);

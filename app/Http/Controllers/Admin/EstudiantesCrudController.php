@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\EstudiantesRequest;
 use App\Http\Requests\EstudiantesUpdateRequest;
+use App\Models\AsignaturaDocente;
 use App\Models\Asignaturas;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
@@ -205,8 +206,36 @@ class EstudiantesCrudController extends CrudController
 
 protected function setupShowOperation()
 {
+    if (!backpack_auth()->check() || !backpack_user()->hasRole(['super-admin','admin', 'docente'])) {
+
+        abort(404);
+    }
+
+
+
+    $user = backpack_user();
+
+
+       // Para el docente, se valida que tenga asignada la materia
+       if ($user->hasRole('docente')) {
+        // Obtenemos el ID de la asignatura actual (asumiendo que está en la ruta)
+        $asignaturaId = request()->id;
+        
+
+        // Verificamos en la tabla intermedia (modelo AsignaturaDocente)
+        $tieneAcceso = AsignaturaDocente::where('docente_id', $user->id)
+            ->where('asignatura_id', $asignaturaId)
+            ->exists();
+
+        if (! $tieneAcceso) {
+            abort(404);
+
+        }
+
+
+    }
    // logica roles: elimiar update y delete
-   if (backpack_user()->hasRole(['docente'])) {
+   if (!backpack_user()->hasRole(['super-admin', 'admin'])) {
 
     $this->crud->removeButton('update');
     $this->crud->removeButton('delete');

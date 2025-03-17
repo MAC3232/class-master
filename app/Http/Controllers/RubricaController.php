@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AsignaturaDocente;
 use App\Models\Asignaturas;
 use App\Models\Rubrica;
 use Illuminate\Http\Request;
@@ -15,9 +16,31 @@ class RubricaController extends Controller
             abort(403, 'No tienes permiso para acceder a esta sección.');
         }
 
+
+
     }
     public function showDisenador($id)
 {
+    $user = backpack_user();
+
+
+    // Para el docente, se valida que tenga asignada la materia
+    if ($user->hasRole('docente')) {
+     // Obtenemos el ID de la asignatura actual (asumiendo que está en la ruta)
+     $asignaturaId = $id;
+
+     // Verificamos en la tabla intermedia (modelo AsignaturaDocente)
+     $tieneAcceso = AsignaturaDocente::where('docente_id', $user->id)
+         ->where('asignatura_id', $asignaturaId)
+         ->exists();
+
+     if (! $tieneAcceso) {
+         abort(404);
+
+     }
+
+
+ }
 
     $asignatura = Asignaturas::with('rubrica')->findOrFail($id);
 
@@ -47,6 +70,26 @@ class RubricaController extends Controller
 
 public function editor($id)
     {
+        $user = backpack_user();
+
+
+        // Para el docente, se valida que tenga asignada la materia
+        if ($user->hasRole('docente')) {
+         // Obtenemos el ID de la asignatura actual (asumiendo que está en la ruta)
+         $asignaturaId = $id;
+
+         // Verificamos en la tabla intermedia (modelo AsignaturaDocente)
+         $tieneAcceso = AsignaturaDocente::where('docente_id', $user->id)
+             ->where('asignatura_id', $asignaturaId)
+             ->exists();
+
+         if (! $tieneAcceso) {
+             abort(404);
+
+         }
+
+
+     }
         // Retorna la vista del editor de rúbrica
     $asignatura = Asignaturas::findOrFail($id);
     // dd($asignatura->rubrica->ra);
@@ -56,6 +99,26 @@ public function editor($id)
     }
 public function create($id)
     {
+        $user = backpack_user();
+
+        
+        // Para el docente, se valida que tenga asignada la materia
+        if ($user->hasRole('docente')) {
+         // Obtenemos el ID de la asignatura actual (asumiendo que está en la ruta)
+         $asignaturaId = $id;
+
+         // Verificamos en la tabla intermedia (modelo AsignaturaDocente)
+         $tieneAcceso = AsignaturaDocente::where('docente_id', $user->id)
+             ->where('asignatura_id', $asignaturaId)
+             ->exists();
+
+         if (! $tieneAcceso) {
+             abort(404);
+
+         }
+
+
+     }
         // Retorna la vista del editor de rúbrica
     $asignatura = Asignaturas::findOrFail($id);
 
@@ -65,6 +128,9 @@ public function create($id)
 
     public function store(Request $request)
     {
+
+
+
         $request->validate([
             'nombre' => 'required|string|max:255',
             'asignatura_id' => 'unique:rubricas|required|exists:asignaturas,id',

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Actividad;
+use App\Models\AsignaturaDocente;
 use App\Models\Asignaturas;
 use App\Models\Estudiantes;
 use App\Models\niveles_desempeno_actividad;
@@ -23,6 +24,7 @@ class EvaluarEstudianteController extends Controller
         if (!backpack_auth()->check() || !backpack_user()->hasRole(['docente','super-admin'])) {
             abort(403, 'No tienes permiso para acceder a esta sección.');
         }
+
 
     }
 
@@ -95,8 +97,33 @@ class EvaluarEstudianteController extends Controller
         // Retorna la vista de evaluación, pasando los estudiantes y la materia
         return view('admin.evaluar_actividad', compact('actividad', 'materia', 'estudiante', 'seleccionados'));
     }
+
     public function actividades($actividad, $id)
     {
+
+        $user = backpack_user();
+
+
+
+        // Para el docente, se valida que tenga asignada la materia
+        if ($user->hasRole('docente')) {
+         // Obtenemos el ID de la asignatura actual (asumiendo que está en la ruta)
+         $asignaturaId = $actividad;
+
+         // Verificamos en la tabla intermedia (modelo AsignaturaDocente)
+         $tieneAcceso = AsignaturaDocente::where('docente_id', $user->id)
+             ->where('asignatura_id', $asignaturaId)
+             ->exists();
+
+
+         if (!$tieneAcceso) {
+             abort(404);
+
+         }
+
+
+     }
+
 
 
         $asignatura = Asignaturas::with([ 'rubrica.ra' ])->findOrFail($actividad);
@@ -112,6 +139,9 @@ class EvaluarEstudianteController extends Controller
 
     public function store(Request $request)
     {
+
+
+
         $validator = Validator::make($request->all(), [
             'nota' => 'required|numeric|max:5',
             'actividad_id' => 'required|int',

@@ -145,7 +145,7 @@ trans('backpack::crud.admin') => url(config('backpack.base.route_prefix'), 'dash
                                 <td>{{ $student->codigo_estudiantil }}</td>
                                 <td>
 
-                                    <a href="{{route('estudiantes.show', ['id' =>  $student->id ])}}" class=" m-1 "
+                                    <a href="{{route('estudiantes.show', ['id' =>  $student->id ])}}?id={{$asignatura['id']}}" class=" m-1 "
                                         data-estudiante-id="{{ $student->id }}">
                                         <i class="la la-eye fs-2"></i>
                                     </a>
