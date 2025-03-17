@@ -184,8 +184,12 @@ public function AssigmentStoreEstudents(Request $request)
 {
     $asignatura = Asignaturas::findOrFail($request->materia_id);
 
+    if (!$request->has('estudiantes') || empty($request->estudiantes)) {
+        return response()->json(['message' => 'No hay estudiantes seleccionados'], 400);
+    }
+
     // Agrega los nuevos estudiantes sin eliminar los que ya están asignados
-    $asignatura->students()->syncWithoutDetaching($request->estudiantes);
+    $asignatura->students()->sync($request->estudiantes);
 
     return response()->json(['message' => 'Asignación guardada correctamente']);
 }

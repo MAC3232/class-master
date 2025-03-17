@@ -197,7 +197,7 @@ Route::group([
     // Rutas para Asistencia
     Route::get('/asistencia/generar/{asignatura_id}', [QrAsistenciaController::class, 'generarQrAsistencia'])
          ->name('asistencia.generar');
-         
+
     Route::get('/asistencias/{asignatura_id}', [AsistenciaController::class, 'index'])
          ->name('asistencias.index');
 
@@ -255,6 +255,9 @@ Route::get('/asignaturas/{asignatura_id}/asistencia/tomar', [AsistenciaControlle
         Route::post('/asignaturas/{asignatura_id}/asistencias', [\App\Http\Controllers\admin\AsistenciaController::class, 'guardar'])
              ->name('asistencia.guardar');
     });
+    // buscador en estudiantes
+    Route::get('/admin/asignaturas/{id}', [AssignmentStudentController::class, 'index'])
+    ->name('admin.asignaturas.index');
 
 
 
