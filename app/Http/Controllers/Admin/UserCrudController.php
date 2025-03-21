@@ -13,6 +13,8 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\NewUserCredentials;
+use App\Helpers\MailHelper;
+
 
 
 /**
@@ -195,33 +197,44 @@ public function store()
     $request = $this->crud->validateRequest();
     $adminRoleId = Role::where('name', 'admin')->value('id');
 
+    // Generar una contraseña aleatoria
+    $password = Str::random(8);
 
     if (in_array($adminRoleId, $request->roles)) {
-
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'carrera_id' => $request->carrera_id,
-            'password' => bcrypt($request->password),
+            'password' => bcrypt($password),
         ]);
-
-    }else{
-
-
+    } else {
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => bcrypt($request->password),
+            'password' => bcrypt($password),
         ]);
     }
 
-
-    // Asignar múltiples roles al usuario
+    // Asignar roles al usuario
     if (!empty($request->roles)) {
-        $user->roles()->sync($request->roles); // Suponiendo una relación muchos a muchos
+        $user->roles()->sync($request->roles);
     }
 
-    Alert::success('Usuario creado y roles asignados exitosamente')->flash();
+    // Enviar correo con PHPMailer
+    $subject = "Tu cuenta en Class-Master ha sido creada";
+    $body = "
+        <h1>Bienvenido a Class-Master</h1>
+        <p>Hola {$user->name},</p>
+        <p>Tu cuenta ha sido creada exitosamente.</p>
+        <p><strong>Correo:</strong> {$user->email}</p>
+        <p><strong>Contraseña:</strong> {$password}</p>
+        <p>Por favor, cambia tu contraseña después de iniciar sesión.</p>
+        <p>Saludos,<br>El equipo de Class-Master</p>
+    ";
+
+    $emailResult = MailHelper::sendEmail($user->email, $subject, $body);
+
+    Alert::success('Usuario creado exitosamente', 'Se ha enviado un correo con las credenciales.')->flash();
 
     if ($request->_save_action == 'save_and_back') {
         return Redirect::to('/admin/user');

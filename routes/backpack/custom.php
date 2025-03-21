@@ -258,6 +258,7 @@ Route::get('/asignaturas/{asignatura_id}/asistencia/tomar', [AsistenciaControlle
     // buscador en estudiantes
     Route::get('/admin/asignaturas/{id}', [AssignmentStudentController::class, 'index'])
     ->name('admin.asignaturas.index');
+    
 
 
 
