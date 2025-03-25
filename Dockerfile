@@ -15,8 +15,10 @@ RUN apt-get update && apt-get install -y \
     unzip \
     git \
     curl \
+    libbz2-dev \
+    libzip-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd
+    && docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd zip dom xml
 
 # Instala Composer (Administrador de dependencias de PHP)
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -24,12 +26,17 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Copia el archivo .env (si existe) y los archivos de la aplicación al contenedor
 COPY . /var/www
 
+# Configura el directorio de trabajo para Composer
+WORKDIR /var/www
+
 # Instala las dependencias de Laravel
-RUN composer install --optimize-autoloader 
+RUN composer install --optimize-autoloader --no-interaction --prefer-dist
+
+# Verifica que el directorio vendor se haya creado
+RUN ls -la /var/www/vendor
 
 # Da permisos al directorio de almacenamiento y bootstrap/cache
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
-
 
 # Copia y establece `entrypoint.sh`
 COPY entrypoint.sh /entrypoint.sh

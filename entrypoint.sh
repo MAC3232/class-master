@@ -12,9 +12,9 @@ php artisan migrate --force
 
 php artisan key:generate --force
 
-php artisan DB:seed
-
 php artisan storage:link
+
+php artisan DB:seed
 
 # Iniciar el servidor PHP-FPM
 php artisan serve --host=0.0.0.0 --port=8000
