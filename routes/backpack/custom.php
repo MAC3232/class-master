@@ -60,6 +60,7 @@ Route::group([
 
 
     Route::get('courses', [CourseController::class, 'index'])->name('courses.index');
+    Route::get('{id}/panel-asignatura', [CourseController::class, 'panelCourse']);
     Route::get('searchCourses', [CourseController::class, 'searchAsignatura']);
 
 
